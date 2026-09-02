@@ -1,0 +1,164 @@
+%%Identification
+%%The package identifies itself and the LaTeX version needed
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathshortcuts}[2022/02/05 Math Shortcuts]
+
+\RequirePackage{forloop}
+\RequirePackage{amsmath}
+\RequirePackage{xparse}
+\RequirePackage{ifthen}
+\RequirePackage{ifthenx}
+
+\@ifpackageloaded{unicode-math}{%
+    \newcommand{\mybm}[1]{\symbf{#1}}%
+}{%
+    \@ifpackageloaded{mathptmx}{
+        \newcommand{\mybm}[1]{\mathbf{#1}}%
+    }{
+        \RequirePackage{bm}%
+        \newcommand{\mybm}[1]{\bm{#1}}%
+    }
+}%
+
+\@ifpackageloaded{physics}{%
+    \DeclareDocumentCommand\va{}{\mybm{a}}%
+    \DeclareDocumentCommand\vb{}{\mybm{b}}%
+    \DeclareDocumentCommand\vu{}{\mybm{u}}%
+    \DeclareDocumentCommand\pva{}{\vectorarrow}%
+    \DeclareDocumentCommand\pvb{}{\vectorbold}%
+    \DeclareDocumentCommand\pvu{}{\vectorunit}%
+}{%
+    \newcommand{\va}{\mybm{a}}%
+    \newcommand{\vb}{\mybm{b}}%
+    \newcommand{\vu}{\mybm{u}}%
+}
+\newcommand{\vc}{\mybm{c}}
+\newcommand{\vd}{\mybm{d}}
+\newcommand{\ve}{\mybm{e}}
+\newcommand{\vf}{\mybm{f}}
+\newcommand{\vg}{\mybm{g}}
+\newcommand{\vh}{\mybm{h}}
+\newcommand{\vi}{\mybm{i}}
+\newcommand{\vj}{\mybm{j}}
+\newcommand{\vk}{\mybm{k}}
+\newcommand{\vl}{\mybm{l}}
+\newcommand{\vm}{\mybm{m}}
+\newcommand{\vn}{\mybm{n}}
+\newcommand{\vo}{\mybm{o}}
+\newcommand{\vp}{\mybm{p}}
+\newcommand{\vq}{\mybm{q}}
+\newcommand{\vr}{\mybm{r}}
+\newcommand{\vs}{\mybm{s}}
+\newcommand{\vt}{\mybm{t}}
+\newcommand{\bv}{\mybm{v}}
+\newcommand{\vw}{\mybm{w}}
+\newcommand{\vx}{\mybm{x}}
+\newcommand{\vy}{\mybm{y}}
+\newcommand{\vz}{\mybm{z}}
+\newcommand{\vA}{\mybm{A}}
+\newcommand{\vB}{\mybm{B}}
+\newcommand{\vC}{\mybm{C}}
+\newcommand{\vD}{\mybm{D}}
+\newcommand{\vE}{\mybm{E}}
+\newcommand{\vF}{\mybm{F}}
+\newcommand{\vG}{\mybm{G}}
+\newcommand{\vJ}{\mybm{J}}
+\newcommand{\vH}{\mybm{H}}
+\newcommand{\vI}{\mybm{I}}
+\newcommand{\vK}{\mybm{K}}
+\newcommand{\vL}{\mybm{L}}
+\newcommand{\vM}{\mybm{M}}
+\newcommand{\vN}{\mybm{N}}
+\newcommand{\vO}{\mybm{O}}
+\newcommand{\vP}{\mybm{P}}
+\newcommand{\vQ}{\mybm{Q}}
+\newcommand{\vR}{\mybm{R}}
+\newcommand{\vS}{\mybm{S}}
+\newcommand{\vT}{\mybm{T}}
+\newcommand{\vU}{\mybm{U}}
+\newcommand{\vV}{\mybm{V}}
+\newcommand{\vW}{\mybm{W}}
+\newcommand{\vX}{\mybm{X}}
+\newcommand{\vY}{\mybm{Y}}
+\newcommand{\vZ}{\mybm{Z}}
+\newcommand{\valpha}{\mybm\alpha}
+\newcommand{\vbeta}{\mybm\beta}
+\newcommand{\vchi}{\mybm\chi}
+\newcommand{\vdelta}{\mybm\delta}
+\newcommand{\vepsilon}{\mybm\epsilon}
+\newcommand{\veta}{\mybm\eta}
+\newcommand{\vgamma}{\mybm\gamma}
+\newcommand{\viota}{\mybm\iota}
+\newcommand{\vkappa}{\mybm\kappa}
+\newcommand{\vlambda}{\mybm\lambda}
+\newcommand{\vmu}{\mybm\mu}
+\newcommand{\vomega}{\mybm\omega}
+\newcommand{\vphi}{\mybm\phi}
+\newcommand{\vpi}{\mybm\pi}
+\newcommand{\vpsi}{\mybm\psi}
+\newcommand{\vrho}{\mybm\rho}
+\newcommand{\vsigma}{\mybm\sigma}
+\newcommand{\vtau}{\mybm\tau}
+\newcommand{\vtheta}{\mybm\theta}
+\newcommand{\vupsilon}{\mybm\upsilon}
+\newcommand{\vxi}{\mybm\xi}
+\newcommand{\vzeta}{\mybm\zeta}
+% \newcommand{\vdigamma}{\mybm\digamma}
+\newcommand{\vDelta}{\mybm\Delta}
+\newcommand{\vGamma}{\mybm\Gamma}
+\newcommand{\vLambda}{\mybm\Lambda}
+\newcommand{\vOmega}{\mybm\Omega}
+\newcommand{\vPhi}{\mybm\Phi}
+\newcommand{\vPi}{\mybm\Pi}
+\newcommand{\vPsi}{\mybm\Psi}
+\newcommand{\vSigma}{\mybm\Sigma}
+\newcommand{\vTheta}{\mybm\Theta}
+\newcommand{\vUpsilon}{\mybm\Upsilon}
+\newcommand{\vXi}{\mybm\Xi}
+\newcommand{\vzero}{\mybm{0}}
+\newcommand{\vones}{\mybm{1}}
+
+\DeclareMathOperator{\diag}{diag}
+\newcommand{\T}{^\mathrm{T}}
+\newcommand{\I}{^{-1}}
+\newcommand{\IG}{^{-}}
+
+\NewDocumentCommand{\rvec}{ m O{} }{%
+\mathchoice{\left(#1\right)#2}%
+  {(#1)#2}%
+  {(#1)#2}%
+  {(#1)#2}%
+}
+\NewDocumentCommand{\cvec}{ m O{} }{{\rvec{#1}[#2]}\T}
+
+\@ifpackageloaded{physics}{%
+    \let\var\undefined
+    \DeclareDocumentCommand\dvar{}{\variation}
+}{}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\sd}{sd}
+\DeclareMathOperator{\se}{se}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\NP}{N.P.}
+\DeclareMathOperator{\ENP}{E.N.P.}
+\DeclareMathOperator{\DF}{D.F.}
+\DeclareMathOperator{\EDF}{E.D.F.}
+\NewDocumentCommand{\diagnostic}{ m O{} m }{%
+    \ensuremath{#1_{\mathrm{#2}}\ifthenelse{\isnumber{#3}}{={#3}}{}}%
+}
+\NewDocumentCommand{\cond}{ m m }{%
+    \left( #1 \middle| #2 \right)%
+}%
+\NewDocumentCommand{\conde}{ m m }{%
+    E\left( #1 \middle| #2 \right)%
+}%
+\NewDocumentCommand{\condvar}{ m m }{%
+    \var\left( #1 \middle| #2 \right)%
+}%
+% \NewDocumentCommand{\rsquared}{ O{} m }{%
+%     \ensuremath{R^2_{\mathrm{#1}}\ifthenelse{\ispositiverealnumber{#2}}{={#2}}{}}%
+% }
+\NewDocumentCommand{\rsquared}{O{} m}{\diagnostic{R^2}[#1]{#2}}
+\NewDocumentCommand{\AIC}{O{} m}{\diagnostic{{\mathrm{AIC}}}[#1]{#2}}
+\NewDocumentCommand{\hfrac}{ m m }{\left.{#1}\middle/{#2}\right.}
