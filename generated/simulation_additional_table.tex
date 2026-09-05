@@ -1,0 +1,29 @@
+\begin{table}[tbp]
+  \centering\scriptsize
+  \caption{Diagnostic and robustness Monte Carlo results. The legacy, $B=999$, and bandwidth-reselection rows are diagnostic rather than primary calibration evidence.}
+  \label{tab:simulation-additional-results}
+  \begin{tabular}{lllcll}
+    \toprule
+    Scenario & Method & $B$ & Effect & Usable/planned & Rejection rate, \% (95\% CI) \\
+    \midrule
+Legacy, null & Legacy bootstrap & 199 & $\gamma_1$ & 50/50 & 0.0 (0.0--7.1) \\
+Legacy, null & Legacy bootstrap & 199 & $\gamma_2$ & 50/50 & 0.0 (0.0--7.1) \\
+Legacy, strong heterogeneity & Legacy bootstrap & 199 & $\gamma_1$ & 49/50 & 14.3 (7.1--26.7) \\
+Legacy, strong heterogeneity & Legacy bootstrap & 199 & $\gamma_2$ & 49/50 & 0.0 (0.0--7.3) \\
+$B=999$, null & Effect-wise bootstrap & 999 & $\gamma_1$ & 20/20 & 5.0 (0.9--23.6) \\
+$B=999$, null & Effect-wise bootstrap & 999 & $\gamma_2$ & 20/20 & 0.0 (0.0--16.1) \\
+$B=999$, strong heterogeneity & Effect-wise bootstrap & 999 & $\gamma_1$ & 20/20 & 100.0 (83.9--100.0) \\
+$B=999$, strong heterogeneity & Effect-wise bootstrap & 999 & $\gamma_2$ & 20/20 & 0.0 (0.0--16.1) \\
+Bandwidth re-selected & Effect-wise bootstrap & 99 & $\gamma_1$ & 1/10 & 100.0 (20.7--100.0) \\
+Bandwidth re-selected & Effect-wise bootstrap & 99 & $\gamma_2$ & 1/10 & 0.0 (0.0--79.3) \\
+$t_5$ errors & Effect-wise bootstrap & 199 & $\gamma_1$ & 30/30 & 96.7 (83.3--99.4) \\
+$t_5$ errors & Effect-wise bootstrap & 199 & $\gamma_2$ & 30/30 & 0.0 (0.0--11.4) \\
+$t_5$ errors & Approximate $F$ & 0 & $\gamma_1$ & 199/200 & 100.0 (98.1--100.0) \\
+$t_5$ errors & Approximate $F$ & 0 & $\gamma_2$ & 199/200 & 8.5 (5.4--13.3) \\
+Strongly unbalanced group sizes & Effect-wise bootstrap & 199 & $\gamma_1$ & 30/30 & 96.7 (83.3--99.4) \\
+Strongly unbalanced group sizes & Effect-wise bootstrap & 199 & $\gamma_2$ & 30/30 & 0.0 (0.0--11.4) \\
+Strongly unbalanced group sizes & Approximate $F$ & 0 & $\gamma_1$ & 200/200 & 100.0 (98.1--100.0) \\
+Strongly unbalanced group sizes & Approximate $F$ & 0 & $\gamma_2$ & 200/200 & 8.0 (5.0--12.6) \\
+    \bottomrule
+  \end{tabular}
+\end{table}

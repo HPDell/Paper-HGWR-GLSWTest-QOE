@@ -96,7 +96,7 @@
 
 \begin{abstract}
 %% Text of abstract
-Hierarchical and geographically weighted regression (HGWR) models spatial hierarchical data by combining group-level spatially weighted (GLSW), fixed, and sample-level random effects. Although GLSW estimates are allowed to vary geographically, variation in an estimated coefficient surface does not by itself establish spatial heterogeneity because sampling error and spatial autocorrelation may produce similar patterns. We address this inferential gap by defining spatial heterogeneity through location-conditional distributions and by developing bootstrap and approximate $F$ tests for the spatial heterogeneity of GLSW effects. A simulation experiment assesses the HGWR-specific procedures. The $F$ test separates the heterogeneous and constant GLSW effects in the simulated models. The bootstrap detects the heterogeneous effect but yields $p=0.040$ for a constant effect in one specification and $p=0.081$ in an alternative specification, indicating sensitivity near a 5\% threshold. We then apply the framework to household investment in children's extracurricular courses in China, integrating household survey, provincial panel, geographic, and point-of-interest data. The heterogeneity tests guide the allocation of provincial variables to GLSW or fixed effects and reveal that the associations of economic development, living costs, income inequality, university recruitment, education budgets, and the highly educated population with hourly extracurricular-course expenditure vary across provinces. The study therefore demonstrates how formal tests can turn mapped coefficient variation into statistically qualified evidence in an applied HGWR analysis.
+Hierarchical and geographically weighted regression (HGWR) models spatial hierarchical data by combining group-level spatially weighted (GLSW), fixed, and sample-level random effects. Although GLSW estimates are allowed to vary geographically, variation in an estimated coefficient surface does not by itself establish spatial heterogeneity because sampling error and spatial autocorrelation may produce similar patterns. We address this inferential gap by defining spatial heterogeneity through location-conditional distributions and by developing an effect-wise parametric bootstrap and an approximate $F$ test for the spatial heterogeneity of GLSW effects. Monte Carlo experiments with 200 fixed random locations assess calibration, power, effect specificity, and computational stability. At intraclass correlation coefficient (ICC) 0.4, the effect-wise bootstrap has null rejection rates of 3.2\% and detects a heterogeneous effect in 96.9--100\% of usable repetitions while rejecting the accompanying constant effect in only 3.1--4.1\%. The corrected $F$ approximation is computationally inexpensive but remains liberal in several null settings and increasingly rejects the constant effect when another effect is heterogeneous. We then apply the framework to household investment in children's extracurricular courses in China, integrating household survey, provincial panel, geographic, and point-of-interest data. The application illustrates how heterogeneity testing can inform the allocation of provincial variables to GLSW or fixed effects, while the simulation results also show why evidence based only on the $F$ approximation should be interpreted cautiously.
 \end{abstract}
 
 %%Graphical abstract
@@ -197,12 +197,12 @@ The need for this distinction is especially clear in applied studies where varia
 We illustrate the problem using family investment in children's extracurricular courses, an important component of quality-oriented education (QOE) in China.
 Participation and expenditure reflect household circumstances, while the availability and price of educational resources are shaped by provincial economic and policy contexts.
 A mapped HGWR coefficient can suggest that a provincial association differs geographically, but policy interpretation requires evidence that the variation is greater than would be expected under a spatially constant effect.
-The case study therefore serves two purposes: it demonstrates how the proposed tests guide the choice between GLSW and fixed effects, and it shows how inferentially supported heterogeneity changes the substantive interpretation of educational inequalities.
+The case study therefore serves two purposes: it illustrates how a heterogeneity test can guide the choice between GLSW and fixed effects, and it shows how simulation evidence about calibration qualifies the interpretation of mapped educational inequalities.
 
 This paper makes three contributions.
 First, it formalises strong and weak spatial heterogeneity using location-conditional distributions and distinguishes spatial non-stationarity from spatial autocorrelation.
-Second, it develops residual-bootstrap and distribution-based $F$ tests for GLSW effects in HGWR and uses a simulation to examine whether the procedures recover known homogeneous and heterogeneous effects.
-Third, it provides an empirical study in which the tests are integrated into effect specification rather than applied only after estimation, thereby connecting statistical evidence of spatial heterogeneity to household- and province-level correlates of extracurricular education investment.
+Second, it develops an effect-wise parametric bootstrap and a distribution-based approximate $F$ test for GLSW effects in HGWR and uses Monte Carlo experiments to examine their calibration, power, effect specificity, and computational behaviour.
+Third, it provides an empirical study in which approximate heterogeneity screening is integrated into effect specification rather than applied only after estimation, thereby connecting the methodological evaluation to household- and province-level correlates of extracurricular education investment.
 
 The remainder of this paper will be organised as follows.
 \autoref{sec:hgwr} outlines the mathematical foundations of the HGWR model and identifies the GLSW effects as the object of inference.
@@ -642,19 +642,19 @@ For the $k$-th GLSW effect, denote this statistic by
 where $m$ is the number of groups and $\overline{\hat{\gamma}}_k$ is the mean of the local estimates.
 A large value of $T_k$ indicates strong variation, but it cannot alone show significant spatial heterogeneity because random error, data borrowing, and the hierarchical random effects also produce variation in local estimates.
 
-The final part is consequently to determine the distribution of $T_k$ under spatial constancy.
-There are two possible routes in this study.
-The bootstrap method repeatedly generates samples according to the null-generating mechanism and compares the observed dispersion with the empirical distribution of the resampled dispersions.
-The distribution-based method uses the linear form of the GLSW estimator, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of the dispersion by an $F$ distribution.
-Thus, the two methods use the same object and the same null hypothesis; their difference lies in how the reference distribution is obtained.
+The final part is consequently to determine the distribution of a dispersion statistic under spatial constancy.
+There are two routes in this study.
+The bootstrap compares the observed variance of standardised local estimates with its empirical null distribution.
+The distribution-based method uses the linear form of the GLSW estimator, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of an observation-weighted coefficient variance by an $F$ distribution.
+The two methods address the same null hypothesis, but use different finite-sample statistics and reference distributions.
 The following section incorporates the hierarchical error structure and GLSW estimator to construct the corresponding bootstrap and $F$ tests for HGWR.
 
 \section{Testing Spatial Heterogeneity in GLSW Effects} \label{sec:glsw-test}
 
 According to \autoref{sec:heterogeneity-testing-logic}, testing a GLSW effect is to determine whether its variation among locations is significantly greater than the variation generated under a spatially constant effect.
 The target is different from the conventional test of whether a coefficient is significantly different from zero.
-For the $k$-th GLSW effect, both methods below evaluate the spatial constancy stated in \eqref{equ:glsw-heterogeneity-core-hypothesis} using the variance of its local estimates.
-The bootstrap method obtains the reference distribution by repeated model fitting, while the distribution-based method derives an approximate $F$ distribution from the GLSW estimator.
+For the $k$-th GLSW effect, both methods below evaluate the spatial constancy stated in \eqref{equ:glsw-heterogeneity-core-hypothesis}.
+The bootstrap obtains an empirical reference distribution by repeated model fitting, while the distribution-based method derives an approximate $F$ distribution from the GLSW estimator.
 
 % In this section, we concentrate on designing hypothesis tests for fixed effects and GLSW effects of the HGWR model.
 % The significance of deviation from zero is evaluated for both fixed effects and GLSW effects using a $t$-test.
@@ -736,33 +736,39 @@ For regression models, there are two typical resampling strategies: sampling obs
 For HGWR, experiments show that resampling observations may lead to an insufficient number of samples in some locations, potentially causing model calibration to fail.
 Therefore, resampling residuals is a more suitable approach, as recommended by \citet{HarrisBrunsdon-2017}.
 
-For a calibrated HGWR model with $\hat{\vgamma}$ as estimates of GLSW effects, $\hat{\vbeta}$ as estimates of fixed effects, and $\hat{\vD}$ as estimated variance-covariance matrix of random effects, the distribution of the error term (including the random effects), $\ve$ can be expressed as \eqref{equ:glsw-bootvar-error-distribution},
+For a calibrated HGWR model with $\hat{\vgamma}$ as estimates of GLSW effects, $\hat{\vbeta}$ as estimates of fixed effects, and $\hat{\vD}$ as the estimated variance--covariance matrix of random effects, the distribution of the combined random-effect and residual term can be expressed as \eqref{equ:glsw-bootvar-error-distribution},
 \begin{equation}\label{equ:glsw-bootvar-error-distribution}
     \ve = \vZ\vmu + \vepsilon \sim \vN\left(\vzero, (\vZ\vD\vZ\T+\vI)\sigma^2\right)
 \end{equation}
-By resampling errors, $\ve^*$, we can generate bootstrapped samples, $\vy^*$, and re-fit an HGWR model with the same settings.
-The procedure for testing the significance of spatial heterogeneity in GLSW effect estimates is as follows.
+The null model is fitted separately for each effect under test.
+For effect $k$, that group-level variable is moved from the GLSW component to the fixed component, while the other GLSW effects retain their fitted spatial surfaces.
+This imposes spatial constancy on the tested effect without imposing the same restriction on the remaining effects.
+The observed coordinates, covariates, group membership, and group sample sizes are held fixed.
+Bootstrap responses are generated from the fixed and GLSW components of this null model plus newly simulated zero-mean group random effects and residuals; empirical random-effect predictions are not included in the generating mean.
+The procedure is as follows.
 \begin{enumerate}[label=\textbf{Step \arabic*.}, left=0.5em, itemindent=2em]
-    \item For the original model, calculate the variance of GLSW effect estimates, $\hat{\vgamma}$, denoted by $S$;
+    \item For the original model, calculate the variance of the standardised local estimates $\hat{\gamma}_{jk}/\widehat{\operatorname{se}}(\hat{\gamma}_{jk})$, denoted by $S_k$;
+    \item Fit the effect-wise spatially constant null model and obtain its mean $\hat{\vy}_{0k}$, random-effect covariance $\hat{\vD}_{0k}$, and residual scale $\hat{\sigma}_{0k}$;
     \item Repeat the following steps $B$ times. In each iteration $i$,
     \begin{enumerate}
-        \item Resample a set of errors, $\ve^*_i$, with $\hat{\vD}$ according to \eqref{equ:glsw-bootvar-error-distribution}, and generate bootstrap samples $\vy^*_i = \diag(\vG\hat{\vgamma}) + \vX\hat{\vbeta} + \ve^*_i$;
-        \item Fit an HGWR model with $\vy^*_t$ with the same settings to obtain GLSW effect estimates, denoted by $\hat{\vgamma}^*_t$;
-        \item Calculate the variance of $\hat{\vgamma}^*_t$, denoted by $S^*_i$;
+        \item Independently draw new group random effects and residuals according to \eqref{equ:glsw-bootvar-error-distribution}, using $\hat{\vD}_{0k}$ and $\hat{\sigma}_{0k}$, and set $\vy^*_i=\hat{\vy}_{0k}+\ve^*_i$;
+        \item Refit the original HGWR specification to $\vy^*_i$, normally holding the bandwidth at its value selected from the observed data;
+        \item Calculate the standardised-variance statistic $S^*_{ik}$;
     \end{enumerate}
     \item Calculate the $p$ value as \eqref{equ:glsw-bootvar-pvalue},
     \begin{equation}\label{equ:glsw-bootvar-pvalue}
-        p = \frac{\sum_{i=1}^B 1_{S^*_i > S}}{B}
+        p_k = \frac{1+\sum_{i=1}^B 1_{S^*_{ik} \geq S_k}}{B+1}
     \end{equation}
-    and compare $p$ with the pre-defined significance level $\alpha$.
+    and compare $p_k$ with the pre-defined significance level $\alpha$.
 \end{enumerate}
 
 Although HGWR is more efficient than GWR and MGWR \citep{HuHarris-2024}, the entire procedure remains time-intensive.
-In this case, a recommended value of $B$ is $999$, as it achieves a favourable balance between reducing the error rate and controlling computational cost.
+We use $B=199$ in the primary Monte Carlo experiments and $B=999$ in a small diagnostic confirmation.
+The historical fitted-model bootstrap is retained only as a diagnostic comparator; it is not used as the primary bootstrap procedure.
 
 \subsection{Distribution-based method}\label{sec:test-hgwr-glsw-ftest}
 
-As an alternative and cross-validation to the bootstrap method,
+As a computationally inexpensive approximation,
 we can also design a probability-based hypothesis test for GLSW effects following the method proposed by \citet{LeungMei-2000}.
 Assuming normality for $\vmu$ and $\vepsilon$,
 we define the null and alternative hypothesis as \eqref{equ:hypothesis-glsw-ftest},
@@ -803,8 +809,9 @@ The expectation and variance of $V_k^2/\sigma^2$ can be calculated as \eqref{equ
 \label{equ:glsw-ftest-exp-Vksigma}
 E\left( \frac{V_{k}^2}{\sigma^{2}} \right)  & = \mathrm{tr}\left[ \frac{1}{n} \mybm{\Gamma}^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \mybm{\Gamma} \mybm{V} \right]  \\
 \label{equ:glsw-ftest-var-Vksigma}
-\mathop{\mathrm{var}}\left( \frac{V_{k}^2}{\sigma^{2}} \right) & = 2\mathrm{tr}\left[ \frac{1}{n} \mybm{\Gamma}^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \mybm{\Gamma}\mybm{V} \right]^2 .
+\mathop{\mathrm{var}}\left( \frac{V_{k}^2}{\sigma^{2}} \right) & = 2\mathrm{tr}\left\{ \left[ \frac{1}{n} \mybm{\Gamma}^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \mybm{\Gamma}\mybm{V} \right]^2 \right\} .
 \end{align}
+The matrix square in \eqref{equ:glsw-ftest-var-Vksigma} is evaluated before taking the trace, so the second-order moment includes cross-location as well as within-location covariance terms.
 By letting $\xi_{1}=E({V_{k}^2}/{\sigma^2})$ and $\xi_{2}=\frac{1}{2}\mathop{\mathrm{var}}({V_{k}^2}/{\sigma^2})$,
 the term $\hfrac{\xi_{1}V_{k}^2}{\xi_{2}\sigma^2}$ can be approximated by a $\chi^2$ distribution with $\hfrac{\xi_1^2}{\xi_2}$ degrees of freedom.
 
@@ -820,7 +827,7 @@ Using a similar method as above, the expectation and variance of $\left.\mathrm{
 \label{equ:glsw-ftest-rsssigma2-exp}
 E\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right) & = \mathrm{tr}\left[ (\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{V} \right]  \\
 \label{equ:glsw-ftest-rsssigma2-var}
-\mathop{\mathrm{var}}\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right) & = 2\mathrm{tr}\left[ (\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{V} \right]^2 \quad .
+\mathop{\mathrm{var}}\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right) & = 2\mathrm{tr}\left\{ \left[ (\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{V} \right]^2 \right\} \quad .
 \end{align}
 By setting $\delta_{1}=E\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right)$ and 
 $\delta_{2}=\frac{1}{2}\mathop{\mathrm{var}}\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right)$,
@@ -839,8 +846,8 @@ F = \frac{
 \left( \frac{\delta_{1}^{2}\hat{\sigma}^{2}}{\delta_{2}\sigma^{2}} \middle/ \frac{\delta_{1}^{2}}{\delta_{2}} \right) 
 } = \frac{V_{k}^{2}}{\xi_{1}\hat{\sigma}^{2}} \sim F\left( \frac{\xi_{1}^{2}}{\xi_{2}} , \frac{\delta_{1}^{2}}{\delta_{2}} \right)
 \end{equation}
-For a given confidence level $\alpha$, the upper quantile is denoted by $F_\alpha$.
-We can reject the null hypothesis if $F \geqslant F_\alpha$.
+For significance level $\alpha$, let $F_{1-\alpha}$ denote the corresponding upper critical quantile.
+We reject the null hypothesis if $F \geqslant F_{1-\alpha}$.
 
 % \subsection{Sample-level random effects}
 
@@ -861,99 +868,68 @@ We can reject the null hypothesis if $F \geqslant F_\alpha$.
 
 \subsection{Simulation}\label{sec:test-hgwr-simulation}
 
-To verify the effectiveness of bootstrapping and distribution-based tests for HGWR,
-we designed a simulation with a spatial data set of 625 locations, $\vu_j=(u_j,v_j)$ ($j=1,2,\cdots,625$).
-At each location, $j$, a random number ($n_j$) of samples are randomly generated, with $n_j \sim U(20,50)$.
-Eight independent variables, $\vg_1$, $\vg_2$, $\vg_3$, $\vx_1$, $\vx_2$, $\vx_3$, $\vz_1$, $\vz_2$, were randomly generated across these points following a multivariate standard normal distribution.
-To simulate group-level spatially-related variables, the mean values of $\vg_1$ and $\vg_2$ were substituted at each location.
-Four effects, $\vgamma_1$, $\vgamma_2$, $\vbeta_1$, and $\vmu_1$, corresponding to the variables $\vg_1$, $\vg_2$, $\vx_1$, and $\vz_1$, together with an intercept, $\valpha_0$, were generated at each location $\vu_j$ according to \eqref{equ:sim-hgwrtest-coef},
-\begin{align}\label{equ:sim-hgwrtest-coef}
-    \begin{split}
-        \alpha_0(u,v) & = 2 + \eta_0 \\
-        \gamma_1(u,v) & = \frac{1}{324}\left[36 - \left(6 - \frac{u}{2}\right)^2\right]^2 \\
-        \gamma_2(u,v) & = 2 \\
-        \beta_1(u,v) & = 2 \\
-        \mu_1(u,v) & = \eta_1
-    \end{split}
-\end{align}
-where $\eta_0,\eta_1 \sim N(2,0.2^2)$.
-These values are depicted in \autoref{fig:sim-hgwrtest-coef}.
-Finally, we generate the dependent variable, $\vy$, as \eqref{equ:sim-hgwrtest-response},
-\begin{equation}\label{equ:sim-hgwrtest-response}
-    y_{ij} = \alpha_{0j} + g_{1ij} \cdot \gamma_{1j} + g_{2ij}\cdot\gamma_{2j} + x_{1ij} \cdot \beta_1 + z_{1ij} \cdot \mu_{1j} + \epsilon_{ij}
+The Monte Carlo experiment uses 200 group locations drawn independently and uniformly from $[0,1]\times[0,1]$ with a fixed coordinate seed.
+The same locations are retained across scenarios and repetitions so that differences among rejection rates do not reflect a changing spatial configuration.
+For each simulated data set, group sizes are independently sampled from the discrete uniform distribution on 20--50, and the group-level covariates $g_1$ and $g_2$ and sample-level covariates $x_1,x_2,x_3,z_1$ are generated independently from standard normal variables.
+The group-level covariates have no imposed spatial autocorrelation, mutual correlation, or correlation with a latent spatial process.
+
+Let $s(u_j)$ be the standardised value across the 200 locations of
+\begin{equation}\label{equ:sim-hgwrtest-surface}
+  \frac{1}{324}\left[36-\left(6-\frac{12u_j}{2}\right)^2\right]^2.
 \end{equation}
-where $\vepsilon \sim N(0, 1)$.
+The two GLSW effects are $\gamma_{1j}=2+a s(u_j)$ and $\gamma_{2j}=2$, where $a\in\{0,0.5,1\}$ controls the heterogeneity of the first effect.
+Responses are generated as
+\begin{equation}\label{equ:sim-hgwrtest-response}
+  y_{ij}=2+g_{1j}\gamma_{1j}+g_{2j}\gamma_{2j}+2x_{1ij}+b_{0j}+b_{1j}z_{1ij}+\epsilon_{ij},
+\end{equation}
+where $b_{0j}\sim N(0,\tau^2)$, $b_{1j}\sim N(2,0.2^2)$, and $\epsilon_{ij}\sim N(0,1)$ in the core experiment.
+We set $\tau^2=\mathrm{ICC}/(1-\mathrm{ICC})$ for ICC values 0.1 and 0.4; ICC here labels the random-intercept variance setting rather than the complete marginal correlation induced by the random slope.
+Each data set is fitted as
+\begin{equation}\label{equ:simulation-fitted-model}
+  y_{ij}=\gamma_{1j}g_{1j}+\gamma_{2j}g_{2j}+\vbeta\T\vx_{ij}+b_{0j}+b_{1j}z_{1ij}+\epsilon_{ij}.
+\end{equation}
 
-\begin{figure}[tbp]
-    \centering
-    \includegraphics[width=\linewidth]{fig/fig_HGWRTest_coef}
-    \caption{Coefficient values in the simulation.}
-    \label{fig:sim-hgwrtest-coef}
-\end{figure}
+The approximate $F$ test is evaluated in all six $a$-by-ICC scenarios using 500 independent data sets per scenario.
+The effect-wise bootstrap uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with ICC 0.4.
+The same simulated data sets and seeds are used when two methods are compared within a scenario.
+The legacy fitted-model bootstrap is retained at the two ICC 0.4 endpoints using 50 data sets, and independent $B=999$ confirmation experiments use 20 data sets at each endpoint.
+Two robustness scenarios replace the normal residuals by variance-standardised $t_5$ residuals or use strongly unbalanced group sizes.
+They use 200 data sets for the $F$ test and 30 for the effect-wise bootstrap at $a=0.5$ and ICC 0.4.
+A separate ten-data-set diagnostic re-selects the bandwidth within every bootstrap fit.
+All tests use a 5\% threshold; rejection rates exclude non-converged fits, whose frequency is reported separately, and Wilson intervals quantify Monte Carlo uncertainty.
 
-% \begin{table}[tbp]
-%     \centering\small
-%     \caption{Statistical summary of model 1.}
-%     \label{tab:sim-hgwrtest-summary-model1}
-%     \begin{tabular}{lrrrrrr}\toprule
-%     & $\beta_1$ & $\beta_2$ & $\beta_3$ & $\gamma_1$ & $\gamma_2$ & $\mu_1$ \\
-%     \midrule
-%     Est.            & 2.000   & -0.001 & -0.000 &        &       & 1.952 \\
-%     S.D.            & 0.007   & 0.007  &  0.007 &        &       & 0.366 \\
-%     $t$             & 284.268 & 0.122  & 0.054  &        &       &       \\
-%     Mean Est.       &         &        &        & 1.851  & 2.013 &       \\
-%     Mean S.D.       &         &        &        & 0.046  & 0.044 &       \\
-%     $F$             &         &        &        & 22.686 & 0.719 &       \\
-%     $p$             & 0.000   & 0.903  & 0.957  & 0.000  & 0.998 &       \\
-%     $p$ (bootstrap) &         &        &        & 0.000  & 0.245 &       \\
-%     \bottomrule
-%     \end{tabular}
-% \end{table}
+\input{generated/simulation_core_table.tex}
 
-\begin{table}
-  \centering\small
-  \caption{Statistical summary of the HGWR models in the simulation.}
-  \label{tab:sim-hgwrtest-summary-model}
-  \begin{tabular}{lrrr|rrr}
-  & \multicolumn{3}{c}{\textbf{Model 1}} & \multicolumn{3}{c}{\textbf{Model 2}} \\\toprule
-  \textbf{\makecell{Fixed\\effects}} & \makecell[r]{Est.\\(S.D.)}    & \makecell[r]{$t$-value\\($p$-value)} &     & \makecell[r]{Est.\\(S.D.)}    & \makecell[r]{$t$-value\\($p$-value)} &  \\\midrule
-  $\beta_1$                          & \makecell[r]{ 2.000\\(0.007)} & \makecell[r]{284.268***\\(0.000)}    &     & \makecell[r]{1.999\\(0.007)}  & \makecell[r]{284.327***\\(0.000)}    &  \\
-  $\beta_2$                          & \makecell[r]{-0.001\\(0.007)} & \makecell[r]{  0.122\\(0.903)}       &     & \makecell[r]{     \\       }  & \makecell[r]{       \\       }       &  \\
-  $\beta_3$                          & \makecell[r]{-0.000\\(0.007)} & \makecell[r]{  0.054\\(0.957)}       &     & \makecell[r]{     \\       }  & \makecell[r]{       \\       }       &  \\
-  $\gamma_1$                         &                               &                                      &     & \makecell[r]{1.663\\(0.176)}  & \makecell[r]{9.441***\\(0.0000)}     &  \\
-  \bottomrule
-  \toprule
-  \textbf{\makecell{GLSW\\effects}} & \makecell[r]{$\overline{\text{Est.}}$\\($\overline{\text{S.D.}}$)} & \makecell[r]{$F$-value\\($p$-value)} & \makecell[r]{Bootstrap\\$p$-value} & \makecell[r]{$\overline{\text{Est.}}$\\($\overline{\text{S.D.}}$)} & \makecell[r]{$F$-value\\($p$-value)} & \makecell[r]{Bootstrap\\$p$-value} \\\midrule
-  $\gamma_1$                        & \makecell[r]{1.851\\(0.046)}                                       & \makecell[r]{22.686***\\(0.000)}     & 0.000***                           &                                                                    &                                      &                                    \\
-  $\gamma_2$                        & \makecell[r]{2.013\\(0.044)}                                       & \makecell[r]{ 0.998\\(0.245)}        & 0.040*                             & \makecell[r]{2.005\\(0.082)}                                       & \makecell[r]{0.637\\(0.999)}         & 0.081                              \\
-  \bottomrule
-  \multicolumn{7}{l}{Significance levels: * $p < 0.05$, ** $p < 0.01$, *** $p < 0.001$.}
-  \end{tabular}
-\end{table}
+Under the global null, the effect-wise bootstrap rejection rates range from 1.6\% to 3.7\%.
+The 95\% intervals include 5\% except for $\gamma_2$ at ICC 0.1, where the method is conservative (1.6\%, 95\% CI 0.6--4.1\%).
+At ICC 0.4, the bootstrap detects the heterogeneous $\gamma_1$ in 96.9\% of usable repetitions for $a=0.5$ and 100\% for $a=1$.
+Over the same repetitions it rejects the constant $\gamma_2$ in only 4.1\% and 3.1\%, respectively.
+This combination of detection and embedded-null behaviour supports the effect-wise bootstrap as the primary inferential procedure in the simulated settings.
 
-We fitted two models on this data, named Model 1 and Model 2.
-For sample $i$ in group $j$, the two models are defined as \eqref{equ:simulation-model1} and \eqref{equ:simulation-model2},
-\begin{align}
-    \label{equ:simulation-model1}
-    y_{ij} &= \alpha_{0j} + \gamma_{1j}g_{1ij} + \gamma_{2j}g_{2ij} + \beta_{1}x_{1ij} + \beta_{2}x_{2ij} + \beta_{3}x_{3ij} + \mu_{1j}z_{1ij} + \epsilon_{ij} \\
-    \label{equ:simulation-model2}
-    y_{ij} &= \alpha_{0j} + g_{2ij} \gamma_{2j} + g_{1ij} \gamma_{1} + x_{1ij} \beta_1 + z_{1ij} \mu_{1j} + \epsilon_{ij}
-\end{align}
-where $\epsilon_{ij} \sim N(0, \sigma_1^2)$.
-For Model 1, we expect $\beta_2$ and $\beta_3$ to be insignificantly different from zero, while $\beta_1$ should be significantly different from zero; and $\gamma_{2j}$ should show no significant spatial variation.
-For Model 2, we expect that $\beta_1$ and $\gamma_{1}$ to be significantly different from zero;
-while $\gamma_{2j}$ should not display significant spatial heterogeneity.
-After fitting the model, we performed the significance test.
-The results are presented in \autoref{tab:sim-hgwrtest-summary-model}.
-As anticipated, $\hat{\beta}_2$ and $\hat{\beta}_3$ were not significantly different from zero in Model 1.
-Spatial heterogeneity of $\hat{\gamma}_2$ was tested to be insignificant in both models.
-Moreover, $\hat{\beta}_1$ was confirmed to be significantly different from zero in both models, while $\hat{\gamma}_1$ showed significant spatial heterogeneity in Model 1.
-The $F$-test separates the heterogeneous $\gamma_1$ surface from the constant $\gamma_2$ effect in both specifications.
-The bootstrap test detects the heterogeneous $\gamma_1$ surface, but its result for the constant $\gamma_2$ effect is sensitive to specification and threshold: $p=0.040$ in Model 1 and $p=0.081$ in Model 2.
-Thus, the simulation supports the proposed inferential distinction while also showing that the bootstrap decision should not be treated as uniformly calibrated from this single design.
+The corrected $F$ approximation is less well calibrated.
+Its global-null rejection rates range from 6.0\% to 9.4\%, with three of four effect-by-ICC estimates above 7\%.
+Although it detects $\gamma_1$ in all usable heterogeneous repetitions, its rejection rate for the constant $\gamma_2$ increases with the heterogeneity of $\gamma_1$.
+For $a=0.5$, these false-positive rates are 20.8\% at ICC 0.1 and 11.2\% at ICC 0.4; for $a=1$, they rise to 49.5\% and 17.1\%.
+The apparent 100\% power of the $F$ test therefore cannot be interpreted independently of its loss of effect specificity.
+The method remains useful as a rapid approximation, but the Monte Carlo results do not support treating it as a calibrated substitute or cross-validation for the effect-wise bootstrap.
+
+The additional experiments are reported in the supplemental material.
+The legacy bootstrap has no rejections under its 50-data-set null scenario but detects $\gamma_1$ in only 14.3\% of 49 usable strong-alternative repetitions.
+The independent $B=999$ confirmation is directionally consistent with the primary effect-wise results, although 20 repetitions per endpoint yield wide confidence intervals.
+Under $t_5$ residuals and strongly unbalanced group sizes, the effect-wise bootstrap detects $\gamma_1$ in 29 of 30 repetitions and does not reject $\gamma_2$; the corresponding zero-rejection intervals nevertheless have upper bounds of 11.4\%.
+The bandwidth-reselection diagnostic succeeds for only one of ten data sets and provides no interpretable inferential result.
+
+Across 4,310 outer repetitions, 35 (0.81\%) fail to produce usable tests.
+For fixed-bandwidth experiments, the failure rates are 0.38\% for the $F$ test, 1.00\% for the legacy bootstrap, and 1.50\% for the effect-wise bootstrap.
+All initial covariance optimisations report convergence and all usable estimates of $\vD$ are positive definite, indicating that the remaining failures arise principally from outer backfitting or bootstrap-refit iteration limits.
+The median serial elapsed times are 1.44 seconds for the $F$ test, 73.92 seconds for the legacy bootstrap, and 132.67 seconds for the effect-wise bootstrap.
+
+The simulation is conditional on one fixed spatial configuration and excludes spatially autocorrelated or spatially confounded covariates.
+It also generates $b_{1j}$ with mean 2 while the fitted random-effect component is centred at zero without a separate fixed $z_1$ term.
+The results consequently describe the implemented data-generating and fitting configuration, not calibration under every correctly specified HGWR design.
 \section{Case study: spatial inequalities in extracurricular education investment in China}\label{sec:qoe-case}
 
-The simulations establish whether the proposed procedures recover known data-generating structures.
+The simulations evaluate how the proposed procedures behave under known data-generating structures.
 This section examines their role in an applied HGWR analysis, where the assignment of a coefficient to the GLSW or fixed component affects both model complexity and substantive interpretation.
 We study family expenditure on children's extracurricular courses in China.
 The case is methodologically relevant because the outcome is observed for children and families, whereas several candidate explanations describe the provinces in which those families live.
@@ -1015,8 +991,8 @@ All continuous variables indicated in \autoref{tab:qoe-variables} are transforme
 \end{table}
 
 The specification is not based on the visual variability of coefficient maps alone.
-We first fit the remaining province-level variables as GLSW effects and use the spatial heterogeneity test in \autoref{sec:glsw-test} to assess each surface.
-The youth-palace count does not exhibit significant spatial heterogeneity and is therefore retained as a fixed rather than a GLSW effect.
+The original specification procedure first fits the remaining province-level variables as GLSW effects and uses the approximate $F$ test in \autoref{sec:test-hgwr-glsw-ftest} to screen each surface.
+The youth-palace count is not rejected by this screening test and is therefore retained as a fixed rather than a GLSW effect.
 This decision illustrates the inferential distinction motivating the paper: a variable may be substantively relevant or have a non-zero global association without requiring a geographically varying coefficient.
 We also address clear multicollinearity between \GDPPrimary and \NumEnterprise by assigning the latter a fixed effect, and exclude national fiscal education expenditure because of its high correlation with \GeneralEduBudget.
 Finally, an HLM with forward selection identifies \RegionUrban as an SLR effect.
@@ -1025,14 +1001,16 @@ The resulting specification is shown in \autoref{tab:qoe-variables}.
 \subsection{Evidence of spatial heterogeneity}\label{sec:qoe-heterogeneity-results}
 
 \autoref{tab:qoe-model-summary} reports the main model.
-The $F$ column tests whether each GLSW effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
+The $F$ column gives the approximate test of whether each GLSW effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
 These are distinct inferential statements.
 For example, an effect surface may be heterogeneous overall even when many individual provincial estimates are imprecise.
-All retained GLSW effects reject spatial homogeneity at the 5\% level, although the evidence is weaker for \Gini than for most other provincial variables.
+All retained GLSW effects reject spatial homogeneity according to the approximate $F$ test at the 5\% level, although the evidence is weaker for \Gini than for most other provincial variables.
+The Monte Carlo experiment shows that this approximation can be liberal and can reject a constant effect when another GLSW effect is heterogeneous.
+The case-study results are therefore treated as screening evidence rather than independent confirmation by a well-calibrated effect-wise test.
 
 \begin{table}[tbp]
   \centering\scriptsize
-  \caption{Summary of the main QOE HGWR model. For GLSW effects, the $F$ statistic tests spatial homogeneity; percentages are the proportions of province-specific estimates in each significance category.}
+  \caption{Summary of the main QOE HGWR model. For GLSW effects, the $F$ statistic is the approximate spatial-homogeneity test; percentages are the proportions of province-specific estimates in each significance category.}
   \label{tab:qoe-model-summary}
   \begin{tabular}{lrrrrrrr}
     \toprule
@@ -1069,7 +1047,7 @@ All retained GLSW effects reject spatial homogeneity at the 5\% level, although 
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=\linewidth]{fig/fig_Model19_coef.pdf}
-  \caption{Province-specific estimates of the GLSW effects and the SLR effect for urban residence in the main QOE model. The global $F$ tests in \autoref{tab:qoe-model-summary}, rather than visual variation alone, establish evidence against spatial homogeneity.}
+  \caption{Province-specific estimates of the GLSW effects and the SLR effect for urban residence in the main QOE model. The approximate global $F$ results in \autoref{tab:qoe-model-summary} provide screening evidence against spatial homogeneity; visual variation alone is not a test.}
   \label{fig:qoe-coefficients}
 \end{figure}
 
@@ -1129,22 +1107,28 @@ Strong spatial heterogeneity occurs when that conditional distribution changes w
 This formulation separates spatial non-stationarity from spatial autocorrelation: the former concerns a location-dependent distributional feature, while the latter concerns dependence among observations.
 The two processes may co-occur, but one is not evidence of the other.
 
-Building on this definition, we develop residual-bootstrap and approximate $F$ tests for GLSW effects in HGWR.
-The simulation shows that the $F$ procedure distinguishes a genuinely varying coefficient from a spatially constant coefficient in both fitted specifications, while conventional tests continue to address whether fixed effects differ from zero.
-The bootstrap detects the genuinely varying coefficient, but its $p$-values of $0.040$ and $0.081$ for the constant coefficient across the two specifications reveal sensitivity near conventional thresholds.
-The distinction between testing constancy and testing a zero coefficient is essential: the former determines whether a GLSW representation is statistically warranted.
+Building on this definition, we develop an effect-wise parametric bootstrap and an approximate $F$ test for GLSW effects in HGWR.
+The effect-wise bootstrap is generally calibrated or conservative under the global null in the simulated settings.
+At ICC 0.4 it detects the heterogeneous coefficient in 96.9--100\% of usable repetitions while rejecting the accompanying constant coefficient in 3.1--4.1\%.
+The approximate $F$ test is much faster, but its global-null rejection rates reach 9.4\%, and its false-positive rate for the constant coefficient rises as the other GLSW effect becomes more heterogeneous.
+It should therefore be treated as a rapid approximation rather than a calibrated substitute for effect-wise bootstrapping.
+The distinction between testing constancy and testing a zero coefficient remains essential: the former determines whether a GLSW representation is statistically warranted.
 
 The QOE case study demonstrates this role in practice.
-The heterogeneity tests support GLSW specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
-The fitted model provides evidence that the associations of primary-sector GDP, living costs, income inequality, university recruitment, public education budgets, and the highly educated population with hourly extracurricular-course expenditure vary geographically.
+The approximate $F$ screening results support GLSW specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
+The fitted model suggests that the associations of primary-sector GDP, living costs, income inequality, university recruitment, public education budgets, and the highly educated population with hourly extracurricular-course expenditure vary geographically.
 Household spending, assets, parental education, child gender, age, and urban residence provide a complementary account of within- and between-province inequality.
+Because the case-study tests use the $F$ approximation, they are screening evidence rather than effect-wise bootstrap confirmation.
 These findings show how formal heterogeneity tests can qualify coefficient maps and guide model specification; they do not establish causal effects of provincial policy or household characteristics.
 
 Several issues remain.
-The effect of non-i.i.d. errors on the bootstrap procedure requires further theoretical and simulation study beyond the structures considered here.
-Bootstrap accuracy also increases computational cost, particularly for large data sets and repeated bandwidth optimisation, whereas the $F$ approximation depends on distributional and smoother-matrix assumptions.
+The simulation fixes one spatial configuration, excludes spatially correlated and spatially confounded covariates, and contains a mismatch between the generated random-slope mean and the centred fitted random-effect component.
+Its results should not be extrapolated beyond this design.
+Although the $t_5$ experiment addresses one departure from normality, spatially dependent and heteroskedastic errors require further theoretical and simulation study.
+Bootstrap accuracy also increases computational cost, particularly for large data sets, and repeated bandwidth optimisation was not computationally reliable in the present experiment.
+The $F$ approximation depends on distributional and smoother-matrix assumptions and did not maintain effect specificity in several alternatives.
 The current procedures provide a decision about statistical evidence of heterogeneity but do not supply a scale-independent measure of its magnitude.
-Future work should examine effect-size measures, multiplicity across many candidate effects, direct resampling of hierarchical observations, sensitivity to spatial collinearity, and extensions to more than two levels.
+Future work should examine effect-size measures, multiplicity across many candidate effects, sensitivity to spatial collinearity and confounding, and extensions to more than two levels.
 
 \section*{Acknowledgement}
 
