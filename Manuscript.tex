@@ -149,90 +149,52 @@ Statistical inference; hypothesis test; spatial heterogeneity; bootstrap; hierar
 \section{Introduction}
 \label{sec:introduction}
 
-Data possesses immense value, and data analysis unveils numerous patterns in the world and society \citep{Bormida-2021,Al-SaiHusin-2022}, including spatial effects \citet{AnselinGriffith-1988,AnselinCho-2002,LegendreDale-2004,ParadinasIllian-2023,HeHe-2025}.
-When examining spatially distributed data, discernible patterns in the data or their conditional values often indicate that observations from one location differ systematically (for instance, in their mean values) from those at other locations.
-This connection between geographic context and measured outcomes is broadly described as spatial dependency: values are not distributed randomly or uniformly across the geographic domain \citep{Anselin-2010,Haining-2003}.
-Tobler's First Law of Geography \citep{Tobler-1970} is frequently interpreted as articulating positive spatial autocorrelation, positing that proximate entities (or values) tend to exhibit greater similarity than those that are more distant.
-Under this premise, a closer inspection of any subregion of the map should reveal localised clusters of relatively homogeneous values.
-Alternatively, with a shift in emphasis, the same principle can be construed as an expression of spatial heterogeneity: if distant entities differ, then one should generally expect to observe systematic variations across the map, with different areas characterized by distinct attributes.
-This implies that spatial autocorrelation and spatial heterogeneity, while interrelated, are conceptually distinct. 
-One key distinction lies in their scale of manifestation. 
-Spatial autocorrelation typically refers to localised patterns emerging, for example, from interactions among individuals or between species and their immediate surroundings \citep[p. 255]{FischerGetis-2010}.
-In contrast, spatial heterogeneity may arise from broader contextual differences across regions, wherein varying local conditions foster divergent developmental pathways and evolutionary trajectories \citep{DutilleulLegendre-1993,ShiyomiTakahashi-2000,EscobedoNowak-2009,Long-2010}
-A consequence of such divergent processes is that outcomes may vary substantially across a study area.
-An aim of this paper is to define more precisely what is meant by spatial heterogeneity and how it differs from spatial autocorrelation. 
-The motivation is to develop a test of spatial heterogeneity for a relatively new method of spatial analysis, which is \gls{hgwr}. 
-However, the discussion of what is meant by spatial heterogeneity is more foundational, and will be of interest beyond the specific case study of \gls{hgwr}.
+Local regression models are valuable because they allow a regression relationship to vary across space rather than imposing one global coefficient on every location.
+\acrcite{gwr} is the best-known example, and its extensions are widely used to explore spatially non-stationary relationships \citep{FotheringhamBrunsdon-2010,HelbichBrunauer-2014,FanSong-2021,TranPearson-2022}.
+Many spatial data sets, however, are also hierarchical: individual outcomes are grouped within locations, and both individual- and group-level variables may affect the response.
+For such data, the \acrcite{hgwr} model combines GWR with \acrcite{hlm} and separates group-level spatially weighted (\gls{glsw}), fixed, and sample-level random (\gls{slr}) effects \citep{HuHarris-2024}.
+This structure permits associations of group-level variables to vary geographically while retaining the grouped error structure and sample-level variation that a conventional local regression may not represent.
 
-Spatial dependence has been widely understood and studied with the development of spatial statistics and tests of spatial autocorrelation,
-whereas spatial heterogeneity has more recently been gaining increased attention \citep{ZhaiFeng-2023,HuLu-2022,HelbichBrunauer-2014,WangZhao-2018,ZhaoLiu-2021}, due to its prevalence in spatial data sets\footnote{
-  The term ``spatial data sets'' here means data spanning a geographical study region, for which the location of the measurement as well as the measurement itself is recorded.
-} \citep{LiuWang-2023-en,LokeChisholm-2022,ZhaoLiu-2021,YangFang-2019,WolfOshan-2018,Yuan-2016} and the resulting risk of ``ecological fallacy'' in the inference on individuals using globally constant relationship \citep{LokarZagar-2019,Openshaw-1984,TranmerSteel-1998,FieldhouseTye-1996}.
-In addition to the spatial effects, spatial hierarchical structure also demonstrates significant influence on spatial data analysis,
-such as failure on model fitting \citep{HuLu-2022} and spatial spillover effects \citep{DongHarris-2015a}.
-We use ``spatial hierarchical data'' to refer to data that are products of a geographical process exhibiting spatial effects in its measurements, and that are structured in a way creating a grouping effect or hierarchy.
-They are a consequence of what is measured, as well as how it is measured. 
-As an example, in housing price analysis in China, properties are grouped by communities, and attributes from both properties and communities impact the prices \citep{HuHarris-2024,HuLu-2022}.
-Such data are prevalent in various fields, including health, economy, and social sciences
-\citep{ChenTruong-2012,BrunauerLang-2013,FeuilletCossart-2024,AielloRicotta-2016}.
+The flexibility of \gls{hgwr} creates an inferential question that is not answered by mapping its local coefficients.
+An estimated \gls{glsw} coefficient surface always has some variation, but that variation may arise from sampling error, the hierarchical random component, smoothing, or spatial dependence rather than from a genuinely non-constant relationship.
+The relevant hypothesis is therefore spatial constancy of an individual \gls{glsw} effect across group locations, not whether that effect is zero and not whether selected local estimates are individually significant.
+At the time of writing, \gls{hgwr} provides estimates of \gls{glsw} surfaces but lacks a formal, effect-specific test of this spatial-homogeneity null hypothesis.
+The hybrid parametric and non-parametric structure of the model makes both a reference distribution and a valid resampling scheme less direct than in GWR \citep{HuHarris-2024,HuHarris-2024a}.
 
-To model spatial hierarchical data, special methods are necessary to account for its characteristics.
-The \acrcite{hgwr} model is a synthesis of \acrcite{gwr} and \acrcite{hlm}.
-To handle spatial hierarchical data,
-\gls{hgwr} includes three types of effects: \gls{glsw} effects, fixed effects, and \gls{slr} effects.
-\gls{glsw} and \gls{slr} effects allow for the possibility of spatial heterogeneity at the group and sample levels, respectively, while fixed effects capture globally constant influences (i.e. effects that do not vary geographically across the study region).
-% A key restriction is that \gls{glsw} effects are applicable only to group-level variables, whereas \gls{slr} effects are restricted to sample-level variables.
-% To estimate these effects, \gls{hgwr} employs a back-fitting algorithm and a maximum likelihood estimator \citep[BFML;][]{ChenLeung-2022}, enabling simultaneous estimation of all effects within the hierarchical structure.
+The gap also requires a precise definition of the object being tested.
+We treat a spatial random variable as a random variable conditional on location and define strong spatial heterogeneity as a location-dependent conditional distribution.
+Weak spatial heterogeneity concerns a specified characteristic of that distribution, such as a location-dependent conditional expectation.
+For a \gls{glsw} effect, this turns spatial heterogeneity into a testable departure from a constant conditional mean across group locations.
+It also distinguishes spatial non-stationarity from spatial autocorrelation: the former concerns a distributional feature that changes with location, whereas the latter concerns dependence among observations.
+The two processes may occur together, but evidence of one is not, by itself, evidence of the other.
 
-However, at the time of writing, relatively little work has been undertaken to situate the model within a formal framework of statistical inference, particularly with respect to testing the significance of any spatial heterogeneity observed in estimates of \gls{glsw} effects.
-As a hybrid of parametric and non-parametric methods \citep{HuHarris-2024,HuHarris-2024a}, \gls{hgwr} lacks a well-established inferential foundation.
-The reasons for this are twofold.
-When adopting a probability-based approach to inference, the hierarchical structure introduces additional complexity in deriving probability distributions compared to the hypothesis tests of \gls{gwr} \citep{LeungMei-2000}.
-Conversely, if one turns to resampling-based bootstrap methods \citep{MooneyDuval-1993,DelgadoManteiga-2001} a more fundamental question emerges: what precisely is the object of inference in the context of spatial heterogeneity?
+Existing local-regression methods clarify both the opportunity and the limitation.
+For GWR, approximate $F$ tests compare a coefficient surface with a spatially constant relationship \citep{LeungMei-2000}, and residual-based bootstrap procedures test whether particular coefficients can be treated as constant without relying on normal errors \citep{MeiXu-2016,HarrisBrunsdon-2017}.
+Moran's I and local indicators of spatial association instead assess spatial dependence, while ANOVA and HLM address grouped variation under their own model structures \citep{Moran-1950,LiCalder-2007,DutilleulLegendre-1993,Goldstein-2011}.
+None directly supplies a test for a GLSW surface while preserving the joint fixed, random, and locally weighted components of HGWR.
 
-Unlike spatial dependence that Moran's I \citep{Moran-1950,LiCalder-2007} and other well-known methods can quantify, spatial heterogeneity is challenging to be quantified, although there have been some attempts to do so \citep{TranPearson-2022}.
-As spatial heterogeneity and spatial dependence often happen together, Moran's I and, in particular, \acrcite{lisa} ---
-measures of spatial dependence that are estimated for parts of the study regions and not just for the study region as a whole ---
-are sometimes employed to identify potential spatial heterogeneity \citep{JacksonHuang-2009,ZhangLin-2016}.
-When \gls{gwr} is used to model spatially-varying regression relationships, one may then analyse the spatial heterogeneity in these relationships using either an $F$-test \citep{LeungMei-2000} or a bootstrap test \citep{HarrisBrunsdon-2017}.
-For hierarchical or grouped data, \gls{anova} and \gls{hlm} are feasible methods \citep{DutilleulLegendre-1993,FotheringhamBrunsdon-2010,LignierJarvis-2024,KirkbrideStochl-2015} in addition to caterpillar plots visualising intraclass correlation in data grouped by geographical locations.
-Geodetector \citep{WangZhang-2016,ZhaoLiu-2021,HuoSun-2021} offers a method to detect stratified heterogeneity in spatial data for finding homogeneous regions.
-However, these methods need to meet certain assumptions to be applied.
-Methods using Moran's I and \gls{lisa} assume that spatial heterogeneity arises from autocorrelation, while \gls{anova} or \gls{hlm} rely on grouping or repeated observations \citep{HuLu-2022,HuHarris-2024}.
-Geodetector focus on uncovering categorical driving factors for numerical data, resulting in limitations of data types.
+This paper develops two complementary tests for spatial heterogeneity in GLSW effects.
+The primary procedure is an effect-wise parametric bootstrap: for each effect under test, it fits a null model in which that effect is spatially constant, generates responses under the fitted hierarchical error structure, refits the original HGWR specification, and compares the observed and simulated variability of the local estimates.
+The second is a distribution-based approximate $F$ test derived from the GLSW smoother and hat matrix.
+Both procedures test the same null hypothesis, but the simulation treats the $F$ test as a rapid approximation rather than as an automatic validation of the bootstrap result.
 
-At heart is a more fundamental problem --- the absence of a widely accepted and formalised definition of spatial heterogeneity itself.
-Whether concerning random variables or \gls{glsw} effects within the \gls{hgwr} model, equating spatial variation with spatial heterogeneity is not always appropriate.
-At the very least, such variation may stem from random error.
-Conversely, if spatial variation in the data is driven by spatial autocorrelation, it does not necessarily constitute spatial heterogeneity in the sense typically implied by local models.
-
-To fill this gap, after introducing the \gls{hgwr} model, we clarify what constitutes spatial heterogeneity in this study, as well as the specific form of spatial heterogeneity that we aim to test.
-\citet{LiuWang-2023-en} suggest viewing (geographical) space as an accumulation of fields.
-In line with this theory, we conceptualise variables as randomly distributed within these fields, named ``spatial random variables''.
-A spatial random variable is a conditional random variable where the location serves as the condition.
-Yet, fields can be very complex and difficult to parameterize.
-In this case, non-parametric methods, such as kernel density estimation, are applicable \citep{Tran-1990,HyndmanBashtannyk-1996,LuHu-2025}.
-% Spatial heterogeneity exists when a variable's conditional distribution varies across locations.
-This definition identifies spatial constancy as the relevant null hypothesis for the \gls{glsw} effects in \gls{hgwr}.
-We evaluate that null hypothesis using bootstrap and distribution-based methods, thereby assessing whether the variation in an estimated \gls{glsw} effect is greater than would be expected under a spatially constant relationship.
-
-The need for this distinction is especially clear in applied studies where variables are measured at more than one level.
-We illustrate the problem using family investment in children's extracurricular courses, an important component of quality-oriented education (QOE) in China.
-Participation and expenditure reflect household circumstances, while the availability and price of educational resources are shaped by provincial economic and policy contexts.
-A mapped \gls{hgwr} coefficient can suggest that a provincial association differs geographically, but policy interpretation requires evidence that the variation is greater than would be expected under a spatially constant effect.
-The case study therefore serves two purposes: it illustrates how a heterogeneity test can guide the choice between \gls{glsw} and fixed effects, and it shows how simulation evidence about calibration qualifies the interpretation of mapped educational inequalities.
+We evaluate the procedures by Monte Carlo experiments with known homogeneous and heterogeneous GLSW effects at 200 fixed group locations.
+The simulations vary the strength of spatial heterogeneity and the random-intercept variance, and report null rejection rates, power, rejection of an accompanying constant effect, failures, and computation time.
+This design assesses whether a procedure detects a truly varying effect without attributing heterogeneity to another effect that is spatially constant.
+We then use household investment in children's extracurricular courses, an important component of quality-oriented education (QOE) in China, as an empirical illustration.
+Household expenditure reflects family circumstances, whereas provincial economic and policy variables are candidates for GLSW effects; the case study shows how heterogeneity testing can inform the choice between GLSW and fixed specifications, without treating the resulting associations as causal effects.
 
 This paper makes three contributions.
-First, it formalises strong and weak spatial heterogeneity using location-conditional distributions and distinguishes spatial non-stationarity from spatial autocorrelation.
-Second, it develops an effect-wise parametric bootstrap and a distribution-based approximate $F$ test for \gls{glsw} effects in \gls{hgwr} and uses Monte Carlo experiments to examine their calibration, power, effect specificity, and computational behaviour.
-Third, it provides an empirical study in which approximate heterogeneity screening is integrated into effect specification rather than applied only after estimation, thereby connecting the methodological evaluation to household- and province-level correlates of extracurricular education investment.
+First, it formalises strong and weak spatial heterogeneity using location-conditional distributions and separates spatial non-stationarity from spatial autocorrelation.
+Second, it develops an effect-wise parametric bootstrap and a distribution-based approximate $F$ test for GLSW effects in HGWR and evaluates their calibration, power, effect specificity, and computational behaviour.
+Third, it connects this methodological evaluation to a multilevel application in which heterogeneity screening guides the specification of provincial variables.
 
-The remainder of this paper will be organised as follows.
-\autoref{sec:hgwr} outlines the mathematical foundations of the \gls{hgwr} model and identifies the \gls{glsw} effects as the object of inference.
-\autoref{sec:spatial-heterogeneity} then presents our definitions of spatial heterogeneity and analyses how these definitions lead to a testable null hypothesis.
-\autoref{sec:glsw-test} develops bootstrap and distribution-based $F$ tests for \gls{glsw} effects and assesses their effectiveness by simulation.
+The remainder of this paper is organised as follows.
+\autoref{sec:hgwr} presents the HGWR model and identifies GLSW effects as the object of inference.
+\autoref{sec:spatial-heterogeneity} defines spatial heterogeneity and derives the spatial-homogeneity null hypothesis.
+\autoref{sec:glsw-test} develops the bootstrap and approximate $F$ tests and evaluates them by simulation.
 \autoref{sec:qoe-case} applies the framework to extracurricular education investment in China.
-Finally, \autoref{sec:conclusion} concludes with the methodological findings, substantive implications, and limitations.
+Finally, \autoref{sec:conclusion} summarises the methodological findings, substantive illustration, and limitations.
 
 \section{Hierarchical and Geographically Weighted Regression}\label{sec:hgwr}
 
