@@ -70,6 +70,28 @@
 \renewcommand{\sectionautorefname}{Section}
 \renewcommand{\subsectionautorefname}{Subsection}
 
+%%% =====================
+%%% Glossaries
+%%% =====================
+\usepackage[acronyms,shortcuts]{glossaries}
+\newcommand{\acrcite}[1]{\glsentrylong{#1} \ifglshasfield{useri}{#1}{\citep[\glsentryshort{#1};][]{\glscurrentfieldvalue}}{}\glsunset{#1}}
+\glsdisablehyper
+\newacronym{dgp}{DGP}{data generation process}
+\newacronym{rmse}{RMSE}{root mean square error}
+\newacronym{mae}{MAE}{mean absolute error}
+\newacronym{cv}{CV}{cross-validation}
+\newacronym{aic}{AIC}{Akaike Information Criterion}
+\newacronym{aicc}{AICc}{corrected Akaike Information Criterion}
+\newacronym[user1={BrunsdonFotheringham-1996}]{gwr}{GWR}{Geographically Weighted Regression}
+\newacronym[user1={FotheringhamYang-2017,LuBrunsdon-2017}]{mgwr}{MGWR}{Multiscale Geographically Weighted Regression}
+\newacronym[user1={Goldstein-2011}]{hlm}{HLM}{Hierarchical Linear Model}
+\newacronym[user1={HuHarris-2024}]{hgwr}{HGWR}{Hierarchical and Geographically Weighted Regression}
+\newacronym{glsw}{GLSW}{group-level spatially weighted}
+\newacronym{slr}{SLR}{simple-level random}
+\newacronym{icc}{ICC}{intraclass correlation coefficient}
+\newacronym[user1={Anselin-1995}]{lisa}{LISA}{local indicators of spatial association}
+\newacronym{anova}{ANOVA}{analysis of variance}
+
 \usepackage{mathshortcuts}
 \input{variables.tex}
 \allowdisplaybreaks
@@ -96,7 +118,7 @@
 
 \begin{abstract}
 %% Text of abstract
-Hierarchical and geographically weighted regression (HGWR) models spatial hierarchical data by combining group-level spatially weighted (GLSW), fixed, and sample-level random effects. Although GLSW estimates are allowed to vary geographically, variation in an estimated coefficient surface does not by itself establish spatial heterogeneity because sampling error and spatial autocorrelation may produce similar patterns. We address this inferential gap by defining spatial heterogeneity through location-conditional distributions and by developing an effect-wise parametric bootstrap and an approximate $F$ test for the spatial heterogeneity of GLSW effects. Monte Carlo experiments with 200 fixed random locations assess calibration, power, effect specificity, and computational stability. At intraclass correlation coefficient (ICC) 0.4, the effect-wise bootstrap has null rejection rates of 3.2\% and detects a heterogeneous effect in 96.9--100\% of usable repetitions while rejecting the accompanying constant effect in only 3.1--4.1\%. The corrected $F$ approximation is computationally inexpensive but remains liberal in several null settings and increasingly rejects the constant effect when another effect is heterogeneous. We then apply the framework to household investment in children's extracurricular courses in China, integrating household survey, provincial panel, geographic, and point-of-interest data. The application illustrates how heterogeneity testing can inform the allocation of provincial variables to GLSW or fixed effects, while the simulation results also show why evidence based only on the $F$ approximation should be interpreted cautiously.
+\Gls{hgwr} models spatial hierarchical data by combining \gls{glsw}, fixed, and sample-level random effects. Although \gls{glsw} estimates are allowed to vary geographically, variation in an estimated coefficient surface does not by itself establish spatial heterogeneity because sampling error and spatial autocorrelation may produce similar patterns. We address this inferential gap by defining spatial heterogeneity through location-conditional distributions and by developing an effect-wise parametric bootstrap and an approximate $F$ test for the spatial heterogeneity of \gls{glsw} effects. Monte Carlo experiments with 200 fixed random locations assess calibration, power, effect specificity, and computational stability. At \gls{icc} 0.4, the effect-wise bootstrap has null rejection rates of 3.2\% and detects a heterogeneous effect in 96.9--100\% of usable repetitions while rejecting the accompanying constant effect in only 3.1--4.1\%. The corrected $F$ approximation is computationally inexpensive but remains liberal in several null settings and increasingly rejects the constant effect when another effect is heterogeneous. We then apply the framework to household investment in children's extracurricular courses in China, integrating household survey, provincial panel, geographic, and point-of-interest data. The application illustrates how heterogeneity testing can inform the allocation of provincial variables to \gls{glsw} or fixed effects, while the simulation results also show why evidence based only on the $F$ approximation should be interpreted cautiously.
 \end{abstract}
 
 %%Graphical abstract
@@ -120,6 +142,7 @@ Hierarchical and geographically weighted regression (HGWR) models spatial hierar
 Statistical inference; hypothesis test; spatial heterogeneity; bootstrap; hierarchical and geographically weighted regression; extracurricular education
 \end{keywords}
 
+\glsresetall
 \linenumbers
 
 %% main text
@@ -138,8 +161,8 @@ Spatial autocorrelation typically refers to localised patterns emerging, for exa
 In contrast, spatial heterogeneity may arise from broader contextual differences across regions, wherein varying local conditions foster divergent developmental pathways and evolutionary trajectories \citep{DutilleulLegendre-1993,ShiyomiTakahashi-2000,EscobedoNowak-2009,Long-2010}
 A consequence of such divergent processes is that outcomes may vary substantially across a study area.
 An aim of this paper is to define more precisely what is meant by spatial heterogeneity and how it differs from spatial autocorrelation. 
-The motivation is to develop a test of spatial heterogeneity for a relatively new method of spatial analysis, which is HGWR. 
-However, the discussion of what is meant by spatial heterogeneity is more foundational, and will be of interest beyond the specific case study of HGWR.
+The motivation is to develop a test of spatial heterogeneity for a relatively new method of spatial analysis, which is \gls{hgwr}. 
+However, the discussion of what is meant by spatial heterogeneity is more foundational, and will be of interest beyond the specific case study of \gls{hgwr}.
 
 Spatial dependence has been widely understood and studied with the development of spatial statistics and tests of spatial autocorrelation,
 whereas spatial heterogeneity has more recently been gaining increased attention \citep{ZhaiFeng-2023,HuLu-2022,HelbichBrunauer-2014,WangZhao-2018,ZhaoLiu-2021}, due to its prevalence in spatial data sets\footnote{
@@ -154,82 +177,82 @@ Such data are prevalent in various fields, including health, economy, and social
 \citep{ChenTruong-2012,BrunauerLang-2013,FeuilletCossart-2024,AielloRicotta-2016}.
 
 To model spatial hierarchical data, special methods are necessary to account for its characteristics.
-The hierarchical and geographically weighted regression \citep[HGWR;][]{HuHarris-2024} model is a synthesis of geographically weighted regression \citep[GWR;][]{BrunsdonFotheringham-1996} and hierarchical linear modelling \citep[HLM;][]{Goldstein-2011}.
+The \acrcite{hgwr} model is a synthesis of \acrcite{gwr} and \acrcite{hlm}.
 To handle spatial hierarchical data,
-HGWR includes three types of effects: group-level (`upper level') spatially weighted (GLSW) effects, fixed effects, and sample-level (`lower level') random (SLR) effects.
-GLSW and SLR effects allow for the possibility of spatial heterogeneity at the group and sample levels, respectively, while fixed effects capture globally constant influences (i.e. effects that do not vary geographically across the study region).
-% A key restriction is that GLSW effects are applicable only to group-level variables, whereas SLR effects are restricted to sample-level variables.
-% To estimate these effects, HGWR employs a back-fitting algorithm and a maximum likelihood estimator \citep[BFML;][]{ChenLeung-2022}, enabling simultaneous estimation of all effects within the hierarchical structure.
+\gls{hgwr} includes three types of effects: \gls{glsw} effects, fixed effects, and \gls{slr} effects.
+\gls{glsw} and \gls{slr} effects allow for the possibility of spatial heterogeneity at the group and sample levels, respectively, while fixed effects capture globally constant influences (i.e. effects that do not vary geographically across the study region).
+% A key restriction is that \gls{glsw} effects are applicable only to group-level variables, whereas \gls{slr} effects are restricted to sample-level variables.
+% To estimate these effects, \gls{hgwr} employs a back-fitting algorithm and a maximum likelihood estimator \citep[BFML;][]{ChenLeung-2022}, enabling simultaneous estimation of all effects within the hierarchical structure.
 
-However, at the time of writing, relatively little work has been undertaken to situate the model within a formal framework of statistical inference, particularly with respect to testing the significance of any spatial heterogeneity observed in estimates of GLSW effects.
-As a hybrid of parametric and non-parametric methods \citep{HuHarris-2024,HuHarris-2024a}, HGWR lacks a well-established inferential foundation.
+However, at the time of writing, relatively little work has been undertaken to situate the model within a formal framework of statistical inference, particularly with respect to testing the significance of any spatial heterogeneity observed in estimates of \gls{glsw} effects.
+As a hybrid of parametric and non-parametric methods \citep{HuHarris-2024,HuHarris-2024a}, \gls{hgwr} lacks a well-established inferential foundation.
 The reasons for this are twofold.
-When adopting a probability-based approach to inference, the hierarchical structure introduces additional complexity in deriving probability distributions compared to the hypothesis tests of GWR \citep{LeungMei-2000}.
+When adopting a probability-based approach to inference, the hierarchical structure introduces additional complexity in deriving probability distributions compared to the hypothesis tests of \gls{gwr} \citep{LeungMei-2000}.
 Conversely, if one turns to resampling-based bootstrap methods \citep{MooneyDuval-1993,DelgadoManteiga-2001} a more fundamental question emerges: what precisely is the object of inference in the context of spatial heterogeneity?
 
 Unlike spatial dependence that Moran's I \citep{Moran-1950,LiCalder-2007} and other well-known methods can quantify, spatial heterogeneity is challenging to be quantified, although there have been some attempts to do so \citep{TranPearson-2022}.
-As spatial heterogeneity and spatial dependence often happen together, Moran's I and, in particular, local indicators of spatial association \citep[LISA;][]{Anselin-1995} ---
+As spatial heterogeneity and spatial dependence often happen together, Moran's I and, in particular, \acrcite{lisa} ---
 measures of spatial dependence that are estimated for parts of the study regions and not just for the study region as a whole ---
 are sometimes employed to identify potential spatial heterogeneity \citep{JacksonHuang-2009,ZhangLin-2016}.
-When GWR is used to model spatially-varying regression relationships, one may then analyse the spatial heterogeneity in these relationships using either an $F$-test \citep{LeungMei-2000} or a bootstrap test \citep{HarrisBrunsdon-2017}.
-For hierarchical or grouped data, analysis of variance (ANOVA) and HLM are feasible methods \citep{DutilleulLegendre-1993,FotheringhamBrunsdon-2010,LignierJarvis-2024,KirkbrideStochl-2015} in addition to caterpillar plots visualising intraclass correlation in data grouped by geographical locations.
+When \gls{gwr} is used to model spatially-varying regression relationships, one may then analyse the spatial heterogeneity in these relationships using either an $F$-test \citep{LeungMei-2000} or a bootstrap test \citep{HarrisBrunsdon-2017}.
+For hierarchical or grouped data, \gls{anova} and \gls{hlm} are feasible methods \citep{DutilleulLegendre-1993,FotheringhamBrunsdon-2010,LignierJarvis-2024,KirkbrideStochl-2015} in addition to caterpillar plots visualising intraclass correlation in data grouped by geographical locations.
 Geodetector \citep{WangZhang-2016,ZhaoLiu-2021,HuoSun-2021} offers a method to detect stratified heterogeneity in spatial data for finding homogeneous regions.
 However, these methods need to meet certain assumptions to be applied.
-Methods using Moran's I and LISA assume that spatial heterogeneity arises from autocorrelation, while ANOVA or HLM rely on grouping or repeated observations \citep{HuLu-2022,HuHarris-2024}.
+Methods using Moran's I and \gls{lisa} assume that spatial heterogeneity arises from autocorrelation, while \gls{anova} or \gls{hlm} rely on grouping or repeated observations \citep{HuLu-2022,HuHarris-2024}.
 Geodetector focus on uncovering categorical driving factors for numerical data, resulting in limitations of data types.
 
 At heart is a more fundamental problem --- the absence of a widely accepted and formalised definition of spatial heterogeneity itself.
-Whether concerning random variables or GLSW effects within the HGWR model, equating spatial variation with spatial heterogeneity is not always appropriate.
+Whether concerning random variables or \gls{glsw} effects within the \gls{hgwr} model, equating spatial variation with spatial heterogeneity is not always appropriate.
 At the very least, such variation may stem from random error.
 Conversely, if spatial variation in the data is driven by spatial autocorrelation, it does not necessarily constitute spatial heterogeneity in the sense typically implied by local models.
 
-To fill this gap, after introducing the HGWR model, we clarify what constitutes spatial heterogeneity in this study, as well as the specific form of spatial heterogeneity that we aim to test.
+To fill this gap, after introducing the \gls{hgwr} model, we clarify what constitutes spatial heterogeneity in this study, as well as the specific form of spatial heterogeneity that we aim to test.
 \citet{LiuWang-2023-en} suggest viewing (geographical) space as an accumulation of fields.
 In line with this theory, we conceptualise variables as randomly distributed within these fields, named ``spatial random variables''.
 A spatial random variable is a conditional random variable where the location serves as the condition.
 Yet, fields can be very complex and difficult to parameterize.
 In this case, non-parametric methods, such as kernel density estimation, are applicable \citep{Tran-1990,HyndmanBashtannyk-1996,LuHu-2025}.
 % Spatial heterogeneity exists when a variable's conditional distribution varies across locations.
-This definition identifies spatial constancy as the relevant null hypothesis for the GLSW effects in HGWR.
-We evaluate that null hypothesis using bootstrap and distribution-based methods, thereby assessing whether the variation in an estimated GLSW effect is greater than would be expected under a spatially constant relationship.
+This definition identifies spatial constancy as the relevant null hypothesis for the \gls{glsw} effects in \gls{hgwr}.
+We evaluate that null hypothesis using bootstrap and distribution-based methods, thereby assessing whether the variation in an estimated \gls{glsw} effect is greater than would be expected under a spatially constant relationship.
 
 The need for this distinction is especially clear in applied studies where variables are measured at more than one level.
 We illustrate the problem using family investment in children's extracurricular courses, an important component of quality-oriented education (QOE) in China.
 Participation and expenditure reflect household circumstances, while the availability and price of educational resources are shaped by provincial economic and policy contexts.
-A mapped HGWR coefficient can suggest that a provincial association differs geographically, but policy interpretation requires evidence that the variation is greater than would be expected under a spatially constant effect.
-The case study therefore serves two purposes: it illustrates how a heterogeneity test can guide the choice between GLSW and fixed effects, and it shows how simulation evidence about calibration qualifies the interpretation of mapped educational inequalities.
+A mapped \gls{hgwr} coefficient can suggest that a provincial association differs geographically, but policy interpretation requires evidence that the variation is greater than would be expected under a spatially constant effect.
+The case study therefore serves two purposes: it illustrates how a heterogeneity test can guide the choice between \gls{glsw} and fixed effects, and it shows how simulation evidence about calibration qualifies the interpretation of mapped educational inequalities.
 
 This paper makes three contributions.
 First, it formalises strong and weak spatial heterogeneity using location-conditional distributions and distinguishes spatial non-stationarity from spatial autocorrelation.
-Second, it develops an effect-wise parametric bootstrap and a distribution-based approximate $F$ test for GLSW effects in HGWR and uses Monte Carlo experiments to examine their calibration, power, effect specificity, and computational behaviour.
+Second, it develops an effect-wise parametric bootstrap and a distribution-based approximate $F$ test for \gls{glsw} effects in \gls{hgwr} and uses Monte Carlo experiments to examine their calibration, power, effect specificity, and computational behaviour.
 Third, it provides an empirical study in which approximate heterogeneity screening is integrated into effect specification rather than applied only after estimation, thereby connecting the methodological evaluation to household- and province-level correlates of extracurricular education investment.
 
 The remainder of this paper will be organised as follows.
-\autoref{sec:hgwr} outlines the mathematical foundations of the HGWR model and identifies the GLSW effects as the object of inference.
+\autoref{sec:hgwr} outlines the mathematical foundations of the \gls{hgwr} model and identifies the \gls{glsw} effects as the object of inference.
 \autoref{sec:spatial-heterogeneity} then presents our definitions of spatial heterogeneity and analyses how these definitions lead to a testable null hypothesis.
-\autoref{sec:glsw-test} develops bootstrap and distribution-based $F$ tests for GLSW effects and assesses their effectiveness by simulation.
+\autoref{sec:glsw-test} develops bootstrap and distribution-based $F$ tests for \gls{glsw} effects and assesses their effectiveness by simulation.
 \autoref{sec:qoe-case} applies the framework to extracurricular education investment in China.
 Finally, \autoref{sec:conclusion} concludes with the methodological findings, substantive implications, and limitations.
 
 \section{Hierarchical and Geographically Weighted Regression}\label{sec:hgwr}
 
 In addition to spatial analysis of individual variables, examining the relationships among multiple variables is often a more critical issue.
-Due to the existence of spatial heterogeneity, local-form regression models \citep{FotheringhamBrunsdon-2010} analysing non-stationary relationships are popular with geographers, like GWR \citep{HelbichBrunauer-2014,FanSong-2021,TranPearson-2022} and HLM \citep{WuHou-2011,KirkbrideStochl-2015,WangJiang-2021}.
-As a combination of GWR and HLM, the HGWR model overcomes the limitations of the two models, such as the risk of singular matrix in GWR and the inability to model spatial heterogeneity for group-level variables in HLM \citep{HuHarris-2024}.
-However, methods for testing the significance of spatial heterogeneity of the non-stationary relationships have been developed for GWR via bootstrapping or $F$-test \citep{LeungMei-2000,MeiXu-2016,HarrisBrunsdon-2017} and HLM \citep{GelmanHill-2006,Goldstein-2011},
-while HGWR lacks such methods.
+Due to the existence of spatial heterogeneity, local-form regression models \citep{FotheringhamBrunsdon-2010} analysing non-stationary relationships are popular with geographers, like \gls{gwr} \citep{HelbichBrunauer-2014,FanSong-2021,TranPearson-2022} and \gls{hlm} \citep{WuHou-2011,KirkbrideStochl-2015,WangJiang-2021}.
+As a combination of \gls{gwr} and \gls{hlm}, the \gls{hgwr} model overcomes the limitations of the two models, such as the risk of singular matrix in \gls{gwr} and the inability to model spatial heterogeneity for group-level variables in \gls{hlm} \citep{HuHarris-2024}.
+However, methods for testing the significance of spatial heterogeneity of the non-stationary relationships have been developed for \gls{gwr} via bootstrapping or $F$-test \citep{LeungMei-2000,MeiXu-2016,HarrisBrunsdon-2017} and \gls{hlm} \citep{GelmanHill-2006,Goldstein-2011},
+while \gls{hgwr} lacks such methods.
 
-Developing a hypothesis test for spatial heterogeneity in HGWR is challenging due to the model's complexity.
-At minimum, it is important to establish that the variation in GLSW effect estimates differs from the variation produced by the random component of the model.
+Developing a hypothesis test for spatial heterogeneity in \gls{hgwr} is challenging due to the model's complexity.
+At minimum, it is important to establish that the variation in \gls{glsw} effect estimates differs from the variation produced by the random component of the model.
 To achieve this goal, starting from reviewing the basis of this model is essential.
-This section summarises the definition and estimation of the HGWR model, as the bootstrap method requires resampling according to the hierarchical error structure, and the $F$-test requires the GLSW estimator and its hat matrix.
+This section summarises the definition and estimation of the \gls{hgwr} model, as the bootstrap method requires resampling according to the hierarchical error structure, and the $F$-test requires the \gls{glsw} estimator and its hat matrix.
 After the model and its estimator are introduced, the next section defines the exact form of spatial heterogeneity to be tested.
 
 \subsection{Definition}
 
-% The HGWR model \citep{HuHarris-2024} integrates geographically weighted regression and hierarchical modelling.
-In a two-level HGWR model, variables are classified as either group level or sample level, and their effects can be fixed or varying.
-For sample $i$ in group $j$ from a data set of $n$ samples across $m$ groups, the HGWR model can be expressed as \eqref{equ:hgwr-model-pointwise},
+% The \gls{hgwr} model \citep{HuHarris-2024} integrates geographically weighted regression and hierarchical modelling.
+In a two-level \gls{hgwr} model, variables are classified as either group level or sample level, and their effects can be fixed or varying.
+For sample $i$ in group $j$ from a data set of $n$ samples across $m$ groups, the \gls{hgwr} model can be expressed as \eqref{equ:hgwr-model-pointwise},
 \begin{equation}\label{equ:hgwr-model-pointwise}
   y_{ij} = \vG_{ij}\vgamma_{j} + \vX_{ij}\vbeta + \vZ_{ij}\vmu_{j} + \epsilon_{ij}
 \end{equation}
@@ -245,7 +268,7 @@ $\vG_{ij}$, $\vX_{ij}$, $\vZ_{ij}$ are row vectors like
   \vX_{ij} = \left(x_{ij1}, x_{ij2}, \cdots, x_{ijp}\right),
   \vZ_{ij} = \left(z_{ij1}, z_{ij2}, \cdots, z_{ijq}\right)
 \end{equation*}
-with $h,p,q$ are the number of GLSW, fixed, and SLR effects, respectively.
+with $h,p,q$ are the number of \gls{glsw}, fixed, and \gls{slr} effects, respectively.
 These vectors are stacked for all samples and groups to form $\vG,\vX,\vZ$ as follows,
 \begin{equation*}
   \vG = \begin{pmatrix}
@@ -273,7 +296,7 @@ These vectors are stacked for all samples and groups to form $\vG,\vX,\vZ$ as fo
   \end{pmatrix}.
 \end{equation*}
 Similarly, the vectors $\vgamma_j$ and $\vmu_j$ can also be vertically stacked, denoted by $\vgamma$ and $\vmu$, respectively.
-The HGWR model can be expressed in the matrix from, as shown in \eqref{equ:hgwr-model},
+The \gls{hgwr} model can be expressed in the matrix from, as shown in \eqref{equ:hgwr-model},
 \begin{equation}\label{equ:hgwr-model}
   \vy = \diag(\vG\vgamma) + \vX\vbeta + \vZ\vmu + \vepsilon
 \end{equation}
@@ -301,19 +324,19 @@ and $\diag(\vG\vgamma)$ represents the diagonal elements of blocked matrix $\vG\
 \subsection{Estimator}
 
 A back-fitting and maximum likelihood (BFML) estimator is applied to estimate effects, $\vgamma,\vbeta,\vmu$.
-Each $\vgamma_{j} (j=1,2,\cdots,m)$ in $\vgamma$ is estimated through a GWR-like method by borrowing information from its geographical neighbours, using a kernel function $k$ with a parameter called bandwidth, $b$.
-These are specified like the standard GWR methods \citep{ComberBrunsdon-2022}.
+Each $\vgamma_{j} (j=1,2,\cdots,m)$ in $\vgamma$ is estimated through a \gls{gwr}-like method by borrowing information from its geographical neighbours, using a kernel function $k$ with a parameter called bandwidth, $b$.
+These are specified like the standard \gls{gwr} methods \citep{ComberBrunsdon-2022}.
 The parameters $\vbeta$ and $\vmu$ are estimated using the maximum likelihood estimator.
 After several iterations, all effects are properly estimated.
-For the HGWR model described above, the BFML estimator follows this procedure.
+For the \gls{hgwr} model described above, the BFML estimator follows this procedure.
 
 \begin{enumerate}[label=\textbf{Step \arabic*.}, left=0.5em, itemindent=2em]
 \item Initialise. Set $\hat{\vD}^{(0)} = \vI$, $\hat{\vbeta}^{(0)} = 0$. Then let $\hat{\vV}^{(0)}=\vZ\hat{\vD}^{(0)}\vZ\T+\vI$.
 
-\item Estimate GLSW effects.
+\item Estimate \gls{glsw} effects.
 Construct $\vy_g^{(t)}=\vy-\vX\hat{\vbeta}^{(t-1)}$.
 Regard $\vZ\vmu$ as a part of random errors.
-For $j$-th location $\vu_j$, by applying a GWR-like method, $\hat{\vgamma}$ there can be estimated as \eqref{equ:bfml-glsw-estimator},
+For $j$-th location $\vu_j$, by applying a \gls{gwr}-like method, $\hat{\vgamma}$ there can be estimated as \eqref{equ:bfml-glsw-estimator},
 \begin{equation}\label{equ:bfml-glsw-estimator}
   \hat{\vgamma}_j^{(t)}
   = \left[\vG\T\vW_j\left(\vV^{(t)}\right)^{-1}\vG\right]^{-1} \left[\vG\T\vW_j\left(\vV^{(t)}\right)^{-1}\vy_g^{(t)}\right] 
@@ -329,7 +352,7 @@ The spatial weighting matrix $\vw(\vu)$ is calculated according to the coordinat
 \item Estimate fixed effects.
 With the estimated $\hat{\vgamma}^{(t)}$, let $\vy_h^{(t)}=\vy - \diag(\vG\hat{\vgamma})$, and $\vbeta$ can be estimated by the generalised weighted least squares estimator.
 
-\item Estimate covariance of SLR effects, $\vD$, and variance of random errors, $\sigma^2$, denoted by $\hat{\vD}^{(t)}$ and $\hat{\sigma}^{(t)}$.
+\item Estimate covariance of \gls{slr} effects, $\vD$, and variance of random errors, $\sigma^2$, denoted by $\hat{\vD}^{(t)}$ and $\hat{\sigma}^{(t)}$.
 
 \item Estimate values of random effects.
 After obtaining $\hat{\vD}^{(t)}$ and $\sigma^{2(t)}$ in iteration $t$, random effects can be computed as $\hat{\vmu}^{(t)} = \hat{\vD} \vZ\T\hat{\vV}^{-1}\left(\vy-\vX\hat{\vbeta}\right)$.
@@ -388,12 +411,12 @@ Whether their variation should be interpreted as spatial heterogeneity depends o
 \section{Spatial heterogeneity}
 \label{sec:spatial-heterogeneity}
 
-The preceding section shows that HGWR allows the GLSW effect $\vgamma_j$ to vary among locations.
+The preceding section shows that \gls{hgwr} allows the \gls{glsw} effect $\vgamma_j$ to vary among locations.
 However, such variation is a property of the estimator and is not itself sufficient evidence of spatial heterogeneity.
 The importance of spatial heterogeneity as a spatial effect has been widely recognised \citep{Anselin-2010,ShuPei-2019,ComberBrunsdon-2022}.
 However, its description remains largely conceptual, suggesting that the characteristics of a geographical entity vary across different locations.
 Researchers may sometimes find it challenging to differentiate spatial heterogeneity from spatial dependency, as the two often appear as two facets of the same phenomenon \citep{Anselin-2010}.
-While methods such as LISA and GWR are available for analysing spatial heterogeneity,
+While methods such as \gls{lisa} and \gls{gwr} are available for analysing spatial heterogeneity,
 they do not fully capture the essence of spatial heterogeneity or clearly distinguish it from spatial dependence.
 Indeed, many of these methods presuppose the existence of spatial dependence as a starting premise.
 Consequently, spatial heterogeneity remains elusive --- a presence observable but not easily quantified.
@@ -449,7 +472,7 @@ To address this, we define weak spatial heterogeneity by \autoref{def:spatial-he
 \end{definition}
 
 In \autoref{def:spatial-heterogeneity-weak}, we use the terms ``statistically similar'' and ``statistically different'' in place of ``equal'' and ``nonequal''.
-To measure the statistical difference, we can apply hypothesis tests such as ANOVA \citep{Gelman-2005} or likelihood ratio test \citep{Woolf-1957}.
+To measure the statistical difference, we can apply hypothesis tests such as \gls{anova} \citep{Gelman-2005} or likelihood ratio test \citep{Woolf-1957}.
 The ranges of $R_1$ and $R_2$ are controlled by the spatial scale of $X$.
 This definition is more practical, as it permits variance within a group while still considering the set of all groups to exhibit spatial heterogeneity.
 Therefore, we can choose a small area that presents no spatial heterogeneity as the fundamental unit for spatial analysis, in which samples are i.i.d. to a certain distribution.
@@ -620,13 +643,13 @@ Correspondingly, spatial non-stationarity and spatial autocorrelation should be 
 
 The definitions above determine what needs to be tested.
 The strong definition concerns the complete conditional density $f_{X|\vU}(x|\vu)$.
-Testing equality of the complete density at all locations would be difficult in practice and is not necessary for the purpose of HGWR, where the primary interest is whether a conditional relationship changes across space.
+Testing equality of the complete density at all locations would be difficult in practice and is not necessary for the purpose of \gls{hgwr}, where the primary interest is whether a conditional relationship changes across space.
 Therefore, we use the weak definition based on the conditional expectation.
 Let $g(\vu)=E(X|\vU=\vu)$.
 The absence of spatial non-stationarity means that $g(\vu)$ is constant for all possible locations, while spatial heterogeneity exists when at least one location has a different conditional expectation.
 
 This statement gives the first part of the testing logic: a test of spatial heterogeneity is a test of spatial constancy, rather than a test of whether an effect is different from zero.
-For the $k$-th GLSW effect in HGWR, this definition leads to the null hypothesis
+For the $k$-th \gls{glsw} effect in \gls{hgwr}, this definition leads to the null hypothesis
 \begin{equation}\label{equ:glsw-heterogeneity-core-hypothesis}
   H_0: \gamma_{1k}=\gamma_{2k}=\cdots=\gamma_{mk},
 \end{equation}
@@ -635,7 +658,7 @@ An effect can therefore be significantly different from zero but spatially homog
 
 The second part of the logic is to measure departure from spatial constancy.
 After estimating $\gamma_{jk}$ at all group locations, its spatial dispersion can be used as a statistic.
-For the $k$-th GLSW effect, denote this statistic by
+For the $k$-th \gls{glsw} effect, denote this statistic by
 \begin{equation}\label{equ:heterogeneity-core-statistic}
   T_k = \frac{1}{m}\sum_{j=1}^{m}\left(\hat{\gamma}_{jk}-\overline{\hat{\gamma}}_k\right)^2,
 \end{equation}
@@ -645,20 +668,20 @@ A large value of $T_k$ indicates strong variation, but it cannot alone show sign
 The final part is consequently to determine the distribution of a dispersion statistic under spatial constancy.
 There are two routes in this study.
 The bootstrap compares the observed variance of standardised local estimates with its empirical null distribution.
-The distribution-based method uses the linear form of the GLSW estimator, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of an observation-weighted coefficient variance by an $F$ distribution.
+The distribution-based method uses the linear form of the \gls{glsw} estimator, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of an observation-weighted coefficient variance by an $F$ distribution.
 The two methods address the same null hypothesis, but use different finite-sample statistics and reference distributions.
-The following section incorporates the hierarchical error structure and GLSW estimator to construct the corresponding bootstrap and $F$ tests for HGWR.
+The following section incorporates the hierarchical error structure and \gls{glsw} estimator to construct the corresponding bootstrap and $F$ tests for \gls{hgwr}.
 
 \section{Testing Spatial Heterogeneity in GLSW Effects} \label{sec:glsw-test}
 
-According to \autoref{sec:heterogeneity-testing-logic}, testing a GLSW effect is to determine whether its variation among locations is significantly greater than the variation generated under a spatially constant effect.
+According to \autoref{sec:heterogeneity-testing-logic}, testing a \gls{glsw} effect is to determine whether its variation among locations is significantly greater than the variation generated under a spatially constant effect.
 The target is different from the conventional test of whether a coefficient is significantly different from zero.
-For the $k$-th GLSW effect, both methods below evaluate the spatial constancy stated in \eqref{equ:glsw-heterogeneity-core-hypothesis}.
-The bootstrap obtains an empirical reference distribution by repeated model fitting, while the distribution-based method derives an approximate $F$ distribution from the GLSW estimator.
+For the $k$-th \gls{glsw} effect, both methods below evaluate the spatial constancy stated in \eqref{equ:glsw-heterogeneity-core-hypothesis}.
+The bootstrap obtains an empirical reference distribution by repeated model fitting, while the distribution-based method derives an approximate $F$ distribution from the \gls{glsw} estimator.
 
-% In this section, we concentrate on designing hypothesis tests for fixed effects and GLSW effects of the HGWR model.
-% The significance of deviation from zero is evaluated for both fixed effects and GLSW effects using a $t$-test.
-% Additionally, testing spatial heterogeneity is considered for GLSW effects using an $F$-test and a bootstrap test.
+% In this section, we concentrate on designing hypothesis tests for fixed effects and \gls{glsw} effects of the \gls{hgwr} model.
+% The significance of deviation from zero is evaluated for both fixed effects and \gls{glsw} effects using a $t$-test.
+% Additionally, testing spatial heterogeneity is considered for \gls{glsw} effects using an $F$-test and a bootstrap test.
 
 % \subsection{Fixed effects}\label{sec:test-hgwr-fixed}
 
@@ -687,12 +710,12 @@ The bootstrap obtains an empirical reference distribution by repeated model fitt
 % where $\mathrm{se}(\hat{\beta}_j)$ is the squared root of the $j$-th diagonal element of 
 % $\var(\hat{\vbeta})$, and $\DF$ is the degree of freedom of this model.
 
-% For an HGWR model with $p$ fixed effects, $q$ SLR effects, $r$ GLSW effects, $n$ observations, and $m$ groups, the total number of parameters is given by \eqref{equ:hgwr-test-np},
+% For an \gls{hgwr} model with $p$ fixed effects, $q$ \gls{slr} effects, $r$ \gls{glsw} effects, $n$ observations, and $m$ groups, the total number of parameters is given by \eqref{equ:hgwr-test-np},
 % \begin{equation}\label{equ:hgwr-test-np}
 %     \NP = r m + p + \frac{q(q+1)}{2} + 1
 % \end{equation}
-% However, due to the data borrowing process, the GLSW effect parameters are not fully independent.
-% Thus, we estimate the effective number of parameters of GLSW effects as \eqref{equ:hgwr-enp-glsw},
+% However, due to the data borrowing process, the \gls{glsw} effect parameters are not fully independent.
+% Thus, we estimate the effective number of parameters of \gls{glsw} effects as \eqref{equ:hgwr-enp-glsw},
 % \begin{equation}\label{equ:hgwr-enp-glsw}
 %     \ENP_{\vgamma} = 2\tr(\vS) - \tr(\vS\T\vS)
 % \end{equation}
@@ -722,7 +745,7 @@ The bootstrap obtains an empirical reference distribution by repeated model fitt
 
 \subsection{Bootstrap-based method}\label{sec:test-hgwr-glsw-boot}
 
-The primary objective for the GLSW effects is to determine whether their spatial variation is significant under the definition and null hypothesis established in \autoref{sec:heterogeneity-testing-logic}.
+The primary objective for the \gls{glsw} effects is to determine whether their spatial variation is significant under the definition and null hypothesis established in \autoref{sec:heterogeneity-testing-logic}.
 The hypothesis is formulated as \eqref{equ:hgwr-glsw-boot-hypothesis},
 \begin{align}\label{equ:hgwr-glsw-boot-hypothesis}
     \begin{split}
@@ -730,21 +753,21 @@ The hypothesis is formulated as \eqref{equ:hgwr-glsw-boot-hypothesis},
     H_1 &: \exists \vu, E(\hat{\vgamma}|\vu) \neq E(\hat{\vgamma}) \; .
     \end{split}
 \end{align}
-Because the GLSW effects are estimated within a hierarchical regression model, their local estimates inherit correlation from data borrowing and the model's error structure.
-Both theoretical and experimental findings indicate that directly testing for spatial heterogeneity in GLSW effect estimates results in an excessively high Type I error rate (i.e., incorrectly rejecting the null hypothesis of no spatial heterogeneity), making the test ineffective.
+Because the \gls{glsw} effects are estimated within a hierarchical regression model, their local estimates inherit correlation from data borrowing and the model's error structure.
+Both theoretical and experimental findings indicate that directly testing for spatial heterogeneity in \gls{glsw} effect estimates results in an excessively high Type I error rate (i.e., incorrectly rejecting the null hypothesis of no spatial heterogeneity), making the test ineffective.
 For regression models, there are two typical resampling strategies: sampling observations and sampling residuals \citep{Bittmann-2021}.
-For HGWR, experiments show that resampling observations may lead to an insufficient number of samples in some locations, potentially causing model calibration to fail.
+For \gls{hgwr}, experiments show that resampling observations may lead to an insufficient number of samples in some locations, potentially causing model calibration to fail.
 Therefore, resampling residuals is a more suitable approach, as recommended by \citet{HarrisBrunsdon-2017}.
 
-For a calibrated HGWR model with $\hat{\vgamma}$ as estimates of GLSW effects, $\hat{\vbeta}$ as estimates of fixed effects, and $\hat{\vD}$ as the estimated variance--covariance matrix of random effects, the distribution of the combined random-effect and residual term can be expressed as \eqref{equ:glsw-bootvar-error-distribution},
+For a calibrated \gls{hgwr} model with $\hat{\vgamma}$ as estimates of \gls{glsw} effects, $\hat{\vbeta}$ as estimates of fixed effects, and $\hat{\vD}$ as the estimated variance--covariance matrix of random effects, the distribution of the combined random-effect and residual term can be expressed as \eqref{equ:glsw-bootvar-error-distribution},
 \begin{equation}\label{equ:glsw-bootvar-error-distribution}
     \ve = \vZ\vmu + \vepsilon \sim \vN\left(\vzero, (\vZ\vD\vZ\T+\vI)\sigma^2\right)
 \end{equation}
 The null model is fitted separately for each effect under test.
-For effect $k$, that group-level variable is moved from the GLSW component to the fixed component, while the other GLSW effects retain their fitted spatial surfaces.
+For effect $k$, that group-level variable is moved from the \gls{glsw} component to the fixed component, while the other \gls{glsw} effects retain their fitted spatial surfaces.
 This imposes spatial constancy on the tested effect without imposing the same restriction on the remaining effects.
 The observed coordinates, covariates, group membership, and group sample sizes are held fixed.
-Bootstrap responses are generated from the fixed and GLSW components of this null model plus newly simulated zero-mean group random effects and residuals; empirical random-effect predictions are not included in the generating mean.
+Bootstrap responses are generated from the fixed and \gls{glsw} components of this null model plus newly simulated zero-mean group random effects and residuals; empirical random-effect predictions are not included in the generating mean.
 The procedure is as follows.
 \begin{enumerate}[label=\textbf{Step \arabic*.}, left=0.5em, itemindent=2em]
     \item For the original model, calculate the variance of the standardised local estimates $\hat{\gamma}_{jk}/\widehat{\operatorname{se}}(\hat{\gamma}_{jk})$, denoted by $S_k$;
@@ -752,7 +775,7 @@ The procedure is as follows.
     \item Repeat the following steps $B$ times. In each iteration $i$,
     \begin{enumerate}
         \item Independently draw new group random effects and residuals according to \eqref{equ:glsw-bootvar-error-distribution}, using $\hat{\vD}_{0k}$ and $\hat{\sigma}_{0k}$, and set $\vy^*_i=\hat{\vy}_{0k}+\ve^*_i$;
-        \item Refit the original HGWR specification to $\vy^*_i$, normally holding the bandwidth at its value selected from the observed data;
+        \item Refit the original \gls{hgwr} specification to $\vy^*_i$, normally holding the bandwidth at its value selected from the observed data;
         \item Calculate the standardised-variance statistic $S^*_{ik}$;
     \end{enumerate}
     \item Calculate the $p$ value as \eqref{equ:glsw-bootvar-pvalue},
@@ -762,14 +785,14 @@ The procedure is as follows.
     and compare $p_k$ with the pre-defined significance level $\alpha$.
 \end{enumerate}
 
-Although HGWR is more efficient than GWR and MGWR \citep{HuHarris-2024}, the entire procedure remains time-intensive.
+Although \gls{hgwr} is more efficient than \gls{gwr} and \gls{mgwr} \citep{HuHarris-2024}, the entire procedure remains time-intensive.
 We use $B=199$ in the primary Monte Carlo experiments and $B=999$ in a small diagnostic confirmation.
 The historical fitted-model bootstrap is retained only as a diagnostic comparator; it is not used as the primary bootstrap procedure.
 
 \subsection{Distribution-based method}\label{sec:test-hgwr-glsw-ftest}
 
 As a computationally inexpensive approximation,
-we can also design a probability-based hypothesis test for GLSW effects following the method proposed by \citet{LeungMei-2000}.
+we can also design a probability-based hypothesis test for \gls{glsw} effects following the method proposed by \citet{LeungMei-2000}.
 Assuming normality for $\vmu$ and $\vepsilon$,
 we define the null and alternative hypothesis as \eqref{equ:hypothesis-glsw-ftest},
 \begin{equation}\label{equ:hypothesis-glsw-ftest}
@@ -778,7 +801,7 @@ we define the null and alternative hypothesis as \eqref{equ:hypothesis-glsw-ftes
         H_{1} & : \mbox{not all $\gamma_{ik}(i=1,2,\cdots,m)$ are equal.}
     \end{split}
 \end{equation}
-For the $k$-th GLSW effect, we examine its variance under the null hypothesis, $V_k^2$, as \eqref{equ:glsw-ftest-variance},
+For the $k$-th \gls{glsw} effect, we examine its variance under the null hypothesis, $V_k^2$, as \eqref{equ:glsw-ftest-variance},
 \begin{equation}\label{equ:glsw-ftest-variance}
     \begin{split}
         V_{k}^2 & = \frac{1}{n} \sum_{i=1}^m \left( \hat{\gamma}_{ik} - \frac{1}{n} \sum_{i=1}^n \hat{\gamma}_{ik} \right)^2 = \frac{1}{n} \hat{\mybm{\gamma}}_{k}^{\mathrm{T}}\left( \mybm{I} - \frac{1}{n} \mybm{J} \right) \hat{\mybm{\gamma}}_{k} \\
@@ -851,8 +874,8 @@ We reject the null hypothesis if $F \geqslant F_{1-\alpha}$.
 
 % \subsection{Sample-level random effects}
 
-% Like the GLSW effects, an important question in testing the significance of SLR effects is whether they are heterogeneous between groups instead of whether they are significantly different from zero.
-% For SLR effects, which are similar to the random effects in HLM, we use the likelihood ratio test typically \citep{MyersMontgomery-2012}.
+% Like the \gls{glsw} effects, an important question in testing the significance of \gls{slr} effects is whether they are heterogeneous between groups instead of whether they are significantly different from zero.
+% For \gls{slr} effects, which are similar to the random effects in \gls{hlm}, we use the likelihood ratio test typically \citep{MyersMontgomery-2012}.
 % For a full model and a reduced model, their log-likelihood functions have values $l^{\mathrm{Full}}$ and $l^{\mathrm{Red}}$, respectively.
 % The likelihood-ratio-test statistic is
 % \begin{equation}
@@ -877,7 +900,7 @@ Let $s(u_j)$ be the standardised value across the 200 locations of
 \begin{equation}\label{equ:sim-hgwrtest-surface}
   \frac{1}{324}\left[36-\left(6-\frac{12u_j}{2}\right)^2\right]^2.
 \end{equation}
-The two GLSW effects are $\gamma_{1j}=2+a s(u_j)$ and $\gamma_{2j}=2$, where $a\in\{0,0.5,1\}$ controls the heterogeneity of the first effect.
+The two \gls{glsw} effects are $\gamma_{1j}=2+a s(u_j)$ and $\gamma_{2j}=2$, where $a\in\{0,0.5,1\}$ controls the heterogeneity of the first effect.
 Responses are generated as
 \begin{equation}\label{equ:sim-hgwrtest-response}
   y_{ij}=2+g_{1j}\gamma_{1j}+g_{2j}\gamma_{2j}+2x_{1ij}+b_{0j}+b_{1j}z_{1ij}+\epsilon_{ij},
@@ -926,11 +949,11 @@ The median serial elapsed times are 1.44 seconds for the $F$ test, 73.92 seconds
 
 The simulation is conditional on one fixed spatial configuration and excludes spatially autocorrelated or spatially confounded covariates.
 It also generates $b_{1j}$ with mean 2 while the fitted random-effect component is centred at zero without a separate fixed $z_1$ term.
-The results consequently describe the implemented data-generating and fitting configuration, not calibration under every correctly specified HGWR design.
+The results consequently describe the implemented data-generating and fitting configuration, not calibration under every correctly specified \gls{hgwr} design.
 \section{Case study: spatial inequalities in extracurricular education investment in China}\label{sec:qoe-case}
 
 The simulations evaluate how the proposed procedures behave under known data-generating structures.
-This section examines their role in an applied HGWR analysis, where the assignment of a coefficient to the GLSW or fixed component affects both model complexity and substantive interpretation.
+This section examines their role in an applied \gls{hgwr} analysis, where the assignment of a coefficient to the \gls{glsw} or fixed component affects both model complexity and substantive interpretation.
 We study family expenditure on children's extracurricular courses in China.
 The case is methodologically relevant because the outcome is observed for children and families, whereas several candidate explanations describe the provinces in which those families live.
 
@@ -940,7 +963,7 @@ Quality-oriented education, also known as \textit{suzhi jiaoyu}, was introduced 
 It seeks to foster development beyond examination performance, including aesthetic appreciation, physical education, and practical skills \citep{Dello-Iacovo-2009,LiuLi-2020-en}.
 Extracurricular courses have become an important means of obtaining these forms of education \citep{ZhangTang-2017,ZhengYuan-2021}, but access is voluntary and largely market-mediated.
 Consequently, participation and expenditure are related to household resources and parental choices \citep{ChiQian-2016,QianChi-2015-en,SongZhou-2019}, while the supply and price of courses also reflect regional economic development, public education investment, and urban--rural differences \citep{HuangGao-2017,XiangStillwell-2020,SuYuan-2023}.
-These multiple levels make the application suitable for HGWR, but they also make it important to distinguish a genuinely spatially heterogeneous provincial association from an estimated surface that varies only because of sampling uncertainty.
+These multiple levels make the application suitable for \gls{hgwr}, but they also make it important to distinguish a genuinely spatially heterogeneous provincial association from an estimated surface that varies only because of sampling uncertainty.
 
 We combine four data sources.
 The China Institute for Educational Finance Research Household Surveys (CIEFR-HS) collected family and child information from 40,011 families in 29 provincial-level administrations in 2017 and 34,643 families in 2019 \citep{CIEFR-HS,CIEFR-HS-V1,CIEFR-HS-2019}.
@@ -965,7 +988,7 @@ The household-level covariates describe income, spending, assets, debt, parental
 \subsection{Effect specification guided by heterogeneity tests}\label{sec:qoe-specification}
 
 The case study uses the three-effect structure in \autoref{sec:hgwr}.
-Province-level covariates are candidates for GLSW effects because their associations with family expenditure may vary geographically.
+Province-level covariates are candidates for \gls{glsw} effects because their associations with family expenditure may vary geographically.
 Household covariates are assigned fixed effects unless the grouped data support a sample-level random effect.
 All continuous variables indicated in \autoref{tab:qoe-variables} are transformed and scaled as in the original QOE analysis.
 
@@ -978,34 +1001,34 @@ All continuous variables indicated in \autoref{tab:qoe-variables} are transforme
     Variable & Effect & Log & Scale & Variable & Effect & Log & Scale \\
     \midrule
     \QOESpendingPH          & Response & Yes & Yes & \NumEnterprise          & Fixed & Yes & Yes \\
-    \GDPPrimary             & GLSW & Yes & Yes & \CultCentCountTotal     & Fixed & Yes & Yes \\
-    \Engel                  & GLSW & Yes & Yes & \TotalIncome            & Fixed & Yes & Yes \\
-    \CPI                    & GLSW & Yes & Yes & \TotalSpending          & Fixed & Yes & Yes \\
-    \Gini                   & GLSW & Yes & Yes & \Asset                  & Fixed & Yes & Yes \\
-    \UniversityRecruitRatio & GLSW & Yes & No  & \Debt                   & Fixed & Yes & Yes \\
-    \GeneralEduBudget       & GLSW & Yes & Yes & \Age                    & Fixed & Yes & Yes \\
-    \HighEducated           & GLSW & Yes & Yes & \HighEdu                & Fixed & No  & No  \\
-    \RegionUrban            & SLR  & No  & No  & \GenderMale             & Fixed & No  & No  \\
+    \GDPPrimary             & \gls{glsw} & Yes & Yes & \CultCentCountTotal     & Fixed & Yes & Yes \\
+    \Engel                  & \gls{glsw} & Yes & Yes & \TotalIncome            & Fixed & Yes & Yes \\
+    \CPI                    & \gls{glsw} & Yes & Yes & \TotalSpending          & Fixed & Yes & Yes \\
+    \Gini                   & \gls{glsw} & Yes & Yes & \Asset                  & Fixed & Yes & Yes \\
+    \UniversityRecruitRatio & \gls{glsw} & Yes & No  & \Debt                   & Fixed & Yes & Yes \\
+    \GeneralEduBudget       & \gls{glsw} & Yes & Yes & \Age                    & Fixed & Yes & Yes \\
+    \HighEducated           & \gls{glsw} & Yes & Yes & \HighEdu                & Fixed & No  & No  \\
+    \RegionUrban            & \gls{slr}  & No  & No  & \GenderMale             & Fixed & No  & No  \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 The specification is not based on the visual variability of coefficient maps alone.
-The original specification procedure first fits the remaining province-level variables as GLSW effects and uses the approximate $F$ test in \autoref{sec:test-hgwr-glsw-ftest} to screen each surface.
-The youth-palace count is not rejected by this screening test and is therefore retained as a fixed rather than a GLSW effect.
+The original specification procedure first fits the remaining province-level variables as \gls{glsw} effects and uses the approximate $F$ test in \autoref{sec:test-hgwr-glsw-ftest} to screen each surface.
+The youth-palace count is not rejected by this screening test and is therefore retained as a fixed rather than a \gls{glsw} effect.
 This decision illustrates the inferential distinction motivating the paper: a variable may be substantively relevant or have a non-zero global association without requiring a geographically varying coefficient.
 We also address clear multicollinearity between \GDPPrimary and \NumEnterprise by assigning the latter a fixed effect, and exclude national fiscal education expenditure because of its high correlation with \GeneralEduBudget.
-Finally, an HLM with forward selection identifies \RegionUrban as an SLR effect.
+Finally, an \gls{hlm} with forward selection identifies \RegionUrban as an \gls{slr} effect.
 The resulting specification is shown in \autoref{tab:qoe-variables}.
 
 \subsection{Evidence of spatial heterogeneity}\label{sec:qoe-heterogeneity-results}
 
 \autoref{tab:qoe-model-summary} reports the main model.
-The $F$ column gives the approximate test of whether each GLSW effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
+The $F$ column gives the approximate test of whether each \gls{glsw} effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
 These are distinct inferential statements.
 For example, an effect surface may be heterogeneous overall even when many individual provincial estimates are imprecise.
-All retained GLSW effects reject spatial homogeneity according to the approximate $F$ test at the 5\% level, although the evidence is weaker for \Gini than for most other provincial variables.
-The Monte Carlo experiment shows that this approximation can be liberal and can reject a constant effect when another GLSW effect is heterogeneous.
+All retained \gls{glsw} effects reject spatial homogeneity according to the approximate $F$ test at the 5\% level, although the evidence is weaker for \Gini than for most other provincial variables.
+The Monte Carlo experiment shows that this approximation can be liberal and can reject a constant effect when another \gls{glsw} effect is heterogeneous.
 The case-study results are therefore treated as screening evidence rather than independent confirmation by a well-calibrated effect-wise test.
 
 \begin{table}[tbp]
@@ -1063,7 +1086,7 @@ By contrast, \Engel and \UniversityRecruitRatio change sign across the study are
 The former is more positive in northern provinces and negative in parts of the south; the latter is positive in some western provinces and negative in several eastern provinces.
 These sign changes are precisely the type of pattern for which a single global coefficient would conceal substantively relevant geographical differences, although the local explanations remain hypotheses rather than causal effects.
 
-The SLR estimate for urban residence is positive in nearly all provinces and is especially large in Gansu and Chongqing.
+The \gls{slr} estimate for urban residence is positive in nearly all provinces and is especially large in Gansu and Chongqing.
 Because household finances and parental education are included in the model, the remaining urban--rural difference is consistent with unequal access to course providers and qualified teachers, but unobserved household location and accessibility prevent a direct test of this interpretation.
 
 \subsection{Household-level findings and substantive implications}\label{sec:qoe-household-results}
@@ -1080,7 +1103,7 @@ Age is negative and is treated as a control: older children may face greater aca
 Together, the province- and household-level results suggest that educational inequality is related to both family resources and geographically varying macro contexts.
 The estimates support attention to public education budgets, the distribution of extracurricular resources between urban and rural areas, and access for families with fewer resources.
 Potential interventions include targeted support for underserved regions, public or non-profit extracurricular institutions such as youth palaces, and incentives for qualified teachers to work in rural areas \citep{LaiXu-2023,JiangYip-2024}.
-These policy implications are associational: the HGWR analysis identifies where estimated relationships differ, not the causal effect of changing a budget or economic indicator.
+These policy implications are associational: the \gls{hgwr} analysis identifies where estimated relationships differ, not the causal effect of changing a budget or economic indicator.
 
 \subsection{Alternative outcome and limitations}\label{sec:qoe-robustness}
 
@@ -1094,28 +1117,28 @@ The case study has five main limitations.
 First, hourly expenditure is an imperfect proxy for course quality and does not measure participation.
 Second, the two-level province--household structure cannot directly represent intermediate contexts such as cities, counties, schools, or neighbourhoods.
 Third, the survey does not provide household coordinates, preventing an explicit analysis of distance and transport accessibility.
-Fourth, spatial collinearity may affect the allocation and interpretation of GLSW and fixed effects.
+Fourth, spatial collinearity may affect the allocation and interpretation of \gls{glsw} and fixed effects.
 Finally, the data support conditional associations rather than causal policy effects.
 The heterogeneity tests strengthen the inferential basis for deciding whether a relationship varies geographically, but they do not resolve omitted-variable bias, measurement error, multiple local comparisons, or causal identification.
 
 
 \section{Conclusion}\label{sec:conclusion}
 
-This article develops an inferential framework for spatial heterogeneity in HGWR.
+This article develops an inferential framework for spatial heterogeneity in \gls{hgwr}.
 The framework begins with a spatial random variable defined through its location-conditional distribution.
 Strong spatial heterogeneity occurs when that conditional distribution changes with location, whereas weak forms concern specified characteristics such as the conditional expectation.
 This formulation separates spatial non-stationarity from spatial autocorrelation: the former concerns a location-dependent distributional feature, while the latter concerns dependence among observations.
 The two processes may co-occur, but one is not evidence of the other.
 
-Building on this definition, we develop an effect-wise parametric bootstrap and an approximate $F$ test for GLSW effects in HGWR.
+Building on this definition, we develop an effect-wise parametric bootstrap and an approximate $F$ test for \gls{glsw} effects in \gls{hgwr}.
 The effect-wise bootstrap is generally calibrated or conservative under the global null in the simulated settings.
 At ICC 0.4 it detects the heterogeneous coefficient in 96.9--100\% of usable repetitions while rejecting the accompanying constant coefficient in 3.1--4.1\%.
-The approximate $F$ test is much faster, but its global-null rejection rates reach 9.4\%, and its false-positive rate for the constant coefficient rises as the other GLSW effect becomes more heterogeneous.
+The approximate $F$ test is much faster, but its global-null rejection rates reach 9.4\%, and its false-positive rate for the constant coefficient rises as the other \gls{glsw} effect becomes more heterogeneous.
 It should therefore be treated as a rapid approximation rather than a calibrated substitute for effect-wise bootstrapping.
-The distinction between testing constancy and testing a zero coefficient remains essential: the former determines whether a GLSW representation is statistically warranted.
+The distinction between testing constancy and testing a zero coefficient remains essential: the former determines whether a \gls{glsw} representation is statistically warranted.
 
 The QOE case study demonstrates this role in practice.
-The approximate $F$ screening results support GLSW specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
+The approximate $F$ screening results support \gls{glsw} specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
 The fitted model suggests that the associations of primary-sector GDP, living costs, income inequality, university recruitment, public education budgets, and the highly educated population with hourly extracurricular-course expenditure vary geographically.
 Household spending, assets, parental education, child gender, age, and urban residence provide a complementary account of within- and between-province inequality.
 Because the case-study tests use the $F$ approximation, they are screening evidence rather than effect-wise bootstrap confirmation.
@@ -1169,7 +1192,7 @@ The authors report there are no competing interests to declare.
 
 \section{Computational simplification of \textit{F}-test for GLSW effects}\label{sec:app-simplify-ftest}
 
-The $F$-test for GLSW effects introduced in Section~\ref{sec:test-hgwr-glsw-ftest} involves matrices $\vV$, $\vS$, and $\vGamma$ with $n \times n$ elements, which can become computationally intensive due to their large size.
+The $F$-test for \gls{glsw} effects introduced in Section~\ref{sec:test-hgwr-glsw-ftest} involves matrices $\vV$, $\vS$, and $\vGamma$ with $n \times n$ elements, which can become computationally intensive due to their large size.
 However, given that $\vS$ and $\vGamma$ contain repeating rows --- since the group-level variable values are uniform within each group --- and that $\vV$ is a block-diagonal matrix with numerous zero elements, we can develop an algorithm to streamline the computations required for the $F$-test.
 
 As shown in \eqref{equ:ftest-glsw-Gamma-full}, the matrix $\vGamma$ can be expressed as \eqref{eq:ftest-simp-Gamma},
