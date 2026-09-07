@@ -62,13 +62,11 @@
 
 #### 4.3 Simulation
 
-- 使用 $[0,1]^2$ 内固定随机生成的 200 个组位置以及每组 20--50 个样本。
-- 核心设计改变异质性强度与随机截距方差设置，协变量无空间相关且无空间混杂。
-- 报告一类错误率、Wilson 置信区间、功效、恒定伴随效应的误拒率、失败率与耗时。
-- 主要结论依据 effect-wise bootstrap；legacy、$B=999$ 和带宽重选仅作为诊断性结果。
-
-- 保留含真实空间异质 GLSW、空间常量 GLSW、固定效应和 SLR 效应的模拟。
-- 报告两类检验对真实异质效应与齐性效应的区分结果。
+- **Data-generating process**：详细说明固定的 200 个组位置、核心与不平衡组规模、组层和个体层协变量、真实 GLSW 系数面、随机截距、随机斜率和误差生成机制。
+- **Monte Carlo design and testing workflow**：列出随机种子、六个核心场景、稳健性与诊断场景、重复次数、bootstrap 次数、CV 带宽、bisquared kernel、迭代与失败判据，以及效应逐一检验和汇总流程。
+- **Computational environment and reproducibility**：报告本机 CPU、内存、操作系统、R、MKL 和 `hgwrr` 版本，说明单线程任务、并发调度、原子结果分片与自动验证边界。
+- **Results**：在主文完整展示核心拒绝率、稳健性与诊断结果、失败率和运行时间，并分别分析校准、功效、效应特异性、计算代价与证据适用范围。
+- 主要结论依据 effect-wise bootstrap；legacy、$B=999$ 和带宽重选只提供诊断性证据，近似 F 检验定位为快速但可能偏宽松的筛查工具。
 
 ### 5. Case study: spatial inequalities in extracurricular education investment in China
 

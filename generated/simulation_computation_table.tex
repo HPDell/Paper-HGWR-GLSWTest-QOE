@@ -2,6 +2,7 @@
   \centering\small
   \caption{Convergence and elapsed time by method. Each outer repetition is counted once although it produces results for two effects. Times are wall-clock seconds recorded for a serial task.}
   \label{tab:simulation-computation}
+  \resizebox{\textwidth}{!}{%
   \begin{tabular}{lrrrrr}
     \toprule
     Method & Repetitions & Failures & Failure, \% & Median & 95th percentile \\
@@ -12,4 +13,5 @@ Effect-wise bootstrap & 810 & 21 & 2.59 & 132.67 & 493.18 \\
 Effect-wise, fixed bandwidth & 800 & 12 & 1.50 & 132.30 & 498.04 \\
     \bottomrule
   \end{tabular}
+  }
 \end{table}

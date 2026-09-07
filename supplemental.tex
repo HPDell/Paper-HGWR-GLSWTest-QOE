@@ -20,32 +20,6 @@
 
 \spacingset{1.8}
 
-\section{Additional Monte Carlo results}\label{app:simulation-results}
-
-The primary Monte Carlo results are reported in the main text.
-Table \autoref{tab:simulation-additional-results} records the experiments designated as diagnostic or robustness evidence.
-The legacy bootstrap uses the fitted-model null mechanism retained for historical comparison.
-Its rejection rates of 0\% under the null and 14.3\% for the heterogeneous effect at $a=1$ indicate low sensitivity rather than superior calibration.
-The $B=999$ rows are based on independent data sets rather than repetitions paired with the $B=199$ experiment, and their sample size of 20 gives wide confidence intervals.
-
-\input{generated/simulation_additional_table.tex}
-
-The $t_5$ and unbalanced-group experiments retain $a=0.5$ and ICC 0.4.
-In both settings, the effect-wise bootstrap detects the heterogeneous $\gamma_1$ in 29 of 30 usable repetitions and does not reject the constant $\gamma_2$.
-These experiments show no evident loss of effect specificity, but 30 repetitions do not establish that the false-positive rate is zero.
-The approximate $F$ test rejects the constant effect in 8.5\% of usable $t_5$ repetitions and 8.0\% of unbalanced-group repetitions.
-
-Re-selecting the bandwidth inside each bootstrap refit succeeds for only one of ten outer repetitions.
-The nine failures occur when a bootstrap fit reaches its outer-iteration limit, so the two rejection indicators from the single successful repetition have no inferential value.
-This diagnostic is reported to delimit computational feasibility and is excluded from the calibration and robustness conclusions.
-
-\input{generated/simulation_computation_table.tex}
-
-Table \autoref{tab:simulation-computation} counts each outer repetition once.
-The effect-wise method is substantially more expensive because it fits a separate null model and bootstrap sequence for each tested effect.
-Nine of its 21 total failures come from the bandwidth-reselection diagnostic; with bandwidth fixed at the value selected from the observed data, its failure rate is 1.50\%.
-The approximate $F$ test is much faster, but its computational advantage does not remove the calibration and effect-specificity limitations found in the core experiment.
-
 \section{Further details on the QOE results}\label{app:further-details}
 
 Estimate values for GLSW and SLR effects of the model in the main text are shown in \autoref{tbl:model-coef-glsw-slr}.
