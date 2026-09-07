@@ -18,7 +18,7 @@
 %% with harvard style bibliographic references
 
 %% For review
-\documentclass{interact}
+\documentclass[times]{interact}
 
 \usepackage{epstopdf}% To incorporate .eps illustrations using PDFLaTeX, etc.
 \usepackage{subfigure}% Support for small, `sub' figures and tables
@@ -27,14 +27,21 @@
 \bibpunct[, ]{(}{)}{,}{a}{}{,}% Citation support using natbib.sty
 \renewcommand\bibfont{\fontsize{10}{12}\selectfont}% Bibliography support using natbib.sty
 
+\usepackage{xcolor}
+\usepackage{aliascnt}
+\usepackage[colorlinks=true,citecolor=teal]{hyperref}
+
 \theoremstyle{plain}% Theorem-like structures
-\newtheorem{theorem}{Theorem}[section]
+\newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{proposition}[theorem]{Proposition}
 
 \theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\providecommand*{\definitionautorefname}{Definition}
 \newtheorem{example}[theorem]{Example}
 
 \theoremstyle{remark}
@@ -58,9 +65,6 @@
 %% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
 %% for the whole article with \linenumbers.
 \usepackage{lineno}
-% \usepackage{esdiff}
-\usepackage{xcolor}
-\usepackage[colorlinks=true,citecolor=teal]{hyperref}
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -68,7 +72,10 @@
 \usepackage{tabularx}
 
 \renewcommand{\sectionautorefname}{Section}
-\renewcommand{\subsectionautorefname}{Subsection}
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+\renewcommand{\equationautorefname}{eq.}
+\labelformat{equation}{(#1)}
 
 %%% =====================
 %%% Glossaries
@@ -91,6 +98,10 @@
 \newacronym{icc}{ICC}{intraclass correlation coefficient}
 \newacronym[user1={Anselin-1995}]{lisa}{LISA}{local indicators of spatial association}
 \newacronym{anova}{ANOVA}{analysis of variance}
+\newacronym{qoe}{QOE}{quality-oriented education}
+
+\usepackage{xspace}
+\newcommand{\morani}{Moran's $I$\xspace}
 
 \usepackage{mathshortcuts}
 \input{variables.tex}
@@ -118,7 +129,14 @@
 
 \begin{abstract}
 %% Text of abstract
-\Gls{hgwr} models spatial hierarchical data by combining \gls{glsw}, fixed, and sample-level random effects. Although \gls{glsw} estimates are allowed to vary geographically, variation in an estimated coefficient surface does not by itself establish spatial heterogeneity because sampling error and spatial autocorrelation may produce similar patterns. We address this inferential gap by defining spatial heterogeneity through location-conditional distributions and by developing an effect-wise parametric bootstrap and an approximate $F$ test for the spatial heterogeneity of \gls{glsw} effects. Monte Carlo experiments with 200 fixed random locations assess calibration, power, effect specificity, and computational stability. At \gls{icc} 0.4, the effect-wise bootstrap has null rejection rates of 3.2\% and detects a heterogeneous effect in 96.9--100\% of usable repetitions while rejecting the accompanying constant effect in only 3.1--4.1\%. The corrected $F$ approximation is computationally inexpensive but remains liberal in several null settings and increasingly rejects the constant effect when another effect is heterogeneous. We then apply the framework to household investment in children's extracurricular courses in China, integrating household survey, provincial panel, geographic, and point-of-interest data. The application illustrates how heterogeneity testing can inform the allocation of provincial variables to \gls{glsw} or fixed effects, while the simulation results also show why evidence based only on the $F$ approximation should be interpreted cautiously.
+\Gls{hgwr} models spatial hierarchical data by combining \gls{glsw}, fixed, and sample-level random effects.
+Although \gls{glsw} estimates are allowed to vary geographically, variation in an estimated coefficient surface does not by itself establish spatial heterogeneity because sampling error and spatial autocorrelation may produce similar patterns.
+We address this inferential gap by defining spatial heterogeneity through location-conditional distributions and by developing an effect-wise parametric bootstrap and an approximate $F$ test for the spatial heterogeneity of \gls{glsw} effects.
+Monte Carlo experiments with 200 fixed random locations assess calibration, power, effect specificity, and computational stability.
+At \gls{icc} 0.4, the effect-wise bootstrap has null rejection rates of 3.2\% and detects a heterogeneous effect in 96.9--100\% of usable repetitions while rejecting the accompanying constant effect in only 3.1--4.1\%.
+The corrected $F$ approximation is computationally inexpensive but remains liberal in several null settings and increasingly rejects the constant effect when another effect is heterogeneous.
+We then apply the framework to household investment in children's extracurricular courses in China, integrating household survey, provincial panel, geographic, and point-of-interest data.
+The application illustrates how heterogeneity testing can inform the allocation of provincial variables to \gls{glsw} or fixed effects, while the simulation results also show why evidence based only on the $F$ approximation should be interpreted cautiously.
 \end{abstract}
 
 %%Graphical abstract
@@ -149,48 +167,61 @@ Statistical inference; hypothesis test; spatial heterogeneity; bootstrap; hierar
 \section{Introduction}
 \label{sec:introduction}
 
-Local regression models are valuable because they allow a regression relationship to vary across space rather than imposing one global coefficient on every location.
+Local regression models are valuable because they allow a regression relationship to vary across space rather than imposing one global coefficient on every location \citep{LuGe-2020a}.
 \acrcite{gwr} is the best-known example, and its extensions are widely used to explore spatially non-stationary relationships \citep{FotheringhamBrunsdon-2010,HelbichBrunauer-2014,FanSong-2021,TranPearson-2022}.
+It helps to control the resulting risk of ``ecological fallacy'' in the inference on individuals using globally constant relationship \citep{LokarZagar-2019,Openshaw-1984,TranmerSteel-1998,FieldhouseTye-1996}.
 Many spatial data sets, however, are also hierarchical: individual outcomes are grouped within locations, and both individual- and group-level variables may affect the response.
-For such data, the \acrcite{hgwr} model combines GWR with \acrcite{hlm} and separates group-level spatially weighted (\gls{glsw}), fixed, and sample-level random (\gls{slr}) effects \citep{HuHarris-2024}.
+We use ``spatial hierarchical data'' to refer to data that are products of a geographical process exhibiting spatial effects in its measurements, and that are structured in a way creating a grouping effect or hierarchy.
+They are a consequence of what is measured, as well as how it is measured. 
+% As an example, in housing price analysis in China, properties are grouped by communities, and attributes from both properties and communities impact the prices \citep{HuHarris-2024,HuLu-2022}.
+Such data are prevalent in various fields, including health, economy, and social sciences
+\citep{ChenTruong-2012,BrunauerLang-2013,FeuilletCossart-2024,AielloRicotta-2016}.
+\gls{gwr} could cause estimation bias, unreliable bandwidth optimisation, and unequal actual bandwidths across locations;
+while \acrcite{hlm} is the conventional approach for dealing with hierarchical data, it assumes that group-level effects are constant across locations and cannot model spatial heterogeneity in group-level variables \citep{HuHarris-2024,HuLu-2022}.
+For such data, the \acrcite{hgwr} model combines \gls{gwr} with \gls{hlm} and separates \gls{glsw}, fixed, and \gls{slr} effects \citep{HuHarris-2024}.
 This structure permits associations of group-level variables to vary geographically while retaining the grouped error structure and sample-level variation that a conventional local regression may not represent.
 
 The flexibility of \gls{hgwr} creates an inferential question that is not answered by mapping its local coefficients.
 An estimated \gls{glsw} coefficient surface always has some variation, but that variation may arise from sampling error, the hierarchical random component, smoothing, or spatial dependence rather than from a genuinely non-constant relationship.
 The relevant hypothesis is therefore spatial constancy of an individual \gls{glsw} effect across group locations, not whether that effect is zero and not whether selected local estimates are individually significant.
-At the time of writing, \gls{hgwr} provides estimates of \gls{glsw} surfaces but lacks a formal, effect-specific test of this spatial-homogeneity null hypothesis.
-The hybrid parametric and non-parametric structure of the model makes both a reference distribution and a valid resampling scheme less direct than in GWR \citep{HuHarris-2024,HuHarris-2024a}.
+At the time of writing, \gls{hgwr} provides estimates of \gls{glsw} surfaces but lacks a formal, effect-specific method for testing spatial heterogeneity of \gls{glsw} effects.
+The hybrid parametric and non-parametric structure of the model makes both a reference distribution and a valid resampling scheme less direct than in \gls{gwr} \citep{HuHarris-2024,HuHarris-2024a}.
 
-The gap also requires a precise definition of the object being tested.
-We treat a spatial random variable as a random variable conditional on location and define strong spatial heterogeneity as a location-dependent conditional distribution.
-Weak spatial heterogeneity concerns a specified characteristic of that distribution, such as a location-dependent conditional expectation.
+Unlike spatial dependence that \morani \citep{Moran-1950,LiCalder-2007} and other well-known methods can quantify, spatial heterogeneity is challenging to be quantified, although there have been some attempts to do so \citep{TranPearson-2022}.
+As spatial heterogeneity and spatial dependence often happen together, \morani and, in particular, \acrcite{lisa} ---
+measures of spatial dependence that are estimated for parts of the study regions and not just for the study region as a whole ---
+are sometimes employed to identify potential spatial heterogeneity \citep{JacksonHuang-2009,ZhangLin-2016}.
+When \gls{gwr} is used to model spatially-varying regression relationships, one may then analyse the spatial heterogeneity in these relationships using either an $F$-test \citep{LeungMei-2000} or a bootstrap test \citep{HarrisBrunsdon-2017}.
+For hierarchical or grouped data, \gls{anova} and \gls{hlm} are feasible methods \citep{DutilleulLegendre-1993,FotheringhamBrunsdon-2010,LignierJarvis-2024,KirkbrideStochl-2015} in addition to caterpillar plots visualising intraclass correlation in data grouped by geographical locations.
+Geodetector \citep{WangZhang-2016,ZhaoLiu-2021,HuoSun-2021} offers a method to detect stratified heterogeneity in spatial data for finding homogeneous regions.
+However, these methods need to meet certain assumptions to be applied.
+Methods using \morani and \gls{lisa} assume that spatial heterogeneity arises from autocorrelation, while \gls{anova} or \gls{hlm} rely on grouping or repeated observations \citep{HuLu-2022,HuHarris-2024}.
+Geodetector focus on uncovering categorical driving factors for numerical data, resulting in limitations of data types.
+Existing local-regression methods with spatially varying coefficients also provide different approaches to testing spatial heterogeneity.
+For \gls{gwr}, approximate $F$ tests compare the variance of a estimated coefficient surface with sample residuals \citep{LeungMei-2000}, and residual-based bootstrap procedures test whether particular coefficients can be treated as constant without relying on normal errors \citep{MeiXu-2016,HarrisBrunsdon-2017}.
+
+The gap requires a precise definition of the object being tested.
+Spatial heterogeneity concerns a specified characteristic of that distribution, such as a location-dependent conditional expectation.
 For a \gls{glsw} effect, this turns spatial heterogeneity into a testable departure from a constant conditional mean across group locations.
 It also distinguishes spatial non-stationarity from spatial autocorrelation: the former concerns a distributional feature that changes with location, whereas the latter concerns dependence among observations.
 The two processes may occur together, but evidence of one is not, by itself, evidence of the other.
+According to the clarified goal of testing spatial heterogeneity of \gls{glsw} effects in \gls{hgwr}, this paper develops two complementary tests.
+One is a distribution-based approximate $F$-test derived from the \gls{glsw} estimator and hat matrix.
+The other is an effect-wise parametric bootstrap: for each effect under test, it fits a null model in which that effect is spatially constant, generates responses under the fitted hierarchical error structure, refits the original \gls{hgwr} specification, and compares the observed and simulated variability of the local estimates.
 
-Existing local-regression methods clarify both the opportunity and the limitation.
-For GWR, approximate $F$ tests compare a coefficient surface with a spatially constant relationship \citep{LeungMei-2000}, and residual-based bootstrap procedures test whether particular coefficients can be treated as constant without relying on normal errors \citep{MeiXu-2016,HarrisBrunsdon-2017}.
-Moran's I and local indicators of spatial association instead assess spatial dependence, while ANOVA and HLM address grouped variation under their own model structures \citep{Moran-1950,LiCalder-2007,DutilleulLegendre-1993,Goldstein-2011}.
-None directly supplies a test for a GLSW surface while preserving the joint fixed, random, and locally weighted components of HGWR.
-
-This paper develops two complementary tests for spatial heterogeneity in GLSW effects.
-The primary procedure is an effect-wise parametric bootstrap: for each effect under test, it fits a null model in which that effect is spatially constant, generates responses under the fitted hierarchical error structure, refits the original HGWR specification, and compares the observed and simulated variability of the local estimates.
-The second is a distribution-based approximate $F$ test derived from the GLSW smoother and hat matrix.
-Both procedures test the same null hypothesis, but the simulation treats the $F$ test as a rapid approximation rather than as an automatic validation of the bootstrap result.
-
-We evaluate the procedures by Monte Carlo experiments with known homogeneous and heterogeneous GLSW effects at 200 fixed group locations.
+We evaluate the procedures by Monte Carlo experiments with known homogeneous and heterogeneous \gls{glsw} effects at 512 fixed group locations.
 The simulations vary the strength of spatial heterogeneity and the random-intercept variance, and report null rejection rates, power, rejection of an accompanying constant effect, failures, and computation time.
 This design assesses whether a procedure detects a truly varying effect without attributing heterogeneity to another effect that is spatially constant.
-We then use household investment in children's extracurricular courses, an important component of quality-oriented education (QOE) in China, as an empirical illustration.
-Household expenditure reflects family circumstances, whereas provincial economic and policy variables are candidates for GLSW effects; the case study shows how heterogeneity testing can inform the choice between GLSW and fixed specifications, without treating the resulting associations as causal effects.
+We then use household investment in children's extracurricular courses, an important component of \gls{qoe} in China, as an empirical illustration.
+Household expenditure reflects family circumstances, whereas provincial economic and policy variables are candidates for \gls{glsw} effects.
 
 This paper makes three contributions.
 First, it formalises strong and weak spatial heterogeneity using location-conditional distributions and separates spatial non-stationarity from spatial autocorrelation.
-Second, it develops an effect-wise parametric bootstrap and a distribution-based approximate $F$ test for GLSW effects in HGWR and evaluates their calibration, power, effect specificity, and computational behaviour.
+Second, it develops an effect-wise parametric bootstrap and a distribution-based approximate $F$ test for \gls{glsw} effects in \gls{hgwr} and evaluates their calibration, power, effect specificity, and computational behaviour.
 Third, it connects this methodological evaluation to a multilevel application in which heterogeneity screening guides the specification of provincial variables.
 
 The remainder of this paper is organised as follows.
-\autoref{sec:hgwr} presents the HGWR model and identifies GLSW effects as the object of inference.
+\autoref{sec:hgwr} presents the \gls{hgwr} model and identifies \gls{glsw} effects as the object of inference.
 \autoref{sec:spatial-heterogeneity} defines spatial heterogeneity and derives the spatial-homogeneity null hypothesis.
 \autoref{sec:glsw-test} develops the bootstrap and approximate $F$ tests and evaluates them by simulation.
 \autoref{sec:qoe-case} applies the framework to extracurricular education investment in China.
@@ -198,8 +229,8 @@ Finally, \autoref{sec:conclusion} summarises the methodological findings, substa
 
 \section{Hierarchical and Geographically Weighted Regression}\label{sec:hgwr}
 
-In addition to spatial analysis of individual variables, examining the relationships among multiple variables is often a more critical issue.
-Due to the existence of spatial heterogeneity, local-form regression models \citep{FotheringhamBrunsdon-2010} analysing non-stationary relationships are popular with geographers, like \gls{gwr} \citep{HelbichBrunauer-2014,FanSong-2021,TranPearson-2022} and \gls{hlm} \citep{WuHou-2011,KirkbrideStochl-2015,WangJiang-2021}.
+% In addition to spatial analysis of individual variables, examining the relationships among multiple variables is often a more critical issue.
+% Due to the existence of spatial heterogeneity, local-form regression models \citep{FotheringhamBrunsdon-2010} analysing non-stationary relationships are popular with geographers, like \gls{gwr} \citep{HelbichBrunauer-2014,FanSong-2021,TranPearson-2022} and \gls{hlm} \citep{WuHou-2011,KirkbrideStochl-2015,WangJiang-2021}.
 As a combination of \gls{gwr} and \gls{hlm}, the \gls{hgwr} model overcomes the limitations of the two models, such as the risk of singular matrix in \gls{gwr} and the inability to model spatial heterogeneity for group-level variables in \gls{hlm} \citep{HuHarris-2024}.
 However, methods for testing the significance of spatial heterogeneity of the non-stationary relationships have been developed for \gls{gwr} via bootstrapping or $F$-test \citep{LeungMei-2000,MeiXu-2016,HarrisBrunsdon-2017} and \gls{hlm} \citep{GelmanHill-2006,Goldstein-2011},
 while \gls{hgwr} lacks such methods.
@@ -213,8 +244,8 @@ After the model and its estimator are introduced, the next section defines the e
 \subsection{Definition}
 
 % The \gls{hgwr} model \citep{HuHarris-2024} integrates geographically weighted regression and hierarchical modelling.
-In a two-level \gls{hgwr} model, variables are classified as either group level or sample level, and their effects can be fixed or varying.
-For sample $i$ in group $j$ from a data set of $n$ samples across $m$ groups, the \gls{hgwr} model can be expressed as \eqref{equ:hgwr-model-pointwise},
+In \gls{hgwr}, variables are classified as either group level or sample level, and their effects can be fixed or varying.
+For sample $i$ in group $j$ from a data set of $n$ samples across $m$ groups, the \gls{hgwr} model can be expressed as \autoref{equ:hgwr-model-pointwise},
 \begin{equation}\label{equ:hgwr-model-pointwise}
   y_{ij} = \vG_{ij}\vgamma_{j} + \vX_{ij}\vbeta + \vZ_{ij}\vmu_{j} + \epsilon_{ij}
 \end{equation}
@@ -258,7 +289,7 @@ These vectors are stacked for all samples and groups to form $\vG,\vX,\vZ$ as fo
   \end{pmatrix}.
 \end{equation*}
 Similarly, the vectors $\vgamma_j$ and $\vmu_j$ can also be vertically stacked, denoted by $\vgamma$ and $\vmu$, respectively.
-The \gls{hgwr} model can be expressed in the matrix from, as shown in \eqref{equ:hgwr-model},
+The \gls{hgwr} model can be expressed in the matrix from, as shown in \autoref{equ:hgwr-model},
 \begin{equation}\label{equ:hgwr-model}
   \vy = \diag(\vG\vgamma) + \vX\vbeta + \vZ\vmu + \vepsilon
 \end{equation}
@@ -298,7 +329,7 @@ For the \gls{hgwr} model described above, the BFML estimator follows this proced
 \item Estimate \gls{glsw} effects.
 Construct $\vy_g^{(t)}=\vy-\vX\hat{\vbeta}^{(t-1)}$.
 Regard $\vZ\vmu$ as a part of random errors.
-For $j$-th location $\vu_j$, by applying a \gls{gwr}-like method, $\hat{\vgamma}$ there can be estimated as \eqref{equ:bfml-glsw-estimator},
+For $j$-th location $\vu_j$, by applying a \gls{gwr}-like method, $\hat{\vgamma}$ there can be estimated as \autoref{equ:bfml-glsw-estimator},
 \begin{equation}\label{equ:bfml-glsw-estimator}
   \hat{\vgamma}_j^{(t)}
   = \left[\vG\T\vW_j\left(\vV^{(t)}\right)^{-1}\vG\right]^{-1} \left[\vG\T\vW_j\left(\vV^{(t)}\right)^{-1}\vy_g^{(t)}\right] 
@@ -324,13 +355,13 @@ If it doesn't change significantly than that in previous iteration, terminate it
 \end{enumerate}
 
 In Step 2, it is common to calculate a so-called ``hat matrix'', $\vS$, such that $\hat{\vy}_g = \vS\vy_g$.
-For the $i$-th sample in the $j$-th group, the corresponding row vector of $\vS$, denoted by $\vS_i$ is given by \eqref{equ:bfml-glsw-hatmat-row},
+For the $i$-th sample in the $j$-th group, the corresponding row vector of $\vS$, denoted by $\vS_i$ is given by \autoref{equ:bfml-glsw-hatmat-row},
 \begin{equation}\label{equ:bfml-glsw-hatmat-row}
   % \vS_i = \left[\vG\T\vW(\vu_i)\left(\vV^{(t)}\right)\I\vG\right]\I
   % \left[\vG\T\vW(\vu_i)\left(\vV^{(t)}\right)\I\right]
   \vS_{ij} = \left(\vg\vw_j\vg'\right)\I \vg\vw_j\vV_{i\Sigma}\I \;.
 \end{equation}
-The full form of $\vS$ is defined by stacking all $\vS_{ij} (i=1,2,\cdots,n;j=1,2,\cdots,m)$ vertically, as shown in \eqref{equ:bfml-glsw-hatmat},
+The full form of $\vS$ is defined by stacking all $\vS_{ij} (i=1,2,\cdots,n;j=1,2,\cdots,m)$ vertically, as shown in \autoref{equ:bfml-glsw-hatmat},
 % \begin{equation}\label{equ:bfml-glsw-hatmat}
 %   \vS = \begin{pmatrix}
 %     \vS_{11} \\
@@ -370,28 +401,22 @@ The hat matrix will be important in deriving probability-based heterogeneity tes
 At this stage, however, the model only provides spatially varying estimates $\hat{\vgamma}_j$.
 Whether their variation should be interpreted as spatial heterogeneity depends on the definition and null hypothesis developed in the next section.
 
-\section{Spatial heterogeneity}
-\label{sec:spatial-heterogeneity}
+\section{Testing Spatial Heterogeneity in GLSW Effects} \label{sec:glsw-test}
 
 The preceding section shows that \gls{hgwr} allows the \gls{glsw} effect $\vgamma_j$ to vary among locations.
 However, such variation is a property of the estimator and is not itself sufficient evidence of spatial heterogeneity.
 The importance of spatial heterogeneity as a spatial effect has been widely recognised \citep{Anselin-2010,ShuPei-2019,ComberBrunsdon-2022}.
-However, its description remains largely conceptual, suggesting that the characteristics of a geographical entity vary across different locations.
 Researchers may sometimes find it challenging to differentiate spatial heterogeneity from spatial dependency, as the two often appear as two facets of the same phenomenon \citep{Anselin-2010}.
-While methods such as \gls{lisa} and \gls{gwr} are available for analysing spatial heterogeneity,
-they do not fully capture the essence of spatial heterogeneity or clearly distinguish it from spatial dependence.
-Indeed, many of these methods presuppose the existence of spatial dependence as a starting premise.
-Consequently, spatial heterogeneity remains elusive --- a presence observable but not easily quantified.
-Before presenting a hypothesis testing method for spatial heterogeneity, we first need to establish a formal definition.
+Before presenting the hypothesis testing methods for \gls{glsw} effects of \gls{hgwr}, we make it clear what is meant by spatial heterogeneity.
+Then we derive the hypothesis of spatial heterogeneity and the corresponding statistics.
 
-\subsection{Strong and weak spatial heterogeneity}
+\subsection{Hypothesis of spatial heterogeneity}
+\label{sec:spatial-heterogeneity}
 
 We assume that space is filled by many kinds of fields.
 Each field $f$ maps the location $\vU$ to a geographical phenomenon or entity $X$ \citep{LiuWang-2023-en,LiuYao-2020-en}, represented by $f: \vU \rightarrow X$, where $\vU \in \mathbb{R}^m$, $m$ is the number of dimensions, and $X$ can be any value, vector or tuple relate to the geographical phenomenon or entity.
 In this paper, we focus specifically on scalar-type $X$.
-For clarity, we will refer to what X represents as an ``object''.
-Note that $\vU$ is used to locate the object.
-It can range from two dimensions (for geographical objects) to three dimensions (for spatial-temporal objects), or even four dimensions \citep[spatial interaction data][]{LiuYao-2020-en,KordiFotheringham-2016}.
+For clarity, we will refer to what $X$ represents as an ``object''.
 Accordingly, we can express $X$ as the outcome of function $f$, i.e., $X = f(\vU)$.
 However, in many real-world situations, the relationship between $X$ and $\vU$ may not be that deterministic, as $X$ can be a random variable.
 In such cases, we define a spatial random variable $X$ as specified in \autoref{def:spatial-random-variable}.
@@ -417,311 +442,51 @@ Thus, spatial heterogeneity is defined by \autoref{def:spatial-heterogeneity}.
   For any two possible values of $\vU$, denoting $\vu_1,\vu_2$, there is spatial heterogeneity in $X$ when $f(x|\vu_1) \neq f(x|\vu_2)$; by contrast, there is no heterogeneity in $X$ when $f(x|\vu_1) = f(x|\vu_2)$ for every two possible values of $\vU$.
 \end{definition}
 
-There are two issues in \autoref{def:spatial-heterogeneity}.
-According to this definition, it is nearly impossible for $X$ to exhibit no spatial heterogeneity,
-making it a particularly stringent definition.
-However, this strictness is acceptable since spatial heterogeneity is common.
-The second issue pertains to scale: a geographical object exhibits heterogeneity only at certain scales.
-For instance, climate may appear homogeneous within a city but heterogeneous on a global scale.
-To address this, we define weak spatial heterogeneity by \autoref{def:spatial-heterogeneity-weak}.
-
-\begin{definition}[Weak spatial heterogeneity]
-  \label{def:spatial-heterogeneity-weak}
-  Let random variable $\vU$ denote the location of another random variable $X \sim f_{X|\vU}(x|\vu)$ in $m$-dimension space $\mathbb{R}^m$.
-  $R_1,R_2 \subseteq \mathbb{R}^m$ are any two consecutive fields where $R_1 \cup R_2 \neq R_1 \cap R_2$.
-  For all $\vu_i,\vu_j \in R_1$, if $f(x|\vu_i)$ and $f(x|\vu_j)$ are statistically similar, there is no spatial heterogeneity in $X$ in $R_1$ (i.e., $X$ is spatial homogeneous in $R_1$).
-  If $X$ is spatial homogeneous in $R_1$ and $R_2$, but $\vu_k \in R_2$ exists making $f(x|\vu_i)$ and $f(x|\vu_k)$ are statistically different, there is spatial heterogeneity in $X$ in $\mathbb{R}^m$.
-\end{definition}
-
-In \autoref{def:spatial-heterogeneity-weak}, we use the terms ``statistically similar'' and ``statistically different'' in place of ``equal'' and ``nonequal''.
-To measure the statistical difference, we can apply hypothesis tests such as \gls{anova} \citep{Gelman-2005} or likelihood ratio test \citep{Woolf-1957}.
-The ranges of $R_1$ and $R_2$ are controlled by the spatial scale of $X$.
-This definition is more practical, as it permits variance within a group while still considering the set of all groups to exhibit spatial heterogeneity.
-Therefore, we can choose a small area that presents no spatial heterogeneity as the fundamental unit for spatial analysis, in which samples are i.i.d. to a certain distribution.
-
-However, a problem lies in that the conditional distribution $f(x|\vu)$ is typically unknown and often must be observed and estimated.
-For example, air quality can be forecasted using models like the autoregressive integrated moving average model \citep{KumarJain-2010,AbhilashThakur-2018}.
-Such forecasts generally provide the expectation, variance, or both of $X$, with the distribution represented by these indicators.
-Under the condition of \autoref{def:spatial-random-variable}, the expectation of $X$ is the conditional expectation under $\vU$, i.e., $\conde{X}{\vU}$, and its variance is the conditional variance under $\vU$, i.e., $\condvar{X}{\vU}$, expressed as
-\begin{equation*}
-  \condvar{X}{\vU} = \conde{X^2}{\vU} - \left(\conde{X}{\vU}\right)^2
-\end{equation*}
-Compared to estimating the complete distribution of the random variable $X$, estimating its mean and variance is often more feasible.
-Therefore, in practice, we primarily determine whether a variable exhibits spatial heterogeneity by observing its conditional mean and variance.
-According to conditional density regression theories \citep{HyndmanBashtannyk-1996}, we know that
-$\left.X \middle|(\vU=\vu)\right. = r(\vu) + \epsilon$ where $r(\vu)$ is the conditional mean.
-According to the Nadaraya-Watson estimator \citep{Nadaraya-1964,Watson-1964}, $r(\vu)$ can be estimated by
-\begin{equation}\label{equ:densityreg-neldermead}
-  \hat{r}(\vu) = \sum_{j=1}^n w_j(\vu) X_j
-\end{equation}
-where
-\begin{equation*}
-  w_j(\vu) = \frac{
-    K\left( \frac{\left\Vert \vu - \vu_j \right\Vert}{b_{\vu}} \right)
-  }{
-    \sum_{l=1}^n K\left( \frac{\left\Vert \vu - \vu_l \right\Vert}{b_{\vu}} \right)
-  } \; ,
-\end{equation*}
-$K$ is a real, integrable, non-negative, and even kernel function,
-and $b_{\vu}$ is the bandwidth.
-Correspondingly, the estimated variance $X$ at $\vU = \vu$, $\hat{v}(\vu)$ is denoted by \citep{HallCarroll-1989},
-\begin{equation}
-  \hat{v}(\vu) = \sum_{j=1}^n w_j(\vu) \left[ X_j - \hat{r}(\vu) \right]^2 .
-\end{equation}
-
-The Nadaraya-Watson estimator can be seriously biased at samples near the boundary of the field, but local polynomial estimator overcomes this gap \citep{WangMei-2008,ZhaoZhang-2018}.
-By assuming $r(\vu)$ is $p$-th order differentiable nearby $\vu_0$, we can express $r(\vu)$ as the Taylor expansion at $\vu$ according to \eqref{equ:densityreg-polynomial-taylor}
-% \begin{equation}
-\begin{multline}\label{equ:densityreg-polynomial-taylor}
-  r(\vu) \approx r(\vu_0) + \sum_{v=1}^m \frac{r_v^{(1)}(\vu_0)}{1\!} (u_v - u_{0v}) + \sum_{v=1}^m \frac{r_{v}^{(2)}(\vu_0)}{2\!} (u_v - u_{0v}) + \cdots \\
-  + \sum_{v_1=1}^m \frac{r_{v_1 v_2 \cdots v_p}^{(p)}(\vu_0)}{p\!} (u_{v} - u_{0 v}) + \cdots
-\end{multline}
-% \end{equation}
-where $r_v^{(i)}$ is the $i$-th order partial derivative of $r$ with respect to the $v$-th dimension of $\vu$,
-and $u_v,u_{0v}$ are the $v$-th dimensions of $\vu$ and $\vu_0$, respectively.
-If we truncate \autoref{equ:densityreg-polynomial-taylor} at the $p$-th order,
-the Taylor expansion becomes a $p$-th order polynomial of $\vu$, as
-\begin{equation}\label{equ:densityreg-polynomial-poly}
-  r(\vu) \approx r(\vu_0) + \sum_{d=1}^{p} \sum_{v=1}^{m} \xi_{d,v}(\vu)(u_v - u_{0v})^d
-\end{equation}
-where $\xi_{d,v}(\vu) = \frac{r_v^{(d)}(\vu_0)}{d\!}$.
-Then we can estimate the coefficients of the Taylor expansion by minimizing the weighted least squares error as
-\begin{equation}\label{equ:densityreg-polynomial}
-  \hat{r}(\vu) = \sum_{i=1}^n \left[ X_i - \sum_{d=1}^{p}\sum_{v=1}^{m} \xi_{d,v}(\vu) (u_{iv} - u_{0v})^d \right]^2 K_h(vu_i - \vu) \;.
-\end{equation}
-Constructing vector $\vX = \left( X_1, X_2, \cdots, X_n \right)$ and matrix
-\begin{equation*}
-  \vD = \begin{pmatrix}
-    1 & d_{11} & d_{12} & \cdots & d_{1m} & \cdots & d_{11}^p & d_{12}^p & \cdots & d_{1m}^p \\
-    1 & d_{21} & d_{22} & \cdots & d_{2m} & \cdots & d_{21}^p & d_{22}^p & \cdots & d_{2m}^p \\
-    \vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots \\
-    1 & d_{n1} & d_{n2} & \cdots & d_{nm} & \cdots & d_{n1}^p & d_{n2}^p & \cdots & d_{nm}^p
-  \end{pmatrix} \; ,
-\end{equation*}
-with $d_{iv} = u_{iv} - u_{0v}$,
-the estimates of all $\xi$ can be expressed as
-\begin{equation}
-  \hat{\vxi}(\vu) = \left( \vD\T \vW(\vu) \vD \right)\I \vD\T \vW(\vu) \vX
-\end{equation}
-where $\vxi(\vu) = \left(r(\vu_0), \xi_{1,1}(\vu), \cdots, \xi_{1,m}(\vu), \xi_{p,1}(\vu), \cdots, \xi_{p,m}(\vu)\right)$, and
-\begin{equation*}
-  \vW(\vu) = \begin{pmatrix}
-    K_h(\vu_1 - \vu) & & & \\
-    & K_h(\vu_2 - \vu) & & \\
-    & & \ddots & \\
-    & & &  K_h(\vu_n - \vu)
-  \end{pmatrix}
-\end{equation*}
-Thus, the estimates of $r(\vu_0)$ is the first element of $\hat{\vxi}(\vu)$.
-In most cases, the results of local polynomial estimation are more accurate than those of the Nadaraya-Watson estimator \citep{ZhaoZhang-2018}.
-
-
-
-\subsection{Spatial non-stationarity and spatial autocorrelation}
-
-Although \autoref{def:spatial-heterogeneity-weak} offers relatively lenient conditions, practical application remains limited due to the unknown nature of the distribution function.
-Below, we focus on a special case where $X$ is a normally distributed random variable.
-In this scenario, spatial heterogeneity may be reflected in the mean and variance of $X$.
-Under the assumption of Tobler's ``first law of geography'' being true \citep{Tobler-1970}, such spatial heterogeneity ultimately manifests as ``spatial non-stationarity'' and ``spatial autocorrelation''.
-
-\begin{definition}[Spatial non-stationarity] \label{def:spatial-nonstationarity}
-  If the value of a random variable $X$ on a field of location $\vu$, denoted by $g$, can be expressed as
-  \begin{equation}
-    X = g(\vu) + \epsilon
-  \end{equation}
-  where $\epsilon \sim N(0, \sigma^2)$ is independent and $g$ is differentiable, $X$ has spatial non-stationarity when there exists $\vu$ such that
-  \begin{equation}
-    \conde{X}{\vu} \neq E(X) \; .
-  \end{equation}
-\end{definition}
-
-Considering the first `law' of geography, we can generally assume that the condition --- $g$ is differentiable --- holds true, as this is a characteristic of the field.
-If this condition does not hold, we can apply finite differences within a limited range in place of derivative to achieve comparable results.
-Additionally, according to \autoref{thm:spatial-nonstationarity-independent}, observations of $X$ are independent of each other.
-Let $\vX = \rvec{X_1,X_2,\cdots,X_n}$ denote $n$ observations of $X$ and let $\vm = \rvec{g(\vu_1), g(\vu_2), \cdots, g(\vu_n)}$, so that $\vX \sim \vN(\vm, \sigma^2\vI)$.
-
-\begin{theorem}\label{thm:spatial-nonstationarity-independent}
-  Observations of spatial non-stationarity random variables are independent.
-\end{theorem}
-
-\begin{proof}
-  Let $X_1,X_2$ obtain any two observation of $X$ on location $\vu_1,\vu_2$, respectively, where $X = g(\vu) + \epsilon$ and $\epsilon \sim N(0, \sigma^2)$
-  \begin{equation}
-    \begin{split}
-      \cov(X_1,X_2) & = \var(X_1+X_2) - \var(X_1) - \var(X_2) \\
-      &= \var(\epsilon_1 + \epsilon_2) - \var(\epsilon_1) - \var(\epsilon_2) .
-    \end{split}
-  \end{equation}
-  Because $\epsilon_1$ and $\epsilon_2$ are independent, $\cov(X_1,X_2) = 0$.
-  Thus, $X_1$ and $X_2$ are independent.
-\end{proof}
-
-As demonstrated above, spatial non-stationarity does not influence the variance of $X$ across different locations.
-However, in some cases, observations of $X$ at different locations may exhibit correlation, a phenomenon known as spatial autocorrelation.
-The observations $\vX$ can be expressed as
-\begin{equation}
-  \vX = \lambda \vW\vX + \vepsilon
-\end{equation}
-where $\lambda$ is the spatial autocorrelation coefficient, $\vW$ is the spatial weighting matrix, and $\vepsilon \sim \vN(\vzero, \sigma^2\vI)$.
-Thus,
-\begin{equation}
-  \vX = (\vI - \lambda \vW)\I\vepsilon
-\end{equation}
-It is easy to know that
-\begin{align}
-  E(\vX) & = (\vI - \lambda \vW)\I E(\vepsilon) = (\vI - \lambda \vW)\I \cdot \vzero = \vzero \\
-  \var(\vX) & = \sigma^2 \rvec{(\vI - \lambda \vW)\T(\vI - \lambda \vW)}\I
-\end{align}
-Therefore, spatial autocorrelation does not affect the expectation of $X$ across different locations but its variance.
-This provides one theoretical way to distinguish spatial autocorrelation from spatial non-stationary.
-
-In spatial data analysis, distinguishing between spatial non-stationarity and spatial autocorrelation often proves challenging.
-We try to propose a perspective to understand their relationship as \autoref{fig:rel-spatial-depen-hetero}.
-Data exhibiting spatial autocorrelation frequently appear non-stationary, and non-stationary data also show signs of autocorrelation.
-Within the framework outlined this section, both spatial non-stationarity and spatial autocorrelation can be exhibited as spatial heterogeneity.
-While these two properties can co-occur, they influence spatial random variables in different ways:
-spatial non-stationarity alters the expectation, while spatial autocorrelation affects the variance.
-If observers perceive the expectation as the changing component, they may misinterpret spatial autocorrelation as spatial heterogeneity, and vice versa.
-Furthermore, both phenomena fall under the broader category of spatial dependence.
-The premise of heterogeneity requires that the field function be continuously differentiable, indicating a level of dependency that renders the field non-discrete.
-Meanwhile, autocorrelation directly reflects dependency among locations.
-We believe this dependency is a primary reason why spatial non-stationarity and spatial autocorrelation are often challenging to differentiate.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth]{fig/spatial-dependence-heterogeneity.pdf}
-  \caption{Relationships between spatial dependence, spatial heterogeneity, spatial non-stationarity, and spatial autocorrelation.}
-  \label{fig:rel-spatial-depen-hetero}
-\end{figure}
-
-Furthermore, although both spatial autocorrelation and spatial non-stationarity reflect certain aspects (the variance and expectation, respectively) of spatial heterogeneity,
-spatial autocorrelation is generally regarded as a manifestation of spatial dependence, whereas spatial non-stationarity is viewed as a form of spatial heterogeneity.
-Therefore, the term ``spatial heterogeneity'' in the following discussion will refer solely to spatial non-stationarity,
-aligning with the majority of studies that utilise geographically weighted regression \citep{HelbichBrunauer-2014,LuCharlton-2014,FotheringhamCrespo-2015,LuBrunsdon-2017,LuGe-2020a}.
-Nonetheless, we propose viewing spatial heterogeneity and spatial dependence as broader, abstract properties that describe the conditional probability distribution of spatial random variables.
-Correspondingly, spatial non-stationarity and spatial autocorrelation should be seen as more specific attributes, characterising the expectations and variances of spatial random variables, respectively.
-
-\subsection{From the definition to the testing logic}\label{sec:heterogeneity-testing-logic}
-
-The definitions above determine what needs to be tested.
-The strong definition concerns the complete conditional density $f_{X|\vU}(x|\vu)$.
-Testing equality of the complete density at all locations would be difficult in practice and is not necessary for the purpose of \gls{hgwr}, where the primary interest is whether a conditional relationship changes across space.
-Therefore, we use the weak definition based on the conditional expectation.
-Let $g(\vu)=E(X|\vU=\vu)$.
-The absence of spatial non-stationarity means that $g(\vu)$ is constant for all possible locations, while spatial heterogeneity exists when at least one location has a different conditional expectation.
-
-This statement gives the first part of the testing logic: a test of spatial heterogeneity is a test of spatial constancy, rather than a test of whether an effect is different from zero.
+Under \autoref{def:spatial-heterogeneity}, spatial heterogeneity focus on the spatial variation of the conditional distribution of $X$ under $\vU$.
+Considering that the estimates of \gls{glsw} effects in \gls{hgwr} are actually conditional expectations of the effects, we study how spatial heterogeneity affects the conditional expectation of $X$ under $\vU$.
+Although changes of $f_{X|\vU}$ across locations does not necessarily lead to changes in $E(X|\vU)$, the latter is an effective indicator of spatial heterogeneity for Gaussian random variables, which is the case for the \gls{glsw} effects.
+Let $f_{X|\vU}(x|vu)=N(\mu(\vu),\sigma^2(\vu))$ denote the distribution of $X$ at a certain location $\vu$.
+Spatial heterogeneity cause the changes in expectation and variance of $X$ across locations.
+By controlling the variance $\sigma^2(\vu)$ to be constant across locations, the expectation $\mu(\vu)$ is a direct reflection of spatial heterogeneity.
+On other words, for spatial random variables with Gaussian distribution and homoscedasticity, spatial heterogeneity is equivalent to the non-constancy of the conditional expectation $E(X|\vU)$ across locations following a surface of $\mu(\vu)$.
+In the case without spatial heterogeneity, i.e., $X$ and $\vU$ are independent, $E(X|\vU)$ equal to $E(X)$.
 For the $k$-th \gls{glsw} effect in \gls{hgwr}, this definition leads to the null hypothesis
 \begin{equation}\label{equ:glsw-heterogeneity-core-hypothesis}
-  H_0: \gamma_{1k}=\gamma_{2k}=\cdots=\gamma_{mk},
+  H_0: E(\hat{\gamma}_k|\vu_{1})=E(\hat{\gamma}_k|\vu_{2})=\cdots=E(\hat{\gamma}_k|\vu_{m})=E(\hat{\gamma}_k),
 \end{equation}
-whereas the alternative hypothesis states that not all $\gamma_{jk}$ are equal.
+whereas the alternative hypothesis states that not all $E(\hat{\gamma}_k|\vu_{j})$ equal to $E(\hat{\gamma}_k)$.
 An effect can therefore be significantly different from zero but spatially homogeneous, or spatially heterogeneous even when some local estimates are not significantly different from zero.
 
-The second part of the logic is to measure departure from spatial constancy.
+\subsection{Statistics for testing spatial heterogeneity}\label{sec:heterogeneity-testing-logic}
+
 After estimating $\gamma_{jk}$ at all group locations, its spatial dispersion can be used as a statistic.
-For the $k$-th \gls{glsw} effect, denote this statistic by
+For the $k$-th \gls{glsw} effect, denote this statistic $T_k$ defined by \autoref{equ:heterogeneity-core-statistic},
 \begin{equation}\label{equ:heterogeneity-core-statistic}
-  T_k = \frac{1}{m}\sum_{j=1}^{m}\left(\hat{\gamma}_{jk}-\overline{\hat{\gamma}}_k\right)^2,
+  \begin{split}
+    T_k = & \frac{1}{m}\sum_{j=1}^{m}\left(\tilde{\gamma}_{jk}-\sum_{l=1}^{m} \frac{1}{m}\tilde{\gamma}_{lk} \right)^2 \\
+    \tilde{\gamma} = & \frac{\hat{\gamma}}{\se(\hat{\gamma})} \; ,
+  \end{split}
 \end{equation}
-where $m$ is the number of groups and $\overline{\hat{\gamma}}_k$ is the mean of the local estimates.
+where $m$ is the number of groups and $\var(\cdot)$ is the variance of the local estimates.
 A large value of $T_k$ indicates strong variation, but it cannot alone show significant spatial heterogeneity because random error, data borrowing, and the hierarchical random effects also produce variation in local estimates.
 
-The final part is consequently to determine the distribution of a dispersion statistic under spatial constancy.
-There are two routes in this study.
+The next step is consequently to determine the distribution of a dispersion statistic under spatial constancy.
+There are two routes in this study: bootstrap-based and distribution-based routes.
 The bootstrap compares the observed variance of standardised local estimates with its empirical null distribution.
 The distribution-based method uses the linear form of the \gls{glsw} estimator, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of an observation-weighted coefficient variance by an $F$ distribution.
 The two methods address the same null hypothesis, but use different finite-sample statistics and reference distributions.
 The following section incorporates the hierarchical error structure and \gls{glsw} estimator to construct the corresponding bootstrap and $F$ tests for \gls{hgwr}.
 
-\section{Testing Spatial Heterogeneity in GLSW Effects} \label{sec:glsw-test}
+\subsection{Bootstrap-based hypothesis testing}\label{sec:test-hgwr-glsw-boot}
 
-According to \autoref{sec:heterogeneity-testing-logic}, testing a \gls{glsw} effect is to determine whether its variation among locations is significantly greater than the variation generated under a spatially constant effect.
-The target is different from the conventional test of whether a coefficient is significantly different from zero.
-For the $k$-th \gls{glsw} effect, both methods below evaluate the spatial constancy stated in \eqref{equ:glsw-heterogeneity-core-hypothesis}.
-The bootstrap obtains an empirical reference distribution by repeated model fitting, while the distribution-based method derives an approximate $F$ distribution from the \gls{glsw} estimator.
-
-% In this section, we concentrate on designing hypothesis tests for fixed effects and \gls{glsw} effects of the \gls{hgwr} model.
-% The significance of deviation from zero is evaluated for both fixed effects and \gls{glsw} effects using a $t$-test.
-% Additionally, testing spatial heterogeneity is considered for \gls{glsw} effects using an $F$-test and a bootstrap test.
-
-% \subsection{Fixed effects}\label{sec:test-hgwr-fixed}
-
-% For the $j$-th fixed effect, ${\beta}_j$, we test the following hypothesis as shown in \eqref{equ:hgwr-test-fixed-hypothesis},
-% \begin{align}\label{equ:hgwr-test-fixed-hypothesis}
-%     \begin{split}
-%     H_0 &: {\beta}_j = 0 \; ; \\
-%     H_1 &: {\beta}_j \neq 0 \; .
-%     \end{split}
-% \end{align}
-% First, we obtain their variance as \eqref{equ:var-beta},
-% \begin{equation} \label{equ:var-beta}
-% \begin{split}
-%     \var(\hat{\vbeta}) 
-%     & = \left(\vX\T\vV^{-1}\vX\right)^{-1}\left(\vX\T\vV^{-1}\right) \var(\vy_h^{(t)}) 
-%     \left[\left(\vX\T\vV^{-1}\vX\right)^{-1}\left(\vX\T\vV^{-1}\right)\right]\T \\
-%     & = \left(\vX\T\vV^{-1}\vX\right)^{-1}\vX\T\vV^{-1}
-%     \vV\vV^{-1}\vX \left[\left(\vX\T\vV^{-1}\vX\right)^{-1}\right]\T \\
-%     & = \left(\vX\T\vV^{-1}\vX\right)^{-1} \; .
-% \end{split}
-% \end{equation}
-% The test statistic used to evaluate the null hypothesis is \eqref{equ:hgwr-test-fixed-statistic}
-% \begin{equation}\label{equ:hgwr-test-fixed-statistic}
-%     t = \frac{\hat{\beta}_j}{\mathrm{se}(\hat{\beta}_j)} \sim t(\DF)
-% \end{equation}
-% where $\mathrm{se}(\hat{\beta}_j)$ is the squared root of the $j$-th diagonal element of 
-% $\var(\hat{\vbeta})$, and $\DF$ is the degree of freedom of this model.
-
-% For an \gls{hgwr} model with $p$ fixed effects, $q$ \gls{slr} effects, $r$ \gls{glsw} effects, $n$ observations, and $m$ groups, the total number of parameters is given by \eqref{equ:hgwr-test-np},
-% \begin{equation}\label{equ:hgwr-test-np}
-%     \NP = r m + p + \frac{q(q+1)}{2} + 1
-% \end{equation}
-% However, due to the data borrowing process, the \gls{glsw} effect parameters are not fully independent.
-% Thus, we estimate the effective number of parameters of \gls{glsw} effects as \eqref{equ:hgwr-enp-glsw},
-% \begin{equation}\label{equ:hgwr-enp-glsw}
-%     \ENP_{\vgamma} = 2\tr(\vS) - \tr(\vS\T\vS)
-% \end{equation}
-% where
-% \begin{equation*}
-% \vS = \begin{pmatrix}
-%     \mybm{g}_{1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{1}\mybm{V}\mybm{G})^{-1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{1}\mybm{V}\mybm{y}_{g}) \\
-%     \mybm{g}_{1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{1}\mybm{V}\mybm{G})^{-1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{1}\mybm{V}\mybm{y}_{g})  \\
-%     \vdots  \\
-%     \mybm{g}_{1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{1}\mybm{V}\mybm{G})^{-1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{1}\mybm{V}\mybm{y}_{g}) \\
-%     \vdots \\
-%     \mybm{g}_{m}(\mybm{G}^{\mathrm{T}}\mybm{W}_{m}\mybm{V}\mybm{G})^{-1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{m}\mybm{V}\mybm{y}_{g}) \\
-%     \mybm{g}_{m}(\mybm{G}^{\mathrm{T}}\mybm{W}_{m}\mybm{V}\mybm{G})^{-1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{m}\mybm{V}\mybm{y}_{g}) \\
-%     \vdots \\
-%     \mybm{g}_{m}(\mybm{G}^{\mathrm{T}}\mybm{W}_{m}\mybm{V}\mybm{G})^{-1}(\mybm{G}^{\mathrm{T}}\mybm{W}_{m}\mybm{V}\mybm{y}_{g})
-% \end{pmatrix}
-% \end{equation*}
-% and $\vS$, known as the ``hat matrix'' \citep{FotheringhamBrunsdon-2002}, calculates the effective number of parameters and the effective degrees of freedom for the entire model as \eqref{equ:hgwr-enp} and \eqref{equ:hgwr-edf}, respectively,
-% \begin{align}
-% \label{equ:hgwr-enp}
-% \ENP & = 2\tr(\vS) - \tr(\vS\T\vS) + p + \frac{q(q+1)}{2} + 1 \\
-% \label{equ:hgwr-edf}
-% \EDF & = n - \ENP \; .
-% \end{align}
-
-% \subsection{Group-level spatially weighted effects}\label{sec:test-hgwr-glsw}
-
-\subsection{Bootstrap-based method}\label{sec:test-hgwr-glsw-boot}
-
-The primary objective for the \gls{glsw} effects is to determine whether their spatial variation is significant under the definition and null hypothesis established in \autoref{sec:heterogeneity-testing-logic}.
-The hypothesis is formulated as \eqref{equ:hgwr-glsw-boot-hypothesis},
-\begin{align}\label{equ:hgwr-glsw-boot-hypothesis}
-    \begin{split}
-    H_0 &: \forall \vu, E(\hat{\vgamma}|\vu) = E(\hat{\vgamma}) \; ; \\
-    H_1 &: \exists \vu, E(\hat{\vgamma}|\vu) \neq E(\hat{\vgamma}) \; .
-    \end{split}
-\end{align}
+The primary objective for the \gls{glsw} effects is to determine whether their spatial variation is significant under the definition and null hypothesis established in \autoref{equ:glsw-heterogeneity-core-hypothesis}.
 Because the \gls{glsw} effects are estimated within a hierarchical regression model, their local estimates inherit correlation from data borrowing and the model's error structure.
 Both theoretical and experimental findings indicate that directly testing for spatial heterogeneity in \gls{glsw} effect estimates results in an excessively high Type I error rate (i.e., incorrectly rejecting the null hypothesis of no spatial heterogeneity), making the test ineffective.
 For regression models, there are two typical resampling strategies: sampling observations and sampling residuals \citep{Bittmann-2021}.
 For \gls{hgwr}, experiments show that resampling observations may lead to an insufficient number of samples in some locations, potentially causing model calibration to fail.
 Therefore, resampling residuals is a more suitable approach, as recommended by \citet{HarrisBrunsdon-2017}.
 
-For a calibrated \gls{hgwr} model with $\hat{\vgamma}$ as estimates of \gls{glsw} effects, $\hat{\vbeta}$ as estimates of fixed effects, and $\hat{\vD}$ as the estimated variance--covariance matrix of random effects, the distribution of the combined random-effect and residual term can be expressed as \eqref{equ:glsw-bootvar-error-distribution},
+For a calibrated \gls{hgwr} model with $\hat{\vgamma}$ as estimates of \gls{glsw} effects, $\hat{\vbeta}$ as estimates of fixed effects, and $\hat{\vD}$ as the estimated variance--covariance matrix of random effects, the distribution of the combined random-effect and residual term can be expressed as \autoref{equ:glsw-bootvar-error-distribution},
 \begin{equation}\label{equ:glsw-bootvar-error-distribution}
     \ve = \vZ\vmu + \vepsilon \sim \vN\left(\vzero, (\vZ\vD\vZ\T+\vI)\sigma^2\right)
 \end{equation}
@@ -732,45 +497,45 @@ The observed coordinates, covariates, group membership, and group sample sizes a
 Bootstrap responses are generated from the fixed and \gls{glsw} components of this null model plus newly simulated zero-mean group random effects and residuals; empirical random-effect predictions are not included in the generating mean.
 The procedure is as follows.
 \begin{enumerate}[label=\textbf{Step \arabic*.}, left=0.5em, itemindent=2em]
-    \item For the original model, calculate the variance of the standardised local estimates $\hat{\gamma}_{jk}/\widehat{\operatorname{se}}(\hat{\gamma}_{jk})$, denoted by $S_k$;
-    \item Fit the effect-wise spatially constant null model and obtain its mean $\hat{\vy}_{0k}$, random-effect covariance $\hat{\vD}_{0k}$, and residual scale $\hat{\sigma}_{0k}$;
-    \item Repeat the following steps $B$ times. In each iteration $i$,
-    \begin{enumerate}
-        \item Independently draw new group random effects and residuals according to \eqref{equ:glsw-bootvar-error-distribution}, using $\hat{\vD}_{0k}$ and $\hat{\sigma}_{0k}$, and set $\vy^*_i=\hat{\vy}_{0k}+\ve^*_i$;
-        \item Refit the original \gls{hgwr} specification to $\vy^*_i$, normally holding the bandwidth at its value selected from the observed data;
-        \item Calculate the standardised-variance statistic $S^*_{ik}$;
-    \end{enumerate}
-    \item Calculate the $p$ value as \eqref{equ:glsw-bootvar-pvalue},
-    \begin{equation}\label{equ:glsw-bootvar-pvalue}
-        p_k = \frac{1+\sum_{i=1}^B 1_{S^*_{ik} \geq S_k}}{B+1}
-    \end{equation}
-    and compare $p_k$ with the pre-defined significance level $\alpha$.
+  \item For the original model, calculate the variance of the standardised local estimates $\hat{\gamma}_{jk}/\widehat{\operatorname{se}}(\hat{\gamma}_{jk})$, denoted by $S_k$;
+  \item Fit the effect-wise spatially constant null model and obtain its mean $\hat{\vy}_{0k}$, random-effect covariance $\hat{\vD}_{0k}$, and residual scale $\hat{\sigma}_{0k}$;
+  \item Repeat the following steps $B$ times. In each iteration $i$,
+  \begin{enumerate}
+    \item Independently draw new group random effects and residuals according to \autoref{equ:glsw-bootvar-error-distribution}, using $\hat{\vD}_{0k}$ and $\hat{\sigma}_{0k}$, and set $\vy^*_i=\hat{\vy}_{0k}+\ve^*_i$;
+    \item Refit the original \gls{hgwr} specification to $\vy^*_i$, normally holding the bandwidth at its value selected from the observed data;
+    \item Calculate the standardised-variance statistic $S^*_{ik}$;
+  \end{enumerate}
+  \item Calculate the $p$ value as \autoref{equ:glsw-bootvar-pvalue},
+  \begin{equation}\label{equ:glsw-bootvar-pvalue}
+      p_k = \frac{1+\sum_{i=1}^B 1_{S^*_{ik} \geq S_k}}{B+1}
+  \end{equation}
+  and compare $p_k$ with the pre-defined significance level $\alpha$.
 \end{enumerate}
 
 Although \gls{hgwr} is more efficient than \gls{gwr} and \gls{mgwr} \citep{HuHarris-2024}, the entire procedure remains time-intensive.
 We use $B=199$ in the primary Monte Carlo experiments and $B=999$ in a small diagnostic confirmation.
 The historical fitted-model bootstrap is retained only as a diagnostic comparator; it is not used as the primary bootstrap procedure.
 
-\subsection{Distribution-based method}\label{sec:test-hgwr-glsw-ftest}
+\subsection{Distribution-based hypothesis testing}\label{sec:test-hgwr-glsw-ftest}
 
 As a computationally inexpensive approximation,
 we can also design a probability-based hypothesis test for \gls{glsw} effects following the method proposed by \citet{LeungMei-2000}.
 Assuming normality for $\vmu$ and $\vepsilon$,
-we define the null and alternative hypothesis as \eqref{equ:hypothesis-glsw-ftest},
+we define the null and alternative hypothesis as \autoref{equ:hypothesis-glsw-ftest},
 \begin{equation}\label{equ:hypothesis-glsw-ftest}
     \begin{split}
         H_{0} & : \gamma_{0k} = \gamma_{2k} = \cdots = \gamma_{mk}  \\
         H_{1} & : \mbox{not all $\gamma_{ik}(i=1,2,\cdots,m)$ are equal.}
     \end{split}
 \end{equation}
-For the $k$-th \gls{glsw} effect, we examine its variance under the null hypothesis, $V_k^2$, as \eqref{equ:glsw-ftest-variance},
+For the $k$-th \gls{glsw} effect, we examine its variance under the null hypothesis, $V_k^2$, as \autoref{equ:glsw-ftest-variance},
 \begin{equation}\label{equ:glsw-ftest-variance}
     \begin{split}
         V_{k}^2 & = \frac{1}{n} \sum_{i=1}^m \left( \hat{\gamma}_{ik} - \frac{1}{n} \sum_{i=1}^n \hat{\gamma}_{ik} \right)^2 = \frac{1}{n} \hat{\mybm{\gamma}}_{k}^{\mathrm{T}}\left( \mybm{I} - \frac{1}{n} \mybm{J} \right) \hat{\mybm{\gamma}}_{k} \\
         & =  \frac{1}{n} \left[ \hat{\mybm{\gamma}}_{k} - E(\hat{\mybm{\gamma}}_{k}) \right]^{\mathrm{T}} \left( \mybm{I} - \frac{1}{n} \mybm{J} \right)\left[ \hat{\mybm{\gamma}}_{k} - E(\hat{\mybm{\gamma}}_{k}) \right] \; .
     \end{split}
 \end{equation}
-According to \eqref{equ:bfml-glsw-estimator}, for the $i$-th group, we know
+According to \autoref{equ:bfml-glsw-estimator}, for the $i$-th group, we know
 \begin{equation*}
     \hat{\mybm{\gamma}}_{ik} = \mybm{e}_{k} \left( \mybm{G}^{\mathrm{T}}\mybm{W}_{i}\mybm{V}^{-1}\mybm{G} \right)^{-1}\left( \mybm{G}^{\mathrm{T}}\mybm{W}_{i}\mybm{V}^{-1}\mybm{y}_{g} \right) = \mybm{\Gamma}_{i}\mybm{y}_{g}
 \end{equation*}
@@ -789,25 +554,25 @@ In this case, $E(\hat{\mybm{\gamma}_{k}})=\mybm{\Gamma}E(\mybm{y}_{g})$, and
     V_{k}^2  = \mybm{\eta}^{\mathrm{T}}\left[ \frac{1}{n} \mybm{\Gamma}\left( \mybm{I}-\frac{1}{n} \mybm{J}\right)\mybm{\Gamma} \right]\mybm{\eta}
 \end{equation*}
 where $\mybm{\eta}=\mybm{Z}\mybm{\mu}+\mybm{\epsilon}\sim \mybm{N}(\mybm{0},\vV\sigma^2)$.
-The expectation and variance of $V_k^2/\sigma^2$ can be calculated as \eqref{equ:glsw-ftest-exp-Vksigma} and \eqref{equ:glsw-ftest-var-Vksigma}, respectively,
+The expectation and variance of $V_k^2/\sigma^2$ can be calculated as \autoref{equ:glsw-ftest-exp-Vksigma} and \autoref{equ:glsw-ftest-var-Vksigma}, respectively,
 \begin{align}
 \label{equ:glsw-ftest-exp-Vksigma}
 E\left( \frac{V_{k}^2}{\sigma^{2}} \right)  & = \mathrm{tr}\left[ \frac{1}{n} \mybm{\Gamma}^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \mybm{\Gamma} \mybm{V} \right]  \\
 \label{equ:glsw-ftest-var-Vksigma}
 \mathop{\mathrm{var}}\left( \frac{V_{k}^2}{\sigma^{2}} \right) & = 2\mathrm{tr}\left\{ \left[ \frac{1}{n} \mybm{\Gamma}^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \mybm{\Gamma}\mybm{V} \right]^2 \right\} .
 \end{align}
-The matrix square in \eqref{equ:glsw-ftest-var-Vksigma} is evaluated before taking the trace, so the second-order moment includes cross-location as well as within-location covariance terms.
+The matrix square in \autoref{equ:glsw-ftest-var-Vksigma} is evaluated before taking the trace, so the second-order moment includes cross-location as well as within-location covariance terms.
 By letting $\xi_{1}=E({V_{k}^2}/{\sigma^2})$ and $\xi_{2}=\frac{1}{2}\mathop{\mathrm{var}}({V_{k}^2}/{\sigma^2})$,
 the term $\hfrac{\xi_{1}V_{k}^2}{\xi_{2}\sigma^2}$ can be approximated by a $\chi^2$ distribution with $\hfrac{\xi_1^2}{\xi_2}$ degrees of freedom.
 
-Denote the sum of squared residuals of $\hat{\vy}_g$ by $\mathrm{RSS}_g$ as \eqref{equ:glsw-ftest-rss},
+Denote the sum of squared residuals of $\hat{\vy}_g$ by $\mathrm{RSS}_g$ as \autoref{equ:glsw-ftest-rss},
 \begin{equation}\label{equ:glsw-ftest-rss}
     \begin{split}
     \mathrm{RSS}_{g} & = \mybm{y}_{g}^{\mathrm{T}}(\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{y}_{g} = \mybm{\eta}^{\mathrm{T}}(\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{\eta} \quad .
     \end{split}
 \end{equation}
-where $\vS$ is defined in \eqref{equ:bfml-glsw-hatmat}.
-Using a similar method as above, the expectation and variance of $\left.\mathrm{RSS}\middle/\sigma^2\right.$ can be calculated as \eqref{equ:glsw-ftest-rsssigma2-exp} and \eqref{equ:glsw-ftest-rsssigma2-var},
+where $\vS$ is defined in \autoref{equ:bfml-glsw-hatmat}.
+Using a similar method as above, the expectation and variance of $\left.\mathrm{RSS}\middle/\sigma^2\right.$ can be calculated as \autoref{equ:glsw-ftest-rsssigma2-exp} and \autoref{equ:glsw-ftest-rsssigma2-var},
 \begin{align}
 \label{equ:glsw-ftest-rsssigma2-exp}
 E\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right) & = \mathrm{tr}\left[ (\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{V} \right]  \\
@@ -818,12 +583,12 @@ By setting $\delta_{1}=E\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right)$ and
 $\delta_{2}=\frac{1}{2}\mathop{\mathrm{var}}\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right)$,
 the term $\frac{\delta_1\mathrm{RSS}_g}{\delta_2\sigma^2}$ can be approximated by a $\chi^2$ distribution with $\delta_1^2/\delta_2$ degrees of freedom.
 Furthermore, since $\hat{\sigma}^2 = \frac{\mathrm{RSS}_g}{\delta_1}$
-is an unbiased estimator of $\sigma^2$, $\frac{\delta_1\mathrm{RSS}_g}{\delta_2\sigma^2}$ can be approximated by a $\chi^2$ distribution according to \eqref{equ:glsw-ftest-rss-chi2},
+is an unbiased estimator of $\sigma^2$, $\frac{\delta_1\mathrm{RSS}_g}{\delta_2\sigma^2}$ can be approximated by a $\chi^2$ distribution according to \autoref{equ:glsw-ftest-rss-chi2},
 \begin{equation}\label{equ:glsw-ftest-rss-chi2}
     \frac{\delta_1\mathrm{RSS}_g}{\delta_2\sigma^2} = \frac{\delta_1^2 \hat{\sigma}^2}{\delta_2\sigma^2} \sim \chi^2\left(\frac{\delta_1^2}{\delta_2}\right).
 \end{equation}
 
-Consequently, we can design an $F$-statistic as \eqref{equ:glsw-ftest-statistics},
+Consequently, we can design an $F$-statistic as \autoref{equ:glsw-ftest-statistics},
 \begin{equation}\label{equ:glsw-ftest-statistics}
 F = \frac{
 \left( \frac{\xi_{1}V_{k}^{2}}{\xi_{2}\sigma^{2}} \middle/ \frac{\xi_{1}^{2}}{\xi_{2}} \right) 
@@ -851,7 +616,7 @@ We reject the null hypothesis if $F \geqslant F_{1-\alpha}$.
 % \end{equation}
 % where $k$ is the number of random effects (including the random intercept) in the full model.
 
-\subsection{Simulation}\label{sec:test-hgwr-simulation}
+\section{Simulation}\label{sec:test-hgwr-simulation}
 
 The Monte Carlo experiment uses 200 group locations drawn independently and uniformly from $[0,1]\times[0,1]$ with a fixed coordinate seed.
 The same locations are retained across scenarios and repetitions so that differences among rejection rates do not reflect a changing spatial configuration.
@@ -1157,7 +922,7 @@ The authors report there are no competing interests to declare.
 The $F$-test for \gls{glsw} effects introduced in Section~\ref{sec:test-hgwr-glsw-ftest} involves matrices $\vV$, $\vS$, and $\vGamma$ with $n \times n$ elements, which can become computationally intensive due to their large size.
 However, given that $\vS$ and $\vGamma$ contain repeating rows --- since the group-level variable values are uniform within each group --- and that $\vV$ is a block-diagonal matrix with numerous zero elements, we can develop an algorithm to streamline the computations required for the $F$-test.
 
-As shown in \eqref{equ:ftest-glsw-Gamma-full}, the matrix $\vGamma$ can be expressed as \eqref{eq:ftest-simp-Gamma},
+As shown in \autoref{equ:ftest-glsw-Gamma-full}, the matrix $\vGamma$ can be expressed as \autoref{eq:ftest-simp-Gamma},
 \begin{equation}\label{eq:ftest-simp-Gamma}
     \vGamma = \begin{pmatrix}
     \vones_1 \vGamma_1 \\
@@ -1209,14 +974,14 @@ Considering that,
  & = \sum_{i=1}^m n_{i}\mybm{C}\mybm{\Gamma}_{i}
 \end{split}
 \end{align*}
-where $\vC = \sum_{i=1}^m n_i \vGamma_i$, we have \eqref{eq:ftest-simp-Var-middle},
+where $\vC = \sum_{i=1}^m n_i \vGamma_i$, we have \autoref{eq:ftest-simp-Var-middle},
 \begin{equation}\label{eq:ftest-simp-Var-middle}
 \mybm{\Gamma}^{\mathrm{T}}\left( \mybm{I}-\frac{1}{n}\mybm{J} \right)\mybm{\Gamma}
 = \sum_{i=1}^m n_{i}\left( \mybm{\Gamma}_{i}^{\mathrm{T}}\mybm{\Gamma}_{i} - \frac{\mybm{C}\mybm{\Gamma}_{i}}{n} \right)
 \end{equation}
 
 Further, let $\vGamma'_i = \vGamma_i\T\vGamma_i$, $\vC'_i=\vC\vGamma_i$ and $\vQ=(\vI-\vS)\T(\vI-\vS)$.
-According to \eqref{equ:glsw-ftest-exp-Vksigma}--\eqref{equ:glsw-ftest-rsssigma2-var} and \eqref{eq:ftest-simp-Var-middle}, these matrices will be multiplied by the block-diagonal matrix, $\vV$, which can be expressed as \eqref{eq:ftest-simp-V},
+According to \autoref{equ:glsw-ftest-exp-Vksigma}--\autoref{equ:glsw-ftest-rsssigma2-var} and \autoref{eq:ftest-simp-Var-middle}, these matrices will be multiplied by the block-diagonal matrix, $\vV$, which can be expressed as \autoref{eq:ftest-simp-V},
 \begin{equation}\label{eq:ftest-simp-V}
     \vV = \begin{pmatrix}
     \vV_1 & & & \\
@@ -1225,7 +990,7 @@ According to \eqref{equ:glsw-ftest-exp-Vksigma}--\eqref{equ:glsw-ftest-rsssigma2
     & & & \vV_m
     \end{pmatrix}.
 \end{equation}
-Then, matrices $\vGamma'_i\vV$, $\vC'_i\vV$, and $\vQ\vV$ are simplified to diagonal blocked matrices as \eqref{eq:ftest-simp-GammaiV}--\eqref{eq:ftest-simp-QV},
+Then, matrices $\vGamma'_i\vV$, $\vC'_i\vV$, and $\vQ\vV$ are simplified to diagonal blocked matrices as \autoref{eq:ftest-simp-GammaiV}--\autoref{eq:ftest-simp-QV},
 \begin{align}
   \label{eq:ftest-simp-GammaiV}
   \vGamma'_i\vV & = \begin{pmatrix}
