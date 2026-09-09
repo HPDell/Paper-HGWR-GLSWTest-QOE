@@ -64,7 +64,7 @@
 
 - **Data-generating process**：详细说明固定的 200 个组位置、核心与不平衡组规模、组层和个体层协变量、真实 GLSW 系数面、随机截距、随机斜率和误差生成机制。
 - **Monte Carlo design and testing workflow**：列出随机种子、六个核心场景、稳健性与诊断场景、重复次数、bootstrap 次数、CV 带宽、bisquared kernel、迭代与失败判据，以及效应逐一检验和汇总流程。
-- **Computational environment and reproducibility**：报告本机 CPU、内存、操作系统、R、MKL 和 `hgwrr` 版本，说明单线程任务、并发调度、原子结果分片与自动验证边界。
+- **Computational environment and reproducibility**：报告本机 CPU、内存、操作系统、R 和 `hgwrr` 版本，说明单线程任务、并发调度、原子结果分片与自动验证边界。
 - **Results**：在主文完整展示核心拒绝率、稳健性与诊断结果、失败率和运行时间，并分别分析校准、功效、效应特异性、计算代价与证据适用范围。
 - 在一张主表中汇总所有非稳健性结果：effect-wise bootstrap、六场景 full-model bootstrap、近似 F 检验和 $B=999$ 确认实验；稳健性与带宽重选结果另表报告。
 - 主要校准结论依据 effect-wise bootstrap；full-model 作为保留拟合空间面的模型参照，近似 F 检验定位为快速但可能偏宽松的筛查工具。
