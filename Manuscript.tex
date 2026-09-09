@@ -488,7 +488,8 @@ For regression models, there are two typical resampling strategies: sampling obs
 For \gls{hgwr}, experiments show that resampling observations may lead to an insufficient number of samples in some locations, potentially causing model calibration to fail.
 Therefore, resampling residuals is a more suitable approach, as recommended by \citet{HarrisBrunsdon-2017}.
 
-\noindent\textbf{Full-model bootstrap.}
+\subsubsection{Full-model bootstrap}
+
 The first procedure is a full-model parametric bootstrap.
 It uses one calibrated \gls{hgwr} model to generate each bootstrap response and then refits the same complete model specification.
 In the software used here, this procedure is implemented by the existing fitted-model (\texttt{legacy}) bootstrap mode; no alternative full-model implementation is substituted in the experiments.
@@ -546,7 +547,8 @@ The resulting $p_k$ therefore measures whether the observed standardised dispers
 This feature preserves the joint fitted structure but can make the procedure conservative for weak spatial heterogeneity.
 The computation is also intensive because every replication requires a complete \gls{hgwr} refit, although all effects are evaluated jointly from that refit.
 
-\noindent\textbf{Effect-wise bootstrap.}
+\subsubsection{Effect-wise bootstrap}
+
 The effect-wise bootstrap instead constructs a separate spatially constant null model for each effect $k$.
 For a non-intercept effect, the tested group-level variable is removed from the \gls{glsw} component and entered into the fixed component, so that its coefficient is constant over space.
 For a \gls{glsw} intercept, the spatially varying intercept is removed while the fixed intercept is retained.
