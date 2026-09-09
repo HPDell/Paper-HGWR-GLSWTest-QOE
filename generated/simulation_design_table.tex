@@ -1,19 +1,20 @@
-\begin{table*}[tbp]
+\begin{table}[tbp]
   \centering\scriptsize
   \caption{Monte Carlo design and evidential role of each experiment. A dash in the $B$ column denotes a non-bootstrap procedure.}
   \label{tab:simulation-design}
-  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.12\textwidth}>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}>{\centering\arraybackslash}p{0.05\textwidth}>{\raggedright\arraybackslash}X}
+  \begin{tabularx}{\textwidth}{lXXrr}
     \toprule
-    Experiment & Conditions & Procedure & Outer data sets & $B$ & Evidential role \\
-    \midrule
-Core null & $a=0$; ICC $=0.1,0.4$ & Approximate $F$ & 500 per scenario & -- & Primary calibration \\
-Core null & $a=0$; ICC $=0.1,0.4$ & Effect-wise bootstrap & 250 per scenario & 199 & Primary calibration \\
-Core alternatives & $a=0.5,1$; ICC $=0.1,0.4$ & Approximate $F$ & 500 per scenario & -- & Power and specificity \\
-Core alternatives & $a=0.5,1$; ICC $=0.4$ & Effect-wise bootstrap & 100 per scenario & 199 & Power and specificity \\
-Full-model bootstrap & $a=0,1$; ICC $=0.4$ & Fitted full-model mean & 50 per scenario & 199 & Diagnostic \\
-High-$B$ confirmation & $a=0,1$; ICC $=0.4$ & Effect-wise bootstrap & 20 per scenario & 999 & Diagnostic \\
-Robustness & $t_5$ errors or unbalanced sizes; $a=0.5$, ICC $=0.4$ & Approximate $F$ / effect-wise & 200 / 30 per scenario & -- / 199 & Robustness \\
-Bandwidth diagnostic & Re-select bandwidth in every bootstrap refit & Effect-wise bootstrap & 10 & 99 & Feasibility diagnostic \\
+Experiment & Conditions & Procedure & Replications & $B$ \\
+\midrule
+\multirow{2}{*}{Core null} & \multirow{2}{*}{$a=0$; ICC $=0.1,0.4$} & $F$-test & 500 & -- \\
+& & Effect-wise bootstrap & 250 & 199 \\
+\multirow{2}{*}{Core alternatives} & \multirow{2}{*}{$a=0.5,1$; ICC $=0.1,0.4$} & $F$-test & 500 & -- \\
+& & Effect-wise bootstrap & 100 & 199 \\
+Full-model bootstrap & $a=0,1$; ICC $=0.4$ & Full-model bootstrap & 50 & 199 \\
+High-$B$ confirmation & $a=0,1$; ICC $=0.4$ & Effect-wise bootstrap & 20 & 999 \\
+\multirow{2}{*}{Robustness} & \multirow{2}{\hsize}{$t_5$ errors or unbalanced sizes; $a=0.5$, ICC $=0.4$} & $F$-test & 200 / 30 & -- / 199 \\
+& & Effect-wise bootstrap & 200 / 30 & -- / 199 \\
+Bandwidth diagnostic & Re-select bandwidth in every bootstrap refit & Effect-wise bootstrap & 10 & 99 \\
     \bottomrule
   \end{tabularx}
-\end{table*}
+\end{table}
