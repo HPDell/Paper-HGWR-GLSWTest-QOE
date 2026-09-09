@@ -472,9 +472,10 @@ A large value of $T_k$ indicates strong variation, but it cannot alone show sign
 
 The next step is consequently to determine the distribution of a dispersion statistic under spatial constancy.
 There are two routes in this study: bootstrap-based and distribution-based routes.
-The bootstrap compares the observed variance of standardised local estimates with its empirical null distribution.
+The bootstrap compares the observed variance of standardised local estimates with an empirical reference distribution.
 The distribution-based method uses the linear form of the \gls{glsw} estimator, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of an observation-weighted coefficient variance by an $F$ distribution.
-The two methods address the same null hypothesis, but use different finite-sample statistics and reference distributions.
+Both methods assess spatial constancy, but they use different finite-sample statistics and reference distributions.
+We consider both a full-model bootstrap, which retains all fitted spatial surfaces in its generating mean, and an effect-wise bootstrap, which imposes spatial constancy only on the effect being tested.
 The following section incorporates the hierarchical error structure and \gls{glsw} estimator to construct the corresponding bootstrap and $F$ tests for \gls{hgwr}.
 
 \subsection{Bootstrap-based hypothesis testing}\label{sec:test-hgwr-glsw-boot}
@@ -486,35 +487,105 @@ For regression models, there are two typical resampling strategies: sampling obs
 For \gls{hgwr}, experiments show that resampling observations may lead to an insufficient number of samples in some locations, potentially causing model calibration to fail.
 Therefore, resampling residuals is a more suitable approach, as recommended by \citet{HarrisBrunsdon-2017}.
 
-For a calibrated \gls{hgwr} model with $\hat{\vgamma}$ as estimates of \gls{glsw} effects, $\hat{\vbeta}$ as estimates of fixed effects, and $\hat{\vD}$ as the estimated variance--covariance matrix of random effects, the distribution of the combined random-effect and residual term can be expressed as \autoref{equ:glsw-bootvar-error-distribution},
-\begin{equation}\label{equ:glsw-bootvar-error-distribution}
-    \ve = \vZ\vmu + \vepsilon \sim \vN\left(\vzero, (\vZ\vD\vZ\T+\vI)\sigma^2\right)
+\noindent\textbf{Full-model bootstrap.}
+The first procedure is a full-model parametric bootstrap.
+It uses one calibrated \gls{hgwr} model to generate each bootstrap response and then refits the same complete model specification.
+It does not fit a separate reduced model in which the effect under test is constrained to be spatially constant.
+Consequently, one bootstrap response and one full-model refit provide the bootstrap statistics for all requested \gls{glsw} effects, preserving their dependence within each replication.
+
+Let $j(\ell)$ denote the group containing observation $\ell$.
+For a calibrated model with local \gls{glsw} estimates $\hat{\vgamma}_{j}$, fixed-effect estimates $\hat{\vbeta}$, random-effect covariance $\hat{\vD}$, and residual variance $\hat{\sigma}^{2}$, the full-model generating mean for observation $\ell$ is
+\begin{equation}\label{equ:glsw-full-bootstrap-mean}
+  \hat{m}_{\ell}
+  = \vg_{\ell}\T\hat{\vgamma}_{j(\ell)}
+  + \vx_{\ell}\T\hat{\vbeta}.
 \end{equation}
-The null model is fitted separately for each effect under test.
-For effect $k$, that group-level variable is moved from the \gls{glsw} component to the fixed component, while the other \gls{glsw} effects retain their fitted spatial surfaces.
-This imposes spatial constancy on the tested effect without imposing the same restriction on the remaining effects.
-The observed coordinates, covariates, group membership, and group sample sizes are held fixed.
-Bootstrap responses are generated from the fixed and \gls{glsw} components of this null model plus newly simulated zero-mean group random effects and residuals; empirical random-effect predictions are not included in the generating mean.
-The procedure is as follows.
+The empirical group random-effect predictions are excluded from this mean.
+Instead, each bootstrap data set receives newly generated zero-mean group random effects and residuals.
+Their combined error distribution is
+\begin{equation}\label{equ:glsw-bootvar-error-distribution}
+  \ve^{*}_{i}=\vZ\vmu^{*}_{i}+\vepsilon^{*}_{i}
+  \sim \vN\left(
+    \vzero,
+    (\vZ\hat{\vD}\vZ\T+\vI)\hat{\sigma}^{2}
+  \right),
+\end{equation}
+where the observed coordinates, covariates, group membership, and group sample sizes are held fixed.
+For effect $k$, define the observed dispersion statistic as
+\begin{equation}\label{equ:glsw-full-bootstrap-statistic}
+  S_k
+  = \operatorname{var}_{j=1,\ldots,m}
+  \left\{
+    \frac{\hat{\gamma}_{jk}}
+         {\widehat{\operatorname{se}}(\hat{\gamma}_{jk})}
+  \right\}.
+\end{equation}
+The full-model bootstrap proceeds as follows.
 \begin{enumerate}[label=\textbf{Step \arabic*.}, left=0.5em, itemindent=2em]
-  \item For the original model, calculate the variance of the standardised local estimates $\hat{\gamma}_{jk}/\widehat{\operatorname{se}}(\hat{\gamma}_{jk})$, denoted by $S_k$;
-  \item Fit the effect-wise spatially constant null model and obtain its mean $\hat{\vy}_{0k}$, random-effect covariance $\hat{\vD}_{0k}$, and residual scale $\hat{\sigma}_{0k}$;
-  \item Repeat the following steps $B$ times. In each iteration $i$,
+  \item Fit the complete \gls{hgwr} specification to the observed data and calculate $S_k$ for every requested \gls{glsw} effect;
+  \item Repeat the following steps $B$ times. In replication $i$,
   \begin{enumerate}
-    \item Independently draw new group random effects and residuals according to \autoref{equ:glsw-bootvar-error-distribution}, using $\hat{\vD}_{0k}$ and $\hat{\sigma}_{0k}$, and set $\vy^*_i=\hat{\vy}_{0k}+\ve^*_i$;
-    \item Refit the original \gls{hgwr} specification to $\vy^*_i$, normally holding the bandwidth at its value selected from the observed data;
-    \item Calculate the standardised-variance statistic $S^*_{ik}$;
+    \item Independently draw new group random effects and residuals according to \autoref{equ:glsw-bootvar-error-distribution}, and set $y^{*}_{i\ell}=\hat{m}_{\ell}+e^{*}_{i\ell}$ for every observation;
+    \item Refit the same complete \gls{hgwr} specification to $\vy^{*}_{i}$, holding the bandwidth at the value selected from the observed data unless bandwidth re-selection is explicitly part of the experimental design;
+    \item Calculate $S^{*}_{ik}$ for every requested \gls{glsw} effect from this single refitted model;
   \end{enumerate}
-  \item Calculate the $p$ value as \autoref{equ:glsw-bootvar-pvalue},
+  \item For each effect, calculate the finite-sample corrected upper-tail probability
   \begin{equation}\label{equ:glsw-bootvar-pvalue}
-      p_k = \frac{1+\sum_{i=1}^B 1_{S^*_{ik} \geq S_k}}{B+1}
+    p_k = \frac{1+\sum_{i=1}^B 1\{S^*_{ik} \geq S_k\}}{B+1},
   \end{equation}
   and compare $p_k$ with the pre-defined significance level $\alpha$.
 \end{enumerate}
 
-Although \gls{hgwr} is more efficient than \gls{gwr} and \gls{mgwr} \citep{HuHarris-2024}, the entire procedure remains time-intensive.
-We use $B=199$ in the primary Monte Carlo experiments and $B=999$ in a small diagnostic confirmation.
-The historical fitted-model bootstrap is retained only as a diagnostic comparator; it is not used as the primary bootstrap procedure.
+Because the generating mean in \autoref{equ:glsw-full-bootstrap-mean} retains the estimated \gls{glsw} surfaces, the reference distribution incorporates the amount of heterogeneity reproduced by the fitted full model.
+The resulting $p_k$ therefore measures whether the observed standardised dispersion is unusually large relative to repeated samples from that fitted model; it must not be interpreted as arising from an effect-wise constrained null.
+This feature preserves the joint fitted structure but can make the procedure conservative for weak spatial heterogeneity.
+The computation is also intensive because every replication requires a complete \gls{hgwr} refit, although all effects are evaluated jointly from that refit.
+
+\noindent\textbf{Effect-wise bootstrap.}
+The effect-wise bootstrap instead constructs a separate spatially constant null model for each effect $k$.
+For a non-intercept effect, the tested group-level variable is removed from the \gls{glsw} component and entered into the fixed component, so that its coefficient is constant over space.
+For a \gls{glsw} intercept, the spatially varying intercept is removed while the fixed intercept is retained.
+All other \gls{glsw}, fixed, and sample-level random effects remain in their original components.
+Thus, the target effect alone is constrained by $H_{0k}$, while the other \gls{glsw} effects may retain spatial variation.
+
+Let $\hat{\vm}_{0k}$ denote the fitted mean from the effect-specific null model, excluding its empirical group random-effect predictions.
+The effect-wise bootstrap response in replication $i$ is
+\begin{equation}\label{equ:glsw-effectwise-bootstrap-response}
+  \vy^{*}_{ik}
+  = \hat{\vm}_{0k}
+  + \vZ\vmu^{*}_{ik}
+  + \vepsilon^{*}_{ik},
+  \qquad
+  \vZ\vmu^{*}_{ik}+\vepsilon^{*}_{ik}
+  \sim \vN\left[
+    \vzero,
+    (\vZ\hat{\vD}_{0k}\vZ\T+\vI)\hat{\sigma}^{2}_{0k}
+  \right],
+\end{equation}
+where $\hat{\vD}_{0k}$ and $\hat{\sigma}^{2}_{0k}$ are estimated from that null model.
+The coordinates, covariates, group membership, and group sample sizes again remain fixed.
+The effect-wise procedure is as follows.
+\begin{enumerate}[label=\textbf{Step \arabic*.}, left=0.5em, itemindent=2em]
+  \item Fit the original complete \gls{hgwr} model and calculate the observed statistic $S_k$ in \autoref{equ:glsw-full-bootstrap-statistic};
+  \item For target effect $k$, fit its spatially constant null model and obtain $\hat{\vm}_{0k}$, $\hat{\vD}_{0k}$, and $\hat{\sigma}^{2}_{0k}$;
+  \item Repeat the following steps $B$ times:
+  \begin{enumerate}
+    \item Generate $\vy^{*}_{ik}$ according to \autoref{equ:glsw-effectwise-bootstrap-response};
+    \item Refit the original complete \gls{hgwr} specification to $\vy^{*}_{ik}$, normally holding the observed-data bandwidth fixed;
+    \item Calculate the target-effect statistic $S^{*}_{ik}$ from the refitted model;
+  \end{enumerate}
+  \item Calculate
+  \begin{equation}\label{equ:glsw-effectwise-bootstrap-pvalue}
+    p^{(\mathrm{EW})}_k
+    = \frac{1+\sum_{i=1}^{B}1\{S^{*}_{ik}\geq S_k\}}{B+1},
+  \end{equation}
+  and reject $H_{0k}$ when $p^{(\mathrm{EW})}_k<\alpha$.
+\end{enumerate}
+
+Unlike the full-model bootstrap, the effect-wise bootstrap generates the reference distribution under the tested effect's spatial-constancy null.
+It therefore directly targets effect-specific calibration and avoids requiring the other \gls{glsw} effects to be spatially constant.
+The cost is that each requested effect needs its own null-model fit and its own $B$ complete-model bootstrap refits.
+For $K$ tested effects, the dominant computation consequently increases from $B$ full-model refits to approximately $KB$ refits, in addition to the $K$ null-model fits.
 
 \subsection{Distribution-based hypothesis testing}\label{sec:test-hgwr-glsw-ftest}
 
@@ -666,7 +737,7 @@ Bootstrap refits use an outer iteration limit of 100 and the same ten-retry limi
 The approximate $F$ test is evaluated in all six $a$-by-ICC scenarios using 500 independent data sets per scenario.
 The effect-wise bootstrap uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with ICC 0.4.
 The smaller bootstrap allocation reflects its substantially greater computational cost.
-The legacy fitted-model bootstrap is retained at the two ICC 0.4 endpoints using 50 data sets, and independent $B=999$ confirmation experiments use 20 data sets at each endpoint.
+The full-model bootstrap is evaluated at the two ICC 0.4 endpoints using 50 data sets, and independent $B=999$ confirmation experiments use 20 data sets at each endpoint.
 Two robustness scenarios replace the normal residuals by variance-standardised $t_5$ residuals or use strongly unbalanced group sizes.
 The unbalanced design assigns 5--15 observations to half of the groups and 60--100 to the other half, giving an expected total sample size of 9,000.
 Both robustness scenarios use 200 data sets for the $F$ test and 30 for the effect-wise bootstrap at $a=0.5$ and ICC 0.4.
@@ -715,7 +786,7 @@ The method remains useful as a rapid approximation, but the Monte Carlo results 
 
 \input{generated/simulation_additional_table.tex}
 
-The legacy bootstrap has no rejections under its 50-data-set null scenario but detects $\gamma_1$ in only 14.3\% of 49 usable strong-alternative repetitions.
+The full-model bootstrap has no rejections under its 50-data-set null scenario but detects $\gamma_1$ in only 14.3\% of 49 usable strong-alternative repetitions.
 Its zero rejection rate is therefore accompanied by very low sensitivity and should not be interpreted as superior calibration.
 The independent $B=999$ confirmation rejects $\gamma_1$ in 0 of 20 null data sets and 20 of 20 strong-alternative data sets, while rejecting $\gamma_2$ in neither setting.
 These results are directionally consistent with the primary effect-wise results, but the corresponding confidence intervals are wide because only 20 independent data sets are used at each endpoint.
@@ -733,9 +804,9 @@ This negative result establishes a computational boundary: bandwidth re-selectio
 \input{generated/simulation_computation_table.tex}
 
 Across 4,310 outer repetitions, 35 (0.81\%) fail to produce usable tests.
-For fixed-bandwidth experiments, the failure rates are 0.38\% for the $F$ test, 1.00\% for the legacy bootstrap, and 1.50\% for the effect-wise bootstrap.
+For fixed-bandwidth experiments, the failure rates are 0.38\% for the $F$ test, 1.00\% for the full-model bootstrap, and 1.50\% for the effect-wise bootstrap.
 All initial covariance optimisations report convergence and all usable estimates of $\vD$ are positive definite, indicating that the remaining failures arise principally from outer backfitting or bootstrap-refit iteration limits.
-The median serial elapsed times are 1.44 seconds for the $F$ test, 73.92 seconds for the legacy bootstrap, and 132.67 seconds for the effect-wise bootstrap.
+The median serial elapsed times are 1.44 seconds for the $F$ test, 73.92 seconds for the full-model bootstrap, and 132.67 seconds for the effect-wise bootstrap.
 The corresponding 95th percentiles are 3.44, 104.09, and 493.18 seconds.
 The effect-wise bootstrap is therefore roughly 92 times slower than the approximate $F$ test at the median, before accounting for the larger $B=999$ diagnostic.
 Its stronger calibration and effect specificity in the investigated settings come with a material computational cost rather than an unqualified dominance over the approximation.
