@@ -689,9 +689,13 @@ We reject the null hypothesis if $F \geqslant F_{1-\alpha}$.
 
 \section{Simulation}\label{sec:test-hgwr-simulation}
 
+A Monte Carlo simulation was conducted to evaluate the performance of the proposed bootstrap and $F$ tests for \gls{glsw} effects in \gls{hgwr}.
+In each simulation, the \gls{dgp} was designed to produce a range of scenarios with hierarchical spatial data and varying degrees of spatial heterogeneity.
+Multiple repetitions of each scenario were generated to assess the empirical Type I error rate and power of the tests.
+
 \subsection{Data-generating process}\label{sec:simulation-dgp}
 
-The Monte Carlo experiment uses $J=200$ group locations drawn independently and uniformly from $[0,1]\times[0,1]$ using coordinate seed 20260902.
+The \gls{dgp} generates 200 group locations drawn independently and uniformly from $[0,1]\times [0,1]$.
 The resulting locations are held fixed across every scenario and outer repetition, whereas all covariates, random effects, residuals, and group sizes are regenerated independently for each data set.
 This conditional design removes variation due to changing spatial configurations when rejection rates are compared.
 
@@ -713,8 +717,8 @@ Responses are generated as
 \end{equation}
 Here $x_1$ has coefficient 2, while $x_2$ and $x_3$ are included null predictors with coefficients zero.
 The random effects are $b_{0j}\sim N(0,\tau^2)$ and $b_{1j}\sim N(2,0.2^2)$, and the core residual is $\epsilon_{ij}\sim N(0,1)$.
-We set $\tau^2=\mathrm{ICC}/(1-\mathrm{ICC})$, giving $\tau^2=1/9$ and $2/3$ for the labelled ICC settings 0.1 and 0.4.
-Because the response also contains a random slope, these ICC labels index the random-intercept variance rather than the complete marginal within-group correlation.
+We set $\tau^2=\mathrm{ICC}/(1-\mathrm{ICC})$, giving $\tau^2=1/9$ and $2/3$ for the labelled \gls{icc} settings 0.1 and 0.4.
+Because the response also contains a random slope, these \gls{icc} labels index the random-intercept variance rather than the complete marginal within-group correlation.
 Each data set is fitted as
 \begin{equation}\label{equ:simulation-fitted-model}
   y_{ij}=\gamma_{1j}g_{1j}+\gamma_{2j}g_{2j}+\vbeta\T\vx_{ij}+b_{0j}+b_{1j}z_{1ij}+\epsilon_{ij}.
@@ -722,12 +726,13 @@ Each data set is fitted as
 
 \subsection{Monte Carlo design and testing workflow}\label{sec:simulation-workflow}
 
-For each scenario and repetition, the data seed is determined only by the scenario index and replication number, beginning from base seed 260902.
+For each scenario and repetition, the random seed is determined by the scenario index and replication number, beginning from base seed 260902.
 The same generated data sets are therefore paired whenever two procedures cover the same scenario and replication.
-Each data set is first fitted by \gls{hgwr} with a bisquared kernel and a cross-validation-selected bandwidth.
-The fitting tolerance is $10^{-5}$, the optimisation parameter is 0.01, the outer iteration limit is 200, and at most ten retries are permitted.
+Each data set is first fitted by \gls{hgwr} with a bisquared kernel and a cross-validation-selected bandwidth with fitting tolerance, the optimisation parameter, the outer iteration limit, and at permitted retries being $10^{-5}$, 0.01, 200 and 10, respectively.
 
+Three testing procedure are tested in this simulation: the approximate $F$ test, the full-model bootstrap, and the effect-wise bootstrap.
 The approximate $F$ procedure obtains both effect-specific tests from the fitted model.
+The full-model bootstrap uses the fitted model to generate bootstrap responses and refits the same model to each response, producing two effect-specific tests from each repetition.
 For the primary effect-wise bootstrap, each target effect is separately constrained to be spatially constant under the null, responses are generated under that fitted null model, and the original \gls{hgwr} specification is refitted to each bootstrap response.
 The statistic is the spatial variance of the standardised local coefficient estimates.
 Bootstrap $p$-values use the plus-one correction, and a non-converged null or bootstrap refit invalidates that outer repetition.
@@ -735,12 +740,12 @@ The bandwidth selected from the observed data is held fixed during the primary b
 Bootstrap refits use an outer iteration limit of 100 and the same ten-retry limit.
 
 The approximate $F$ test is evaluated in all six $a$-by-ICC scenarios using 500 independent data sets per scenario.
-The effect-wise bootstrap uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with ICC 0.4.
+The effect-wise bootstrap uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with \gls{icc} 0.4.
 The smaller bootstrap allocation reflects its substantially greater computational cost.
-The full-model bootstrap is evaluated at the two ICC 0.4 endpoints using 50 data sets, and independent $B=999$ confirmation experiments use 20 data sets at each endpoint.
+The full-model bootstrap is evaluated at the two \gls{icc} 0.4 endpoints using 50 data sets, and independent $B=999$ confirmation experiments use 20 data sets at each endpoint.
 Two robustness scenarios replace the normal residuals by variance-standardised $t_5$ residuals or use strongly unbalanced group sizes.
 The unbalanced design assigns 5--15 observations to half of the groups and 60--100 to the other half, giving an expected total sample size of 9,000.
-Both robustness scenarios use 200 data sets for the $F$ test and 30 for the effect-wise bootstrap at $a=0.5$ and ICC 0.4.
+Both robustness scenarios use 200 data sets for the $F$ test and 30 for the effect-wise bootstrap at $a=0.5$ and \gls{icc} 0.4.
 A separate ten-data-set diagnostic re-selects the bandwidth within every bootstrap fit.
 \autoref{tab:simulation-design} summarises the complete allocation and distinguishes primary, robustness, and diagnostic evidence.
 
@@ -751,17 +756,10 @@ All tests use a 5\% threshold.
 Rejection rates use only repetitions that return a finite $p$-value after all required fits converge; the number excluded is reported rather than silently replaced.
 Wilson 95\% intervals quantify Monte Carlo uncertainty in every reported rejection rate.
 
-\subsection{Computational environment and reproducibility}\label{sec:simulation-environment}
+% \subsection{Computational environment and reproducibility}\label{sec:simulation-environment}
 
-The formal experiment was run locally on an AMD Ryzen 9 9950X workstation with 16 physical cores, 32 logical processors, and 58.64 GiB of memory under Ubuntu 26.04 LTS.
-The retained environment uses 64-bit R 4.5.3 with Intel MKL and the project-local development build \texttt{hgwrr} 0.6.2.9003.
-No GPU computation is used.
-Each task process and its BLAS backend are restricted to one thread, while independent manifest tasks may be dispatched concurrently by the local runner.
-Consequently, the per-repetition times below measure elapsed time for a serial task process and are not end-to-end workstation runtimes under concurrent execution.
-
-Each task writes an atomic RDS shard containing its complete scenario configuration, seeds, package version, host name, convergence diagnostics, statistics, $p$-values, and elapsed times.
-Aggregation accepts a shard only when its task identifier, scenario, method, package version, and complete replication range match the manifest.
-The manuscript tables are generated from the validated aggregate rather than transcribed manually; the exporter additionally requires 650 raw shards, 4,310 outer repetitions, 8,620 effect-level rows, and package version 0.6.2.9003.
+The formal experiment was run locally on an AMD Ryzen 9 9950X workstation and 64 GiB of memory under Ubuntu 26.04 with R 4.5.
+Each task outputs its complete scenario configuration, seeds, package version, host name, convergence diagnostics, statistics, $p$-values, and elapsed times.
 
 \subsection{Results}\label{sec:simulation-results}
 
@@ -770,15 +768,15 @@ The manuscript tables are generated from the validated aggregate rather than tra
 \subsubsection{Calibration, power, and effect specificity}
 
 Under the global null, the effect-wise bootstrap rejection rates range from 1.6\% to 3.7\%.
-The 95\% intervals include 5\% except for $\gamma_2$ at ICC 0.1, where the method is conservative (1.6\%, 95\% CI 0.6--4.1\%).
-At ICC 0.4, the bootstrap detects the heterogeneous $\gamma_1$ in 96.9\% of usable repetitions for $a=0.5$ and 100\% for $a=1$.
+The 95\% intervals include 5\% except for $\gamma_2$ at \gls{icc} 0.1, where the method is conservative (1.6\%, 95\% CI 0.6--4.1\%).
+At \gls{icc} 0.4, the bootstrap detects the heterogeneous $\gamma_1$ in 96.9\% of usable repetitions for $a=0.5$ and 100\% for $a=1$.
 Over the same repetitions it rejects the constant $\gamma_2$ in only 4.1\% and 3.1\%, respectively.
 This combination of detection and embedded-null behaviour supports the effect-wise bootstrap as the primary inferential procedure in the simulated settings.
 
 The corrected $F$ approximation is less well calibrated.
-Its global-null rejection rates range from 6.0\% to 9.4\%, with three of four effect-by-ICC estimates above 7\%.
+Its global-null rejection rates range from 6.0\% to 9.4\%, with three of four effect-by-\gls{icc} estimates above 7\%.
 Although it detects $\gamma_1$ in all usable heterogeneous repetitions, its rejection rate for the constant $\gamma_2$ increases with the heterogeneity of $\gamma_1$.
-For $a=0.5$, these false-positive rates are 20.8\% at ICC 0.1 and 11.2\% at ICC 0.4; for $a=1$, they rise to 49.5\% and 17.1\%.
+For $a=0.5$, these false-positive rates are 20.8\% at \gls{icc} 0.1 and 11.2\% at \gls{icc} 0.4; for $a=1$, they rise to 49.5\% and 17.1\%.
 The apparent 100\% power of the $F$ test therefore cannot be interpreted independently of its loss of effect specificity.
 The method remains useful as a rapid approximation, but the Monte Carlo results do not support treating it as a calibrated substitute or cross-validation for the effect-wise bootstrap.
 
