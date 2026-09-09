@@ -740,9 +740,10 @@ The bandwidth selected from the observed data is held fixed during the primary b
 Bootstrap refits use an outer iteration limit of 100 and the same ten-retry limit.
 
 The approximate $F$ test is evaluated in all six $a$-by-ICC scenarios using 500 independent data sets per scenario.
-The effect-wise bootstrap uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with \gls{icc} 0.4.
-The smaller bootstrap allocation reflects its substantially greater computational cost.
-The full-model bootstrap is evaluated at the two \gls{icc} 0.4 endpoints using 50 data sets, and independent $B=999$ confirmation experiments use 20 data sets at each endpoint.
+The full-model bootstrap uses $B=199$ resamples in all six $a$-by-ICC scenarios, with 250 independent data sets in each global-null scenario and 100 in each alternative scenario.
+The effect-wise bootstrap also uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with ICC 0.4.
+The smaller allocation under the alternatives, and the restriction of the effect-wise alternatives to ICC 0.4, reflect the bootstrap procedures' substantially greater computational cost.
+Independent $B=999$ effect-wise confirmation experiments use 20 data sets at each ICC 0.4 endpoint.
 Two robustness scenarios replace the normal residuals by variance-standardised $t_5$ residuals or use strongly unbalanced group sizes.
 The unbalanced design assigns 5--15 observations to half of the groups and 60--100 to the other half, giving an expected total sample size of 9,000.
 Both robustness scenarios use 200 data sets for the $F$ test and 30 for the effect-wise bootstrap at $a=0.5$ and \gls{icc} 0.4.
@@ -751,7 +752,7 @@ A separate ten-data-set diagnostic re-selects the bandwidth within every bootstr
 
 \input{generated/simulation_design_table.tex}
 
-Across the complete design, 650 independently executable tasks contain 4,310 outer repetitions and yield two effect-level results per repetition.
+After excluding superseded pilot output, the reported design comprises 1,050 independently executable tasks, 5,110 outer repetitions, and 10,220 effect-level results.
 All tests use a 5\% threshold.
 Rejection rates use only repetitions that return a finite $p$-value after all required fits converge; the number excluded is reported rather than silently replaced.
 Wilson 95\% intervals quantify Monte Carlo uncertainty in every reported rejection rate.
@@ -765,13 +766,18 @@ Each task outputs its complete scenario configuration, seeds, package version, h
 
 \input{generated/simulation_core_table.tex}
 
-\subsubsection{Calibration, power, and effect specificity}
+\subsubsection{Calibration, power, effect specificity, and model-based reference}
 
 Under the global null, the effect-wise bootstrap rejection rates range from 1.6\% to 3.7\%.
 The 95\% intervals include 5\% except for $\gamma_2$ at \gls{icc} 0.1, where the method is conservative (1.6\%, 95\% CI 0.6--4.1\%).
 At \gls{icc} 0.4, the bootstrap detects the heterogeneous $\gamma_1$ in 96.9\% of usable repetitions for $a=0.5$ and 100\% for $a=1$.
 Over the same repetitions it rejects the constant $\gamma_2$ in only 4.1\% and 3.1\%, respectively.
 This combination of detection and embedded-null behaviour supports the effect-wise bootstrap as the primary inferential procedure in the simulated settings.
+
+The full-model bootstrap gives zero rejections for both effects in both global-null scenarios; the upper limits of the four 95\% intervals are approximately 1.5\%.
+Under the alternatives, its rejection rates for the heterogeneous $\gamma_1$ are 2.0\% and 0\% at ICC 0.1 and 23.0\% and 13.3\% at ICC 0.4 for $a=0.5$ and 1, respectively, while the constant $\gamma_2$ is never rejected.
+This low and non-monotone response to increasing $a$ is expected to differ from ordinary power because the generator retains the fitted heterogeneous surface rather than imposing $H_{0k}$.
+It shows that the full-model reference reproduces much of the fitted dispersion and is highly conservative as a decision rule; these values must not be interpreted as effect-wise null calibration or power.
 
 The corrected $F$ approximation is less well calibrated.
 Its global-null rejection rates range from 6.0\% to 9.4\%, with three of four effect-by-\gls{icc} estimates above 7\%.
@@ -780,14 +786,13 @@ For $a=0.5$, these false-positive rates are 20.8\% at \gls{icc} 0.1 and 11.2\% a
 The apparent 100\% power of the $F$ test therefore cannot be interpreted independently of its loss of effect specificity.
 The method remains useful as a rapid approximation, but the Monte Carlo results do not support treating it as a calibrated substitute or cross-validation for the effect-wise bootstrap.
 
-\subsubsection{Diagnostics and robustness}
+The independent $B=999$ effect-wise confirmation rejects $\gamma_1$ in 1 of 20 null data sets and 20 of 20 strong-alternative data sets, while rejecting $\gamma_2$ in neither setting.
+These results are directionally consistent with the primary $B=199$ effect-wise results, but the confidence intervals are wide because only 20 independent data sets are used at each endpoint.
+
+\subsubsection{Robustness and bandwidth diagnostic}
 
 \input{generated/simulation_additional_table.tex}
 
-The full-model bootstrap has no rejections under its 50-data-set null scenario but detects $\gamma_1$ in only 14.3\% of 49 usable strong-alternative repetitions.
-Its zero rejection rate is therefore accompanied by very low sensitivity and should not be interpreted as superior calibration.
-The independent $B=999$ confirmation rejects $\gamma_1$ in 0 of 20 null data sets and 20 of 20 strong-alternative data sets, while rejecting $\gamma_2$ in neither setting.
-These results are directionally consistent with the primary effect-wise results, but the corresponding confidence intervals are wide because only 20 independent data sets are used at each endpoint.
 Under $t_5$ residuals and strongly unbalanced group sizes, the effect-wise bootstrap detects $\gamma_1$ in 29 of 30 repetitions and does not reject $\gamma_2$; the corresponding zero-rejection intervals nevertheless have upper bounds of 11.4\%.
 Thus, these experiments show no evident loss of effect specificity, but their size does not establish a zero false-positive probability.
 The approximate $F$ test retains 100\% detection of $\gamma_1$ in both robustness settings but rejects the constant $\gamma_2$ in 8.5\% of usable $t_5$ repetitions and 8.0\% of the unbalanced-group repetitions.
@@ -801,11 +806,11 @@ This negative result establishes a computational boundary: bandwidth re-selectio
 
 \input{generated/simulation_computation_table.tex}
 
-Across 4,310 outer repetitions, 35 (0.81\%) fail to produce usable tests.
-For fixed-bandwidth experiments, the failure rates are 0.38\% for the $F$ test, 1.00\% for the full-model bootstrap, and 1.50\% for the effect-wise bootstrap.
+Across the 5,110 reported outer repetitions, 38 (0.74\%) fail to produce usable tests.
+For fixed-bandwidth experiments, the failure rates are 0.38\% for the $F$ test, 0.44\% for the full-model bootstrap, and 1.50\% for the effect-wise bootstrap.
 All initial covariance optimisations report convergence and all usable estimates of $\vD$ are positive definite, indicating that the remaining failures arise principally from outer backfitting or bootstrap-refit iteration limits.
-The median serial elapsed times are 1.44 seconds for the $F$ test, 73.92 seconds for the full-model bootstrap, and 132.67 seconds for the effect-wise bootstrap.
-The corresponding 95th percentiles are 3.44, 104.09, and 493.18 seconds.
+The median serial elapsed times are 1.44 seconds for the $F$ test, 44.23 seconds for the full-model bootstrap, and 132.67 seconds for the effect-wise bootstrap.
+The corresponding 95th percentiles are 3.44, 61.19, and 493.18 seconds.
 The effect-wise bootstrap is therefore roughly 92 times slower than the approximate $F$ test at the median, before accounting for the larger $B=999$ diagnostic.
 Its stronger calibration and effect specificity in the investigated settings come with a material computational cost rather than an unqualified dominance over the approximation.
 
@@ -814,6 +819,7 @@ Its stronger calibration and effect specificity in the investigated settings com
 The simulation is conditional on one fixed spatial configuration and excludes spatially autocorrelated or spatially confounded covariates.
 It also generates $b_{1j}$ with mean 2 while the fitted random-effect component is centred at zero without a separate fixed $z_1$ term.
 The heavy-tailed and unbalanced-group experiments each contain only 30 effect-wise bootstrap repetitions, and the $B=999$ experiment contains only 20 data sets per endpoint.
+Moreover, because the full-model generator retains the unrestricted fitted surfaces, its rejection rates describe agreement with that fitted-model reference rather than effect-wise Type I error or power.
 The results consequently establish finite-sample behaviour for the implemented data-generating and fitting configurations, not universal calibration under every correctly specified \gls{hgwr} design.
 They support the effect-wise bootstrap as the primary procedure in the examined settings and the approximate $F$ test as a rapid screen whose positive findings require cautious interpretation.
 
@@ -1000,6 +1006,7 @@ The two processes may co-occur, but one is not evidence of the other.
 Building on this definition, we develop an effect-wise parametric bootstrap and an approximate $F$ test for \gls{glsw} effects in \gls{hgwr}.
 The effect-wise bootstrap is generally calibrated or conservative under the global null in the simulated settings.
 At ICC 0.4 it detects the heterogeneous coefficient in 96.9--100\% of usable repetitions while rejecting the accompanying constant coefficient in 3.1--4.1\%.
+The full-model bootstrap, evaluated over all six core scenarios, produces much lower and non-monotone rejection rates because it retains the fitted heterogeneous surfaces in its generating mean; it is therefore reported as a model-based reference rather than an effect-wise null test.
 The approximate $F$ test is much faster, but its global-null rejection rates reach 9.4\%, and its false-positive rate for the constant coefficient rises as the other \gls{glsw} effect becomes more heterogeneous.
 It should therefore be treated as a rapid approximation rather than a calibrated substitute for effect-wise bootstrapping.
 The distinction between testing constancy and testing a zero coefficient remains essential: the former determines whether a \gls{glsw} representation is statistically warranted.
