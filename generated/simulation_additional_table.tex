@@ -2,17 +2,16 @@
   \centering\scriptsize
   \caption{Robustness and bandwidth-reselection results. Each effect column gives usable/planned outer data sets followed by the rejection rate in per cent and its Wilson 95\% confidence interval.}
   \label{tab:simulation-additional-results}
-  \resizebox{\textwidth}{!}{%
-  \begin{tabular}{lllclcl}
+  \begin{tabular}{llrrrr}
     \toprule
-    Scenario & Method & $B$ & $\gamma_1$: usable/planned & $\gamma_1$: rate (95\% CI) & $\gamma_2$: usable/planned & $\gamma_2$: rate (95\% CI) \\
+    \multirow{2}{*}{Scenario} & \multirow{2}{*}{Method} & \multirow{2}{*}{$B$} & \multirow{2}{*}{\makecell{Usable/\\planned}} & \multicolumn{2}{r}{Rate (95\% CI)} \\
+    & & & & $\gamma_1$ & $\gamma_2$ \\
     \midrule
-$t_5$ errors & Effect-wise bootstrap & 199 & 30/30 & 96.7 (83.3--99.4) & 30/30 & 0.0 (0.0--11.4) \\
-$t_5$ errors & Approximate $F$ & -- & 199/200 & 100.0 (98.1--100.0) & 199/200 & 8.5 (5.4--13.3) \\
-Strongly unbalanced group sizes & Effect-wise bootstrap & 199 & 30/30 & 96.7 (83.3--99.4) & 30/30 & 0.0 (0.0--11.4) \\
-Strongly unbalanced group sizes & Approximate $F$ & -- & 200/200 & 100.0 (98.1--100.0) & 200/200 & 8.0 (5.0--12.6) \\
-Bandwidth re-selected & Effect-wise bootstrap & 99 & 1/10 & 100.0 (20.7--100.0) & 1/10 & 0.0 (0.0--79.3) \\
+$t_5$ errors & Effect-wise bootstrap & 199 & 30/30 & 96.7 (83.3--99.4) & 0.0 (0.0--11.4) \\
+$t_5$ errors & Approximate $F$ & -- & 199/200 & 100.0 (98.1--100.0) & 8.5 (5.4--13.3) \\
+Unbalanced group & Effect-wise bootstrap & 199 & 30/30 & 96.7 (83.3--99.4) & 0.0 (0.0--11.4) \\
+Unbalanced group & Approximate $F$ & -- & 200/200 & 100.0 (98.1--100.0) & 8.0 (5.0--12.6) \\
+Bandwidth re-selected & Effect-wise bootstrap & 99 & 1/10 & 100.0 (20.7--100.0) & 0.0 (0.0--79.3) \\
     \bottomrule
   \end{tabular}
-  }
 \end{table}

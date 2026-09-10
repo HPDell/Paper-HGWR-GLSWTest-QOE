@@ -739,7 +739,7 @@ Each data set is fitted as
 
 \subsection{Monte Carlo design and testing workflow}\label{sec:simulation-workflow}
 
-For each scenario and repetition, the random seed is determined by the scenario index and replication number, beginning from base seed 260902.
+For each scenario and repetition, the random seed is determined by the scenario index and replication number.
 The same generated data sets are therefore paired whenever two procedures cover the same scenario and replication.
 Each data set is first fitted by \gls{hgwr} with a bisquared kernel and a cross-validation-selected bandwidth with fitting tolerance, the optimisation parameter, the outer iteration limit, and at permitted retries being $10^{-5}$, 0.01, 200 and 10, respectively.
 
@@ -774,48 +774,50 @@ Wilson 95\% intervals quantify Monte Carlo uncertainty in every reported rejecti
 % \subsection{Computational environment and reproducibility}\label{sec:simulation-environment}
 
 The formal experiment was run locally on an AMD Ryzen 9 9950X workstation and 64 GiB of memory under Ubuntu 26.04 with R 4.5.
-All full-model result shards identify \texttt{hgwrr} 0.6.2.9005 and the joint-null \texttt{fullmodel} bootstrap path.
 Each task outputs its complete scenario configuration, seeds, package version, host name, convergence diagnostics, statistics, $p$-values, and elapsed times.
 
 \subsection{Results}\label{sec:simulation-results}
 
-\input{generated/simulation_core_table.tex}
-
 \subsubsection{Calibration, power, and effect specificity}
 
+\input{generated/simulation_core_table.tex}
+
+The core experiments of the three testing procedures are summarised in \autoref{tab:simulation-core-results}.
+The approximated $F$-test is relatively effective.
+Its global-null rejection rates range from 6.0\% to 9.4\%, with three of four effect-by-\gls{icc} estimates above 7\%.
+It detects $\gamma_1$ in all usable heterogeneous repetitions.
+However, its rejection rate for the constant $\gamma_2$ increases with the heterogeneity of $\gamma_1$.
+For $a=0.5$, these false-positive rates are 20.8\% at \gls{icc} 0.1 and 11.2\% at \gls{icc} 0.4; for $a=1$, they rise to 49.5\% and 17.1\%.
+The results shows that the approximate $F$ test tends to be sensitive to spatial heterogeneity in both components, resulting in relatively high false-positive rates for spatially constant effects when other effects are heterogeneous.
+Considering such a problem is more serious when spatial heterogeneity is stronger, it is possibly caused by spillover effects from $\gamma_1$ because the model employs a uniform bandwidth for all \gls{glsw} effects.
+
+Under the complete joint null, the full-model bootstrap rejects the $\gamma_1$ component in 3.5\% of usable repetitions at both \gls{icc} values and the $\gamma_2$ component in 3.1\% and 2.6\% at \gls{icc} 0.1 and 0.4, respectively.
+All four Wilson intervals include 5\%, and the estimates are also consistent with the 4.5\% effective rejection probability induced by the discrete plus-one $p$-values and the strict $p<0.05$ decision rule when $B=199$.
+The full-model bootstrap also responds strongly when $\gamma_1$ is heterogeneous.
+Its $\gamma_1$ rejection rates are 100\% at \gls{icc} 0.1 for both alternatives, 97.9\% at \gls{icc} 0.4 when $a=0.5$, and 100\% at \gls{icc} 0.4 when $a=1$.
+However, the corresponding componentwise rejection rates for the constant $\gamma_2$ are 87.5\%, 15.8\%, 100\%, and 34.0\%.
+These values are not effect-specific false-positive rates, because the full-model joint null is already false whenever $\gamma_1$ varies.
+Rather, they show that jointly estimated coefficient surfaces can transmit a departure from the common generating null to more than one component statistic.
+Descriptively rejecting the joint null when either component has $p<0.05$ gives complete-null rejection rates of 6.6\% and 6.1\%, and alternative rejection rates of 98.9--100\%; this any-component rule is unadjusted and is not presented as a formally multiplicity-controlled omnibus test.
+
+Effect-wise bootstrap performs better than the full-model bootstrap in terms of effect specificity.
 Under the global null, the effect-wise bootstrap rejection rates range from 1.6\% to 3.7\%.
 The 95\% intervals include 5\% except for $\gamma_2$ at \gls{icc} 0.1, where the method is conservative (1.6\%, 95\% CI 0.6--4.1\%).
 At \gls{icc} 0.4, the bootstrap detects the heterogeneous $\gamma_1$ in 96.9\% of usable repetitions for $a=0.5$ and 100\% for $a=1$.
 Over the same repetitions it rejects the constant $\gamma_2$ in only 4.1\% and 3.1\%, respectively.
 This combination of detection and embedded-null behaviour supports the effect-wise bootstrap as the primary inferential procedure in the simulated settings.
 
-Under the complete joint null, the full-model bootstrap rejects the $\gamma_1$ component in 3.5\% of usable repetitions at both ICC values and the $\gamma_2$ component in 3.1\% and 2.6\% at ICC 0.1 and 0.4, respectively.
-All four Wilson intervals include 5\%, and the estimates are also consistent with the 4.5\% effective rejection probability induced by the discrete plus-one $p$-values and the strict $p<0.05$ decision rule when $B=199$.
-The earlier concern that this procedure was intrinsically too conservative is therefore not supported after generating from the joint spatial-constancy null.
-
-The full-model bootstrap also responds strongly when $\gamma_1$ is heterogeneous.
-Its $\gamma_1$ rejection rates are 100\% at ICC 0.1 for both alternatives, 97.9\% at ICC 0.4 when $a=0.5$, and 100\% at ICC 0.4 when $a=1$.
-However, the corresponding componentwise rejection rates for the constant $\gamma_2$ are 87.5\%, 15.8\%, 100\%, and 34.0\%.
-These values are not effect-specific false-positive rates, because the full-model joint null is already false whenever $\gamma_1$ varies.
-Rather, they show that jointly estimated coefficient surfaces can transmit a departure from the common generating null to more than one component statistic.
-Descriptively rejecting the joint null when either component has $p<0.05$ gives complete-null rejection rates of 6.6\% and 6.1\%, and alternative rejection rates of 98.9--100\%; this any-component rule is unadjusted and is not presented as a formally multiplicity-controlled omnibus test.
-
-The corrected $F$ approximation is less well calibrated.
-Its global-null rejection rates range from 6.0\% to 9.4\%, with three of four effect-by-\gls{icc} estimates above 7\%.
-Although it detects $\gamma_1$ in all usable heterogeneous repetitions, its rejection rate for the constant $\gamma_2$ increases with the heterogeneity of $\gamma_1$.
-For $a=0.5$, these false-positive rates are 20.8\% at \gls{icc} 0.1 and 11.2\% at \gls{icc} 0.4; for $a=1$, they rise to 49.5\% and 17.1\%.
-The apparent 100\% power of the $F$ test therefore cannot be interpreted independently of its loss of effect specificity.
-The method remains useful as a rapid approximation, but the Monte Carlo results do not support treating it as a calibrated substitute or cross-validation for the effect-wise bootstrap.
-Taken together, the full-model bootstrap is well calibrated under the complete joint null and powerful for detecting that the joint null has failed, but it does not localise the heterogeneous effect.
-The $F$ approximation also loses effect specificity, while the effect-wise bootstrap provides the most balanced effect-level behaviour in the investigated ICC 0.4 alternatives.
-
-The independent $B=999$ effect-wise confirmation rejects $\gamma_1$ in 1 of 20 null data sets and 20 of 20 strong-alternative data sets, while rejecting $\gamma_2$ in neither setting.
-These results are directionally consistent with the primary $B=199$ effect-wise results, but the confidence intervals are wide because only 20 independent data sets are used at each endpoint.
+Overall, the simulation shows that the $F$-test is effective as a rapid screening tool, as it requires less computation resources than the bootstrap methods and detects heterogeneous effects with high power.
+The two bootstrap methods are more computationally intensive, but the effect-wise bootstrap is more robust to the presence of heterogeneous effects in other components and is therefore recommended as the primary procedure for effect-specific inference.
+The full-model bootstrap increase the rate of false positives for constant effects when other effects are heterogeneous compared with the approximated $F$-test, and it is therefore not recommended for effect-specific inference.
 
 \subsubsection{Robustness and bandwidth diagnostic}
 
 \input{generated/simulation_additional_table.tex}
 
+As shown in the previous section, the approximate $F$ test and the effect-wise bootstrap are more effective methods.
+Thus, we further evaluated their robustness to heavy-tailed residuals and strongly unbalanced group sizes.
+Results are summarised in \autoref{tab:simulation-additional-results}.
 Under $t_5$ residuals and strongly unbalanced group sizes, the effect-wise bootstrap detects $\gamma_1$ in 29 of 30 repetitions and does not reject $\gamma_2$; the corresponding zero-rejection intervals nevertheless have upper bounds of 11.4\%.
 Thus, these experiments show no evident loss of effect specificity, but their size does not establish a zero false-positive probability.
 The approximate $F$ test retains 100\% detection of $\gamma_1$ in both robustness settings but rejects the constant $\gamma_2$ in 8.5\% of usable $t_5$ repetitions and 8.0\% of the unbalanced-group repetitions.
@@ -838,16 +840,16 @@ At the median, the effect-wise procedure takes about 1.9 times as long as the fu
 The effect-wise bootstrap is therefore roughly 92 times slower than the approximate $F$ test at the median, before accounting for the larger $B=999$ diagnostic.
 Its stronger calibration and effect specificity in the investigated settings come with a material computational cost rather than an unqualified dominance over the approximation.
 
-\subsubsection{Scope of the evidence}
+% \subsubsection{Scope of the evidence}
 
-The simulation is conditional on one fixed spatial configuration and excludes spatially autocorrelated or spatially confounded covariates.
-It also generates $b_{1j}$ with mean 2 while the fitted random-effect component is centred at zero without a separate fixed $z_1$ term.
-The heavy-tailed and unbalanced-group experiments each contain only 30 effect-wise bootstrap repetitions, and the $B=999$ experiment contains only 20 data sets per endpoint.
-Moreover, the full-model generator imposes the intersection of all effect-specific null hypotheses.
-Its componentwise rejection rates under a partial alternative therefore diagnose departure from that common null rather than effect-specific Type I error, and a formally multiplicity-controlled omnibus statistic has not been evaluated.
-Full-model rejection rates are conditional on successful null-model convergence, which excludes 6.89\% of its outer repetitions and may introduce selection into the reported estimates.
-The results consequently establish finite-sample behaviour for the implemented data-generating and fitting configurations, not universal calibration under every correctly specified \gls{hgwr} design.
-They support the effect-wise bootstrap as the primary procedure in the examined settings and the approximate $F$ test as a rapid screen whose positive findings require cautious interpretation.
+% The simulation is conditional on one fixed spatial configuration and excludes spatially autocorrelated or spatially confounded covariates.
+% It also generates $b_{1j}$ with mean 2 while the fitted random-effect component is centred at zero without a separate fixed $z_1$ term.
+% The heavy-tailed and unbalanced-group experiments each contain only 30 effect-wise bootstrap repetitions, and the $B=999$ experiment contains only 20 data sets per endpoint.
+% Moreover, the full-model generator imposes the intersection of all effect-specific null hypotheses.
+% Its componentwise rejection rates under a partial alternative therefore diagnose departure from that common null rather than effect-specific Type I error, and a formally multiplicity-controlled omnibus statistic has not been evaluated.
+% Full-model rejection rates are conditional on successful null-model convergence, which excludes 6.89\% of its outer repetitions and may introduce selection into the reported estimates.
+% The results consequently establish finite-sample behaviour for the implemented data-generating and fitting configurations, not universal calibration under every correctly specified \gls{hgwr} design.
+% They support the effect-wise bootstrap as the primary procedure in the examined settings and the approximate $F$ test as a rapid screen whose positive findings require cautious interpretation.
 
 \section{Case study: spatial inequalities in extracurricular education investment in China}\label{sec:qoe-case}
 

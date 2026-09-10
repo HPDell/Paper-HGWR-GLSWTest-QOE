@@ -3,10 +3,10 @@
   \caption{Core and confirmation Monte Carlo results at the 5\% level. The common usable/planned column applies to both effects; each effect column gives the rejection rate in per cent and its Wilson 95\% confidence interval. The main bootstrap experiments use $B=199$ unless otherwise labelled. When $a>0$, $\gamma_1$ is heterogeneous and $\gamma_2$ remains spatially constant. The full-model bootstrap generates each common response under the joint null that all GLSW effects are constant; its componentwise rejection rates under a partial alternative are therefore not effect-specific Type I error rates.}
   \label{tab:simulation-core-results}
   \resizebox{\textwidth}{!}{%
-  \begin{tabular}{lrrcll}
+  \begin{tabular}{lrrrrr}
     \toprule
     \multirow{2}{*}{Method} & \multirow{2}{*}{$a$} & \multirow{2}{*}{ICC} & \multirow{2}{*}{Usable/planned} & \multicolumn{2}{c}{Rejection rate, \% (95\% CI)} \\
-    & & & & $\gamma_1$ & $\gamma_2$ \\
+    & & & & \makecell{$\gamma_1$} & \makecell{$\gamma_2$} \\
     \midrule
 \multirow{6}{*}{Approximate $F$} & 0.0 & 0.1 & 498/500 & 9.4 (7.2--12.3) & 8.0 (6.0--10.8) \\
  & 0.0 & 0.4 & 500/500 & 6.0 (4.2--8.4) & 7.8 (5.8--10.5) \\
@@ -15,20 +15,20 @@
  & 1.0 & 0.1 & 499/500 & 100.0 (99.2--100.0) & 49.5 (45.1--53.9) \\
  & 1.0 & 0.4 & 497/500 & 100.0 (99.2--100.0) & 17.1 (14.0--20.7) \\
 \midrule
-\multirow{6}{*}{Full-model bootstrap} & 0.0 & 0.1 & 229/250 & 3.5 (1.8--6.7) & 3.1 (1.5--6.2) \\
+\multirow{6}{*}{\makecell{Full-model\\bootstrap}} & 0.0 & 0.1 & 229/250 & 3.5 (1.8--6.7) & 3.1 (1.5--6.2) \\
  & 0.0 & 0.4 & 228/250 & 3.5 (1.8--6.8) & 2.6 (1.2--5.6) \\
  & 0.5 & 0.1 & 96/100 & 100.0 (96.2--100.0) & 87.5 (79.4--92.7) \\
  & 0.5 & 0.4 & 95/100 & 97.9 (92.6--99.4) & 15.8 (9.8--24.4) \\
  & 1.0 & 0.1 & 96/100 & 100.0 (96.2--100.0) & 100.0 (96.2--100.0) \\
  & 1.0 & 0.4 & 94/100 & 100.0 (96.1--100.0) & 34.0 (25.3--44.1) \\
 \midrule
-\multirow{4}{*}{Effect-wise bootstrap} & 0.0 & 0.1 & 244/250 & 3.7 (2.0--6.9) & 1.6 (0.6--4.1) \\
+\multirow{4}{*}{\makecell{Effect-wise\\bootstrap}} & 0.0 & 0.1 & 244/250 & 3.7 (2.0--6.9) & 1.6 (0.6--4.1) \\
  & 0.0 & 0.4 & 248/250 & 3.2 (1.6--6.2) & 3.2 (1.6--6.2) \\
  & 0.5 & 0.4 & 98/100 & 96.9 (91.4--99.0) & 4.1 (1.6--10.0) \\
  & 1.0 & 0.4 & 98/100 & 100.0 (96.2--100.0) & 3.1 (1.0--8.6) \\
-\midrule
-\multirow{2}{*}{Effect-wise bootstrap ($B=999$ confirmation)} & 0.0 & 0.4 & 20/20 & 5.0 (0.9--23.6) & 0.0 (0.0--16.1) \\
- & 1.0 & 0.4 & 20/20 & 100.0 (83.9--100.0) & 0.0 (0.0--16.1) \\
+% \midrule
+% \multirow{2}{*}{Effect-wise bootstrap ($B=999$ confirmation)} & 0.0 & 0.4 & 20/20 & 5.0 (0.9--23.6) & 0.0 (0.0--16.1) \\
+%  & 1.0 & 0.4 & 20/20 & 100.0 (83.9--100.0) & 0.0 (0.0--16.1) \\
     \bottomrule
   \end{tabular}
   }
