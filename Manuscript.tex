@@ -878,13 +878,44 @@ This section examines their role in an applied \gls{hgwr} analysis, where the as
 We study family expenditure on children's extracurricular courses in China.
 The case is methodologically relevant because the outcome is observed for children and families, whereas several candidate explanations describe the provinces in which those families live.
 
-\subsection{Context, data, and outcome}\label{sec:qoe-data}
+\subsection{Context}\label{sec:qoe-context}
 
-Quality-oriented education, also known as \textit{suzhi jiaoyu}, was introduced as a national educational development strategy in 1993 \citep{CCCPC-1993}.
-It seeks to foster development beyond examination performance, including aesthetic appreciation, physical education, and practical skills \citep{Dello-Iacovo-2009,LiuLi-2020-en}.
-Extracurricular courses have become an important means of obtaining these forms of education \citep{ZhangTang-2017,ZhengYuan-2021}, but access is voluntary and largely market-mediated.
-Consequently, participation and expenditure are related to household resources and parental choices \citep{ChiQian-2016,QianChi-2015-en,SongZhou-2019}, while the supply and price of courses also reflect regional economic development, public education investment, and urban--rural differences \citep{HuangGao-2017,XiangStillwell-2020,SuYuan-2023}.
-These multiple levels make the application suitable for \gls{hgwr}, but they also make it important to distinguish a genuinely spatially heterogeneous provincial association from an estimated surface that varies only because of sampling uncertainty.
+Quality-oriented education, also known as \textit{suzhi jiaoyu}, was introduced by the Chinese government as a national educational development strategy in 1993 \citep{CCCPC-1993}.
+It seeks the all-round development of students in morality, academic potential, physical health, aesthetic appreciation, and practical capability, extending the aims of education beyond examination performance alone \citep{LiuLi-2020-en,Dello-Iacovo-2009,Deng-1994b,Wang-2018}.
+The government has supported this strategy through financial investment, human-capital development, and related policies \citep{Xie-2017-en,Vilairat-2019,DPCSEC-1997-en,LiuLi-2020-en,SiQiao-2017,HanYe-2017}.
+Extracurricular courses have also become important contributors to quality-oriented education by providing aesthetic, physical, and other forms of non-academic training that tend to receive less attention in examination-oriented school systems \citep{ZhangTang-2017,ZhengYuan-2021}.
+Their commercial provision allows families to select services suited to their circumstances, but it also makes balanced access difficult in a large country with substantial social and regional diversity \citep{HeHuang-2021,WuKC-2022}.
+
+At the micro level, participation in extracurricular courses is voluntary and therefore depends strongly on decisions and constraints within the family.
+Household educational expenditure and socio-economic status affect whether families can purchase these courses and the level of resources they can obtain \citep{ChiQian-2016,QianChi-2015-en,SongZhou-2019,TanCai-2022,RenChen-2021}.
+Urban parents tend to be more involved in their children's education and are often better able to afford supplementary educational resources, whereas rural families may face tighter economic constraints \citep{NieTeng-2021,YangChen-2023}.
+Parents with higher educational qualifications are also more likely to provide enhanced educational opportunities for their children \citep{Wang-2021a}.
+Gender may further shape access, although previous studies disagree over whether gender disparities are small or whether girls, particularly in rural areas, remain disadvantaged \citep{LuoZeng-2022,ZhangLiang-2022,DongLi-2008,Xiao-2015}.
+Income, expenditure, assets, debt, parental education, the child's gender and age, and urban residence are therefore relevant family- and child-level characteristics when examining investment in extracurricular courses.
+
+At the macro level, provincial economic development and the progress of educational initiatives condition the resources available to both schools and families.
+Government education expenditure differs markedly between provinces, in part because economic development is uneven and eastern provinces generally have greater access to resources than western provinces \citep{HuangGao-2017,Lin-2009,Xie-2011,XiaoLiu-2014,XiangStillwell-2020}.
+Geographic access also varies: the reported proportion of rural families living conveniently close to primary schools is higher in Eastern than in Western China \citep{ZhangWang-2019}.
+Because aesthetic training in painting, dance, and musical performance imposes additional costs, the availability and purchase of these services are also related to local consumption levels \citep{YouDing-2021,Cheng-2021,Zhou-2013}.
+Provincial economic structure, living costs, income inequality, public education budgets, the prevalence of highly educated residents, and access to higher education may consequently be associated with how much families invest in extracurricular courses.
+
+Important disparities also occur within provinces, especially between urban and rural areas \citep{Lin-2009}.
+Rural schools often have poorer facilities, fewer specialist teachers, and fewer supporting resources for quality-oriented education, while urban schools benefit from stronger infrastructure, teaching expertise, and community support \citep{Li-2014-en,XiangStillwell-2020,SuYuan-2023,Xie-2022,ZhangLiang-2022,Zhang-2024,SunHu-2023}.
+Concentrating investment in a small number of representative schools can extend the reach of aesthetic education while also widening inequalities in the services available to urban and rural students \citep{Xing-2020}.
+These differences mean that the association between urban residence and family investment may itself differ across provinces rather than being represented adequately by one national coefficient.
+
+The market organisation of extracurricular education introduces a further source of inequality.
+Highly qualified teachers and higher-priced courses tend to concentrate in urban and economically developed areas, where households are more able to pay the associated fees \citep{Liu-2024,YangQiu-2016,Wang-2021a}.
+At the same time, the National College Entrance Examination focuses on academic subjects, which can reduce the priority that families assign to extracurricular courses \citep{LiAbbasi-2013}.
+Because higher-education resources and the difficulty of university admission differ between provinces, the academic pressure surrounding the examination may influence families' willingness to invest in non-exam-oriented activities differently across space \citep{Shang-2024,Liu-2024}.
+
+These mechanisms operate at two connected levels and cannot be represented fully by a model that considers only provincial indicators or only household survey variables.
+Previous quantitative studies have commonly examined either macro-level regional disparities \citep{Wang-2010,XiaoLiu-2014,XiangStillwell-2020,WuKC-2022,SunHu-2023,Song-2023a,HanNi-2023} or micro-level family influences \citep{HannumWang-2006,Wang-2018,TanCai-2022}, while studies that address both perspectives are predominantly qualitative \citep{Dello-Iacovo-2009,ChungMason-2012}.
+Moreover, a single national association can average over geographically different relationships between provincial conditions and household investment.
+The \gls{hgwr} model is therefore appropriate because it combines group-level provincial covariates with sample-level family and child attributes, preserves the hierarchical grouping of households within provinces, and allows selected province-level associations to vary geographically.
+For this application, the heterogeneity tests developed in this paper provide the additional evidence needed to decide whether an observed provincial association should be represented by a \gls{glsw} effect or by a spatially constant fixed effect, rather than treating every mapped coefficient surface as substantively heterogeneous.
+
+\subsection{Data and outcome}\label{sec:qoe-data}
 
 We combine four data sources.
 The China Institute for Educational Finance Research Household Surveys (CIEFR-HS) collected family and child information from 40,011 families in 29 provincial-level administrations in 2017 and 34,643 families in 2019 \citep{CIEFR-HS,CIEFR-HS-V1,CIEFR-HS-2019}.
