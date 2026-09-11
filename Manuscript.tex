@@ -99,6 +99,7 @@
 \newacronym[user1={Anselin-1995}]{lisa}{LISA}{local indicators of spatial association}
 \newacronym{anova}{ANOVA}{analysis of variance}
 \newacronym{qoe}{QOE}{quality-oriented education}
+\newacronym{ciefr}{CIEFR-HS}{China Institute for Educational Finance Research Household Surveys}
 
 \usepackage{xspace}
 \newcommand{\morani}{Moran's $I$\xspace}
@@ -915,10 +916,10 @@ Moreover, a single national association can average over geographically differen
 The \gls{hgwr} model is therefore appropriate because it combines group-level provincial covariates with sample-level family and child attributes, preserves the hierarchical grouping of households within provinces, and allows selected province-level associations to vary geographically.
 For this application, the heterogeneity tests developed in this paper provide the additional evidence needed to decide whether an observed provincial association should be represented by a \gls{glsw} effect or by a spatially constant fixed effect, rather than treating every mapped coefficient surface as substantively heterogeneous.
 
-\subsection{Data and outcome}\label{sec:qoe-data}
+\subsection{Data}\label{sec:qoe-data}
 
-We combine four data sources.
-The China Institute for Educational Finance Research Household Surveys (CIEFR-HS) collected family and child information from 40,011 families in 29 provincial-level administrations in 2017 and 34,643 families in 2019 \citep{CIEFR-HS,CIEFR-HS-V1,CIEFR-HS-2019}.
+Four sources of data are used in the case study.
+The \gls{ciefr} collected family and child information from 40,011 families in 29 provincial-level administrations in 2017 and 34,643 families in 2019 \citep{CIEFR-HS,CIEFR-HS-V1,CIEFR-HS-2019}.
 The surveys include household finances, parental education, child characteristics, education expenditure, and participation in extracurricular training.
 Provincial economic and educational indicators are drawn from the \textit{China Statistical Yearbook} and the \textit{Educational Statistical Yearbook of China} \citep{KangSheng-2024,ESYC-2022}.
 Provincial boundaries provide the locations used by the spatial weights, and 2017 point-of-interest data from Amap provide counts of youth palaces, institutions that supply extracurricular educational resources \citep{Lei-2024,LaiXu-2023}.
@@ -952,15 +953,15 @@ All continuous variables indicated in \autoref{tab:qoe-variables} are transforme
     \toprule
     Variable & Effect & Log & Scale & Variable & Effect & Log & Scale \\
     \midrule
-    \QOESpendingPH          & Response & Yes & Yes & \NumEnterprise          & Fixed & Yes & Yes \\
-    \GDPPrimary             & \gls{glsw} & Yes & Yes & \CultCentCountTotal     & Fixed & Yes & Yes \\
-    \Engel                  & \gls{glsw} & Yes & Yes & \TotalIncome            & Fixed & Yes & Yes \\
-    \CPI                    & \gls{glsw} & Yes & Yes & \TotalSpending          & Fixed & Yes & Yes \\
-    \Gini                   & \gls{glsw} & Yes & Yes & \Asset                  & Fixed & Yes & Yes \\
-    \UniversityRecruitRatio & \gls{glsw} & Yes & No  & \Debt                   & Fixed & Yes & Yes \\
-    \GeneralEduBudget       & \gls{glsw} & Yes & Yes & \Age                    & Fixed & Yes & Yes \\
-    \HighEducated           & \gls{glsw} & Yes & Yes & \HighEdu                & Fixed & No  & No  \\
-    \RegionUrban            & \gls{slr}  & No  & No  & \GenderMale             & Fixed & No  & No  \\
+    \QOESpendingPH          & Response   & Yes & Yes & \NumEnterprise      & Fixed & Yes & Yes \\
+    \GDPPrimary             & \gls{glsw} & Yes & Yes & \CultCentCountTotal & Fixed & Yes & Yes \\
+    \Engel                  & \gls{glsw} & Yes & Yes & \TotalIncome        & Fixed & Yes & Yes \\
+    \CPI                    & \gls{glsw} & Yes & Yes & \TotalSpending      & Fixed & Yes & Yes \\
+    \Gini                   & \gls{glsw} & Yes & Yes & \Asset              & Fixed & Yes & Yes \\
+    \UniversityRecruitRatio & \gls{glsw} & Yes & No  & \Debt               & Fixed & Yes & Yes \\
+    \HighEducated           & \gls{glsw} & Yes & Yes & \Age                & Fixed & Yes & Yes \\
+    \RegionUrban            & \gls{slr}  & No  & No  & \HighEdu            & Fixed & No  & No  \\
+                            &            &     &     & \GenderMale         & Fixed & No  & No  \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -987,35 +988,31 @@ The case-study results are therefore treated as screening evidence rather than i
   \centering\scriptsize
   \caption{Summary of the main QOE HGWR model. For GLSW effects, the $F$ statistic is the earlier unadjusted approximate spatial-homogeneity test; percentages are the proportions of province-specific estimates in each significance category.}
   \label{tab:qoe-model-summary}
-  \begin{tabular}{lrrrrrrr}
-    \toprule
-    GLSW & $\overline{\mathrm{Est.}}$ & $\overline{\mathrm{S.E.}}$ & $F$ & *** & ** & * & . \\
-    \midrule
-    \Intercept              &  5.939 & 3.534 & 3.562*** & 20.7\% & 20.7\% & 13.8\% &  0.0\% \\
-    \GDPPrimary             &  1.797 & 1.164 & 4.206*** & 20.7\% & 13.8\% &  6.9\% &  3.4\% \\
-    \Engel                  &  0.359 & 0.453 & 5.348*** &  0.0\% & 27.6\% & 17.2\% &  0.0\% \\
-    \CPI                    & -0.424 & 0.596 & 6.765*** & 10.3\% & 10.3\% &  0.0\% &  3.4\% \\
-    \Gini                   & -0.549 & 0.578 & 1.820*   &  0.0\% &  3.4\% & 17.2\% & 13.8\% \\
-    \UniversityRecruitRatio & -0.478 &11.045 & 3.985*** &  0.0\% &  3.4\% & 20.7\% & 10.3\% \\
-    \GeneralEduBudget       &  3.413 & 1.053 & 5.121*** & 44.8\% & 13.8\% & 13.8\% &  3.4\% \\
-    \HighEducated           &  1.665 & 1.695 & 2.875**  &  3.4\% &  6.9\% & 13.8\% &  0.0\% \\
-    \bottomrule
-    \toprule
-    Fixed & Est. & S.E. & $t$ & \multicolumn{2}{l}{SLR} & Mean & S.E. \\
-    \cmidrule(r){1-4}\cmidrule(l){5-8}
-    \Intercept          & -4.388 & 0.224 & 19.555*** & \multicolumn{2}{l}{\Intercept}   & 0.000 & 0.969 \\
-    \NumEnterprise      & -4.323 & 0.557 &  7.759*** & \multicolumn{2}{l}{\RegionUrban} & 0.000 & 0.969 \\
-    \CultCentCountTotal & -0.646 & 0.605 &  1.068    & & & & \\
-    \TotalIncome        &  0.014 & 0.021 &  0.653    & & & & \\
-    \TotalSpending      &  0.143 & 0.025 &  5.780*** & & & & \\
-    \Asset              &  0.084 & 0.027 &  3.095**  & & & & \\
-    \Debt               &  0.025 & 0.021 &  1.187    & & & & \\
-    \HighEdu            &  0.281 & 0.049 &  5.775*** & & & & \\
-    \GenderMale         & -0.101 & 0.041 &  2.448*   & & & & \\
-    \Age                & -0.141 & 0.021 &  6.730*** & & & & \\
-    \RegionUrban        &  0.473 & 0.214 &  2.211*   & & & & \\
-    \bottomrule
-    \multicolumn{8}{l}{Significance levels: . $p<0.1$, * $p<0.05$, ** $p<0.01$, *** $p<0.001$.}
+  \begin{tabular}{lrrrrrrrr}
+  \toprule
+  GLSW & $\overline{\text{Est.}}$ & $\overline{\text{S.E.}}$ & $F$ & Bootstrap & *** & ** & * & . \\\midrule
+  \Intercept              & 1.011 & 0.237 & 10.329 \makebox[1.5em][l]{***} & 0.030 \makebox[1.5em][l]{*  } & 62.1 & 0.0 & 6.9 & 6.9 \\
+  \GDPPrimary             & 0.768 & 0.077 & 4.334 \makebox[1.5em][l]{** } & 0.015 \makebox[1.5em][l]{*  } & 100.0 & 0.0 & 0.0 & 0.0 \\
+  \Engel                  & 0.068 & 0.058 & 18.891 \makebox[1.5em][l]{***} & 0.005 \makebox[1.5em][l]{** } & 48.3 & 24.1 & 10.3 & 3.4 \\
+  \CPI                    & -0.146 & 0.072 & 9.678 \makebox[1.5em][l]{***} & 0.005 \makebox[1.5em][l]{** } & 34.5 & 3.4 & 13.8 & 0.0 \\
+  \Gini                   & -0.122 & 0.075 & 27.717 \makebox[1.5em][l]{***} & 0.005 \makebox[1.5em][l]{** } & 65.5 & 17.2 & 0.0 & 3.4 \\
+  \UniversityRecruitRatio & -2.418 & 0.758 & 11.969 \makebox[1.5em][l]{***} & 0.035 \makebox[1.5em][l]{*  } & 58.6 & 0.0 & 6.9 & 3.4 \\
+  \bottomrule
+  \toprule
+  Fixed & Est. & S.E. & $t$ & \multicolumn{3}{l}{SLR} & Mean & S.E. \\
+  \Intercept          & 2.063 & 0.095 & 21.598 \makebox[1.5em][l]{***} & \multicolumn{3}{l}{\Intercept  } & 0.000 & 0.283 \\
+  \HighEducated       & 0.937 & 0.037 & 25.495 \makebox[1.5em][l]{***} & \multicolumn{3}{l}{\RegionUrban} & 0.000 & 0.240 \\
+  \NumEnterprise      & -0.961 & 0.098 & 9.808 \makebox[1.5em][l]{***} & & & & & \\
+  \CultCentCountTotal & 0.413 & 0.103 & 4.012 \makebox[1.5em][l]{***} & & & & & \\
+  \TotalIncome        & 0.011 & 0.021 & 0.507 \makebox[1.5em][l]{   } & & & & & \\
+  \TotalSpending      & 0.138 & 0.024 & 5.657 \makebox[1.5em][l]{***} & & & & & \\
+  \Asset              & 0.087 & 0.027 & 3.286 \makebox[1.5em][l]{** } & & & & & \\
+  \Debt               & 0.027 & 0.021 & 1.255 \makebox[1.5em][l]{   } & & & & & \\
+  \HighEdu            & 0.285 & 0.048 & 5.902 \makebox[1.5em][l]{***} & & & & & \\
+  \GenderMale         & -0.112 & 0.041 & 2.729 \makebox[1.5em][l]{** } & & & & & \\
+  \RegionUrban        & 0.456 & 0.091 & 5.026 \makebox[1.5em][l]{***} & & & & & \\
+  \Age                & -0.145 & 0.021 & 6.963 \makebox[1.5em][l]{***} & & & & & \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
