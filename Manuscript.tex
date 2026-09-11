@@ -810,7 +810,6 @@ It detects $\gamma_1$ in all usable heterogeneous repetitions.
 For the constant $\gamma_2$, its rejection rates are 11.9\% and 9.8\% at \gls{icc} 0.1 and 6.6\% in both alternatives at \gls{icc} 0.4.
 The corresponding unadjusted same-fit diagnostic rejects $\gamma_2$ in 21.2\% and 49.3\% of the \gls{icc} 0.1 alternatives and in 10.0\% and 15.4\% of the \gls{icc} 0.4 alternatives.
 Thus, removing the fitted nuisance surfaces substantially reduces the transmission of $\gamma_1$ heterogeneity into the $\gamma_2$ statistic, but it does not provide nominal 5\% calibration, particularly at low \gls{icc}.
-A further residual-orthogonalisation diagnostic produces nearly unchanged rejection rates and is not retained as part of the test.
 
 Under the complete joint null, the full-model bootstrap rejects the $\gamma_1$ component in 3.5\% of usable repetitions at both \gls{icc} values and the $\gamma_2$ component in 3.1\% and 2.6\% at \gls{icc} 0.1 and 0.4, respectively.
 All four Wilson intervals include 5\%, and the estimates are also consistent with the 4.5\% effective rejection probability induced by the discrete plus-one $p$-values and the strict $p<0.05$ decision rule when $B=199$.
@@ -851,6 +850,7 @@ This negative result establishes a computational boundary: bandwidth re-selectio
 
 \input{generated/simulation_computation_table.tex}
 
+The convergence and computational cost of the three procedures are summarised in \autoref{tab:simulation-computation}.
 Across the 5,110 reported outer repetitions, 94 (1.84\%) fail to produce usable tests.
 The failure rates are 0.33\% for the adjusted core $F$ test, 0.25\% for the unadjusted robustness $F$ diagnostic, 6.89\% for the full-model bootstrap, and 1.50\% for the fixed-bandwidth effect-wise bootstrap.
 Of the 62 full-model failures, 59 arise because the linear mixed joint-null fit does not satisfy the strict gradient convergence criterion and three arise from the initial \gls{hgwr} fit; no full-model failure is attributed to a bootstrap \gls{hgwr} refit.
