@@ -6,11 +6,11 @@
     \toprule
     Experiment & Conditions & Procedure & Outer data sets & $B$ \\
     \midrule
-Core grid & \makecell[l]{$a=0,0.5,1$;\\ICC $=0.1,0.4$} & Approximate $F$ & 500 per scenario & -- \\
+Core grid & \makecell[l]{$a=0,0.5,1$;\\ICC $=0.1,0.4$} & Adjusted approximate $F$ & 500 per scenario & -- \\
 Core grid & \makecell[l]{$a=0,0.5,1$;\\ICC $=0.1,0.4$} & Full-model bootstrap & \makecell[l]{250 null\\100 alternative} & 199 \\
 Effect-wise core & \makecell[l]{$a=0$;\\ICC $=0.1,0.4$;\\$a=0.5,1$ at ICC $=0.4$} & Effect-wise bootstrap & \makecell[l]{250 null\\100 alternative} & 199 \\
 \makecell[l]{High-$B$\\confirmation} & \makecell[l]{$a=0,1$;\\ICC $=0.4$} & Effect-wise bootstrap & 20 per scenario & 999 \\
-Robustness & \makecell[l]{$t_5$ errors or unbalanced sizes;\\$a=0.5$, ICC $=0.4$} & \makecell[l]{Approximate $F$ /\\effect-wise} & \makecell[l]{200 /\\30 per scenario} & \makecell{-- /\\199} \\
+Robustness & \makecell[l]{$t_5$ errors or unbalanced sizes;\\$a=0.5$, ICC $=0.4$} & \makecell[l]{Unadjusted $F$ diagnostic /\\effect-wise} & \makecell[l]{200 /\\30 per scenario} & \makecell{-- /\\199} \\
 \makecell[l]{Bandwidth\\diagnostic} & \makecell[l]{Re-select bandwidth\\in every refit} & Effect-wise bootstrap & 10 & 99 \\
     \bottomrule
   \end{tabular}

@@ -135,7 +135,7 @@ We address this inferential gap by defining spatial heterogeneity through locati
 Monte Carlo experiments with 200 fixed random locations assess calibration, power, effect specificity, and computational stability.
 At \gls{icc} 0.4, the effect-wise bootstrap has null rejection rates of 3.2\% and detects a heterogeneous effect in 96.9--100\% of usable repetitions while rejecting the accompanying constant effect in only 3.1--4.1\%.
 The full-model bootstrap has complete-null rejection rates of 2.6--3.5\% and detects the heterogeneous effect in 97.9--100\% of usable repetitions, but its componentwise rejection of the accompanying constant effect reaches 15.8--100\% once the joint null is false.
-The corrected $F$ approximation is computationally inexpensive but remains liberal in several null settings and increasingly rejects the constant effect when another effect is heterogeneous.
+The adjusted $F$ approximation is computationally inexpensive and reduces cross-effect leakage, but it remains liberal in several null settings.
 We then apply the framework to household investment in children's extracurricular courses in China, integrating household survey, provincial panel, geographic, and point-of-interest data.
 The application illustrates how heterogeneity testing can inform the allocation of provincial variables to \gls{glsw} or fixed effects, while the simulation results also show why evidence based only on the $F$ approximation should be interpreted cautiously.
 \end{abstract}
@@ -475,7 +475,7 @@ A large value of $T_k$ indicates strong variation, but it cannot alone show sign
 The next step is consequently to determine the distribution of a dispersion statistic under spatial constancy.
 There are two routes in this study: bootstrap-based and distribution-based routes.
 The bootstrap compares the observed variance of standardised local estimates with an empirical reference distribution.
-The distribution-based method uses the linear form of the \gls{glsw} estimator, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of an observation-weighted coefficient variance by an $F$ distribution.
+The distribution-based method uses the linear form of the \gls{glsw} estimator, a same-fit adjustment for the other \gls{glsw} surfaces, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of an observation-weighted coefficient variance by an $F$ distribution.
 Both methods assess spatial constancy, but they use different finite-sample statistics and reference distributions.
 We consider both a full-model bootstrap, which imposes spatial constancy on all \gls{glsw} effects jointly, and an effect-wise bootstrap, which imposes spatial constancy only on the effect being tested.
 The following section incorporates the hierarchical error structure and \gls{glsw} estimator to construct the corresponding bootstrap and $F$ tests for \gls{hgwr}.
@@ -612,42 +612,61 @@ we define the null and alternative hypothesis as \autoref{equ:hypothesis-glsw-ft
         H_{1} & : \mbox{not all $\gamma_{ik}(i=1,2,\cdots,m)$ are equal.}
     \end{split}
 \end{equation}
-For the $k$-th \gls{glsw} effect, we examine its variance under the null hypothesis, $V_k^2$, as \autoref{equ:glsw-ftest-variance},
+For the $k$-th \gls{glsw} effect, the unadjusted coefficient-surface variance is
 \begin{equation}\label{equ:glsw-ftest-variance}
-    \begin{split}
-        V_{k}^2 & = \frac{1}{n} \sum_{i=1}^m \left( \hat{\gamma}_{ik} - \frac{1}{n} \sum_{i=1}^n \hat{\gamma}_{ik} \right)^2 = \frac{1}{n} \hat{\mybm{\gamma}}_{k}^{\mathrm{T}}\left( \mybm{I} - \frac{1}{n} \mybm{J} \right) \hat{\mybm{\gamma}}_{k} \\
-        & =  \frac{1}{n} \left[ \hat{\mybm{\gamma}}_{k} - E(\hat{\mybm{\gamma}}_{k}) \right]^{\mathrm{T}} \left( \mybm{I} - \frac{1}{n} \mybm{J} \right)\left[ \hat{\mybm{\gamma}}_{k} - E(\hat{\mybm{\gamma}}_{k}) \right] \; .
-    \end{split}
+  V_{k}^2
+  = \frac{1}{n}\hat{\mybm{\gamma}}_{k}^{\mathrm{T}}
+  \left(\mybm{I}-\frac{1}{n}\mybm{J}\right)
+  \hat{\mybm{\gamma}}_{k},
 \end{equation}
+where each group coefficient is repeated for its $n_i$ observations.
 According to \autoref{equ:bfml-glsw-estimator}, for the $i$-th group, we know
 \begin{equation*}
-    \hat{\mybm{\gamma}}_{ik} = \mybm{e}_{k} \left( \mybm{G}^{\mathrm{T}}\mybm{W}_{i}\mybm{V}^{-1}\mybm{G} \right)^{-1}\left( \mybm{G}^{\mathrm{T}}\mybm{W}_{i}\mybm{V}^{-1}\mybm{y}_{g} \right) = \mybm{\Gamma}_{i}\mybm{y}_{g}
+    \hat{\mybm{\gamma}}_{ik} = \mybm{e}_{k} \left( \mybm{G}^{\mathrm{T}}\mybm{W}_{i}\mybm{V}^{-1}\mybm{G} \right)^{-1}\left( \mybm{G}^{\mathrm{T}}\mybm{W}_{i}\mybm{V}^{-1}\mybm{y}_{g} \right) = \mybm{\Gamma}_{ik}\mybm{y}_{g}
 \end{equation*}
 where $\ve_k$ is the $(k+1)$-th row of the identity matrix $\vI$.
 Let
 \begin{equation}\label{equ:ftest-glsw-Gamma-full}
-\mybm{\Gamma} = \begin{pmatrix}
-\mybm{\Gamma}_{1}\T & \mybm{\Gamma}_{1}\T & \cdots & \mybm{\Gamma}_{1}\T & \cdots &
-\mybm{\Gamma}_{m}\T & \mybm{\Gamma}_{m}\T & \cdots &
-\mybm{\Gamma}_{m}\T
+\mybm{\Gamma}_k = \begin{pmatrix}
+\mybm{\Gamma}_{1k}\T & \mybm{\Gamma}_{1k}\T & \cdots & \mybm{\Gamma}_{1k}\T & \cdots &
+\mybm{\Gamma}_{mk}\T & \mybm{\Gamma}_{mk}\T & \cdots &
+\mybm{\Gamma}_{mk}\T
 \end{pmatrix}\T
 \end{equation}
-where each $\vGamma_j$ represents $n_j$ times, with $n_j$ being the number of samples in the $j$-th group.
-In this case, $E(\hat{\mybm{\gamma}_{k}})=\mybm{\Gamma}E(\mybm{y}_{g})$, and
+where each $\vGamma_{jk}$ is repeated $n_j$ times.
+Because the local coefficients are estimated jointly, $\vGamma_k\vy_g$ can transmit spatial variation from another \gls{glsw} surface into the target surface even when the $k$-th coefficient is constant.
+To remove this fitted nuisance contribution without estimating a null or reduced model, define
+\begin{equation}\label{equ:glsw-ftest-adjusted-map}
+  \vH_{-k}=\sum_{\ell\ne k}\diag(\vg_{\ell})\vGamma_{\ell},
+  \qquad
+  \widetilde{\vGamma}_{k}=\vGamma_k(\vI-\vH_{-k}),
+  \qquad
+  \widetilde{\vgamma}_{k}=\widetilde{\vGamma}_{k}\vy_g,
+\end{equation}
+where $\vg_\ell$ is the observation-level vector for the $\ell$-th \gls{glsw} covariate.
+All quantities in \autoref{equ:glsw-ftest-adjusted-map} are obtained from the same fitted \gls{hgwr} model and bandwidth.
+The adjusted variance used by the test is
+\begin{equation}\label{equ:glsw-ftest-adjusted-variance}
+  \widetilde V_k^2
+  =\frac{1}{n}\widetilde{\vgamma}_{k}\T
+  \left(\vI-\frac{1}{n}\vJ\right)
+  \widetilde{\vgamma}_{k}.
+\end{equation}
+Under the working null, $E(\widetilde{\vgamma}_{k})$ is spatially constant and is removed by the centring matrix, so
 \begin{equation*}
-    V_{k}^2  = \mybm{\eta}^{\mathrm{T}}\left[ \frac{1}{n} \mybm{\Gamma}\left( \mybm{I}-\frac{1}{n} \mybm{J}\right)\mybm{\Gamma} \right]\mybm{\eta}
+    \widetilde V_{k}^2  = \mybm{\eta}^{\mathrm{T}}\left[ \frac{1}{n} \widetilde{\mybm{\Gamma}}_k\T\left( \mybm{I}-\frac{1}{n}\mybm{J}\right)\widetilde{\mybm{\Gamma}}_k \right]\mybm{\eta}
 \end{equation*}
 where $\mybm{\eta}=\mybm{Z}\mybm{\mu}+\mybm{\epsilon}\sim \mybm{N}(\mybm{0},\vV\sigma^2)$.
-The expectation and variance of $V_k^2/\sigma^2$ can be calculated as \autoref{equ:glsw-ftest-exp-Vksigma} and \autoref{equ:glsw-ftest-var-Vksigma}, respectively,
+The expectation and variance of $\widetilde V_k^2/\sigma^2$ can be calculated as \autoref{equ:glsw-ftest-exp-Vksigma} and \autoref{equ:glsw-ftest-var-Vksigma}, respectively,
 \begin{align}
 \label{equ:glsw-ftest-exp-Vksigma}
-E\left( \frac{V_{k}^2}{\sigma^{2}} \right)  & = \mathrm{tr}\left[ \frac{1}{n} \mybm{\Gamma}^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \mybm{\Gamma} \mybm{V} \right]  \\
+E\left( \frac{\widetilde V_{k}^2}{\sigma^{2}} \right)  & = \mathrm{tr}\left[ \frac{1}{n} \widetilde{\mybm{\Gamma}}_k^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \widetilde{\mybm{\Gamma}}_k \mybm{V} \right]  \\
 \label{equ:glsw-ftest-var-Vksigma}
-\mathop{\mathrm{var}}\left( \frac{V_{k}^2}{\sigma^{2}} \right) & = 2\mathrm{tr}\left\{ \left[ \frac{1}{n} \mybm{\Gamma}^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \mybm{\Gamma}\mybm{V} \right]^2 \right\} .
+\mathop{\mathrm{var}}\left( \frac{\widetilde V_{k}^2}{\sigma^{2}} \right) & = 2\mathrm{tr}\left\{ \left[ \frac{1}{n} \widetilde{\mybm{\Gamma}}_k^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \widetilde{\mybm{\Gamma}}_k\mybm{V} \right]^2 \right\} .
 \end{align}
 The matrix square in \autoref{equ:glsw-ftest-var-Vksigma} is evaluated before taking the trace, so the second-order moment includes cross-location as well as within-location covariance terms.
-By letting $\xi_{1}=E({V_{k}^2}/{\sigma^2})$ and $\xi_{2}=\frac{1}{2}\mathop{\mathrm{var}}({V_{k}^2}/{\sigma^2})$,
-the term $\hfrac{\xi_{1}V_{k}^2}{\xi_{2}\sigma^2}$ can be approximated by a $\chi^2$ distribution with $\hfrac{\xi_1^2}{\xi_2}$ degrees of freedom.
+By letting $\xi_{1}=E({\widetilde V_{k}^2}/{\sigma^2})$ and $\xi_{2}=\frac{1}{2}\mathop{\mathrm{var}}({\widetilde V_{k}^2}/{\sigma^2})$,
+the term $\hfrac{\xi_{1}\widetilde V_{k}^2}{\xi_{2}\sigma^2}$ can be approximated by a $\chi^2$ distribution with $\hfrac{\xi_1^2}{\xi_2}$ degrees of freedom.
 
 Denote the sum of squared residuals of $\hat{\vy}_g$ by $\mathrm{RSS}_g$ as \autoref{equ:glsw-ftest-rss},
 \begin{equation}\label{equ:glsw-ftest-rss}
@@ -674,14 +693,14 @@ is an unbiased estimator of $\sigma^2$, $\frac{\delta_1\mathrm{RSS}_g}{\delta_2\
 
 Consequently, we can design an $F$-statistic as \autoref{equ:glsw-ftest-statistics},
 \begin{equation}\label{equ:glsw-ftest-statistics}
-F = \frac{
-\left( \frac{\xi_{1}V_{k}^{2}}{\xi_{2}\sigma^{2}} \middle/ \frac{\xi_{1}^{2}}{\xi_{2}} \right) 
+F_k = \frac{
+\left( \frac{\xi_{1}\widetilde V_{k}^{2}}{\xi_{2}\sigma^{2}} \middle/ \frac{\xi_{1}^{2}}{\xi_{2}} \right)
 }{
 \left( \frac{\delta_{1}^{2}\hat{\sigma}^{2}}{\delta_{2}\sigma^{2}} \middle/ \frac{\delta_{1}^{2}}{\delta_{2}} \right) 
-} = \frac{V_{k}^{2}}{\xi_{1}\hat{\sigma}^{2}} \sim F\left( \frac{\xi_{1}^{2}}{\xi_{2}} , \frac{\delta_{1}^{2}}{\delta_{2}} \right)
+} = \frac{\widetilde V_{k}^{2}}{\xi_{1}\hat{\sigma}^{2}} \sim F\left( \frac{\xi_{1}^{2}}{\xi_{2}} , \frac{\delta_{1}^{2}}{\delta_{2}} \right)
 \end{equation}
 For significance level $\alpha$, let $F_{1-\alpha}$ denote the corresponding upper critical quantile.
-We reject the null hypothesis if $F \geqslant F_{1-\alpha}$.
+We reject the null hypothesis if $F_k \geqslant F_{1-\alpha}$.
 
 % \subsection{Sample-level random effects}
 
@@ -740,11 +759,12 @@ Each data set is fitted as
 \subsection{Monte Carlo design and testing workflow}\label{sec:simulation-workflow}
 
 For each scenario and repetition, the random seed is determined by the scenario index and replication number.
-The same generated data sets are therefore paired whenever two procedures cover the same scenario and replication.
+The two bootstrap procedures use paired generated data sets whenever they cover the same scenario and replication.
+The adjusted $F$ follow-up uses the same fixed locations but an independent base seed, so its comparisons with the bootstrap results are unpaired.
 Each data set is first fitted by \gls{hgwr} with a bisquared kernel and a cross-validation-selected bandwidth with fitting tolerance, the optimisation parameter, the outer iteration limit, and at permitted retries being $10^{-5}$, 0.01, 200 and 10, respectively.
 
 Three testing procedures are evaluated in this simulation: the approximate $F$ test, the full-model bootstrap, and the effect-wise bootstrap.
-The approximate $F$ procedure obtains both effect-specific tests from the fitted model.
+For each target effect, the adjusted approximate $F$ procedure removes the fitted contribution of the other \gls{glsw} surfaces through \autoref{equ:glsw-ftest-adjusted-map} and then obtains the test from the same fitted model; it does not fit a null or reduced model.
 The full-model bootstrap first fits a joint null model in which both \gls{glsw} variables are global fixed effects, generates one common response from that model, and refits the complete \gls{hgwr} specification to obtain both component statistics.
 Its outputs assess the joint spatial-constancy null and are not interpreted as effect-specific tests once either coefficient is heterogeneous.
 For the primary effect-wise bootstrap, each target effect is separately constrained to be spatially constant under the null, responses are generated under that fitted null model, and the original \gls{hgwr} specification is refitted to each bootstrap response.
@@ -753,20 +773,20 @@ Bootstrap $p$-values use the plus-one correction, and a non-converged null or bo
 The bandwidth selected from the observed data is held fixed during the primary bootstrap; a separate diagnostic re-selects it for every bootstrap response.
 Bootstrap refits use an outer iteration limit of 100 and the same ten-retry limit.
 
-The approximate $F$ test is evaluated in all six $a$-by-ICC scenarios using 500 independent data sets per scenario.
+The adjusted approximate $F$ test is evaluated in all six $a$-by-ICC scenarios using 500 independent data sets per scenario.
 The full-model bootstrap uses $B=199$ resamples in all six $a$-by-ICC scenarios, with 250 independent data sets in each global-null scenario and 100 in each alternative scenario.
 The effect-wise bootstrap also uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with ICC 0.4.
 The smaller allocation under the alternatives, and the restriction of the effect-wise alternatives to ICC 0.4, reflect the bootstrap procedures' substantially greater computational cost.
 Independent $B=999$ effect-wise confirmation experiments use 20 data sets at each ICC 0.4 endpoint.
 Two robustness scenarios replace the normal residuals by variance-standardised $t_5$ residuals or use strongly unbalanced group sizes.
 The unbalanced design assigns 5--15 observations to half of the groups and 60--100 to the other half, giving an expected total sample size of 9,000.
-Both robustness scenarios use 200 data sets for the $F$ test and 30 for the effect-wise bootstrap at $a=0.5$ and \gls{icc} 0.4.
+Both robustness scenarios use 200 data sets for the earlier unadjusted $F$ diagnostic and 30 for the effect-wise bootstrap at $a=0.5$ and \gls{icc} 0.4; the adjusted $F$ test was not extended to these scenarios after failing its locked core calibration criterion.
 A separate ten-data-set diagnostic re-selects the bandwidth within every bootstrap fit.
 \autoref{tab:simulation-design} summarises the complete allocation and distinguishes primary, robustness, and diagnostic evidence.
 
 \input{generated/simulation_design_table.tex}
 
-After excluding superseded pilot output, the reported design comprises 1,050 independently executable tasks, 5,110 outer repetitions, and 10,220 effect-level results.
+After excluding superseded pilot output, the reported design comprises 5,110 outer repetitions and 10,220 effect-level results.
 All tests use a 5\% threshold.
 Rejection rates use only repetitions that return a finite $p$-value after all required fits converge; the number excluded is reported rather than silently replaced.
 Wilson 95\% intervals quantify Monte Carlo uncertainty in every reported rejection rate.
@@ -774,6 +794,7 @@ Wilson 95\% intervals quantify Monte Carlo uncertainty in every reported rejecti
 % \subsection{Computational environment and reproducibility}\label{sec:simulation-environment}
 
 The formal experiment was run locally on an AMD Ryzen 9 9950X workstation and 64 GiB of memory under Ubuntu 26.04 with R 4.5.
+The adjusted core $F$ outputs identify \texttt{hgwrr} 0.6.2.9006; the bootstrap and unadjusted robustness outputs identify \texttt{hgwrr} 0.6.2.9003.
 Each task outputs its complete scenario configuration, seeds, package version, host name, convergence diagnostics, statistics, $p$-values, and elapsed times.
 
 \subsection{Results}\label{sec:simulation-results}
@@ -783,13 +804,13 @@ Each task outputs its complete scenario configuration, seeds, package version, h
 \input{generated/simulation_core_table.tex}
 
 The core experiments of the three testing procedures are summarised in \autoref{tab:simulation-core-results}.
-The approximated $F$-test is relatively effective.
-Its global-null rejection rates range from 6.0\% to 9.4\%, with three of four effect-by-\gls{icc} estimates above 7\%.
+The adjusted approximate $F$ test retains high sensitivity but remains liberal under parts of the null.
+Its global-null rejection rates range from 6.6\% to 9.2\%, and three of the four effect-by-\gls{icc} Wilson intervals exclude 5\% on the upper side.
 It detects $\gamma_1$ in all usable heterogeneous repetitions.
-However, its rejection rate for the constant $\gamma_2$ increases with the heterogeneity of $\gamma_1$.
-For $a=0.5$, these false-positive rates are 20.8\% at \gls{icc} 0.1 and 11.2\% at \gls{icc} 0.4; for $a=1$, they rise to 49.5\% and 17.1\%.
-The results shows that the approximate $F$ test tends to be sensitive to spatial heterogeneity in both components, resulting in relatively high false-positive rates for spatially constant effects when other effects are heterogeneous.
-Considering such a problem is more serious when spatial heterogeneity is stronger, it is possibly caused by spillover effects from $\gamma_1$ because the model employs a uniform bandwidth for all \gls{glsw} effects.
+For the constant $\gamma_2$, its rejection rates are 11.9\% and 9.8\% at \gls{icc} 0.1 and 6.6\% in both alternatives at \gls{icc} 0.4.
+The corresponding unadjusted same-fit diagnostic rejects $\gamma_2$ in 21.2\% and 49.3\% of the \gls{icc} 0.1 alternatives and in 10.0\% and 15.4\% of the \gls{icc} 0.4 alternatives.
+Thus, removing the fitted nuisance surfaces substantially reduces the transmission of $\gamma_1$ heterogeneity into the $\gamma_2$ statistic, but it does not provide nominal 5\% calibration, particularly at low \gls{icc}.
+A further residual-orthogonalisation diagnostic produces nearly unchanged rejection rates and is not retained as part of the test.
 
 Under the complete joint null, the full-model bootstrap rejects the $\gamma_1$ component in 3.5\% of usable repetitions at both \gls{icc} values and the $\gamma_2$ component in 3.1\% and 2.6\% at \gls{icc} 0.1 and 0.4, respectively.
 All four Wilson intervals include 5\%, and the estimates are also consistent with the 4.5\% effective rejection probability induced by the discrete plus-one $p$-values and the strict $p<0.05$ decision rule when $B=199$.
@@ -807,21 +828,20 @@ At \gls{icc} 0.4, the bootstrap detects the heterogeneous $\gamma_1$ in 96.9\% o
 Over the same repetitions it rejects the constant $\gamma_2$ in only 4.1\% and 3.1\%, respectively.
 This combination of detection and embedded-null behaviour supports the effect-wise bootstrap as the primary inferential procedure in the simulated settings.
 
-Overall, the simulation shows that the $F$-test is effective as a rapid screening tool, as it requires less computation resources than the bootstrap methods and detects heterogeneous effects with high power.
+Overall, the simulation shows that the adjusted $F$ test is useful as a rapid screening tool, as it requires fewer computational resources than the bootstrap methods and detects heterogeneous effects with high power.
 The two bootstrap methods are more computationally intensive, but the effect-wise bootstrap is more robust to the presence of heterogeneous effects in other components and is therefore recommended as the primary procedure for effect-specific inference.
-The full-model bootstrap increase the rate of false positives for constant effects when other effects are heterogeneous compared with the approximated $F$-test, and it is therefore not recommended for effect-specific inference.
+The full-model bootstrap increases the componentwise rejection rate for constant effects when other effects are heterogeneous compared with the adjusted approximate $F$ test, and it is therefore not recommended for effect-specific inference.
 
 \subsubsection{Robustness and bandwidth diagnostic}
 
 \input{generated/simulation_additional_table.tex}
 
-As shown in the previous section, the approximate $F$ test and the effect-wise bootstrap are more effective methods.
-Thus, we further evaluated their robustness to heavy-tailed residuals and strongly unbalanced group sizes.
+We further evaluated the effect-wise bootstrap and the earlier unadjusted $F$ statistic under heavy-tailed residuals and strongly unbalanced group sizes.
 Results are summarised in \autoref{tab:simulation-additional-results}.
 Under $t_5$ residuals and strongly unbalanced group sizes, the effect-wise bootstrap detects $\gamma_1$ in 29 of 30 repetitions and does not reject $\gamma_2$; the corresponding zero-rejection intervals nevertheless have upper bounds of 11.4\%.
 Thus, these experiments show no evident loss of effect specificity, but their size does not establish a zero false-positive probability.
-The approximate $F$ test retains 100\% detection of $\gamma_1$ in both robustness settings but rejects the constant $\gamma_2$ in 8.5\% of usable $t_5$ repetitions and 8.0\% of the unbalanced-group repetitions.
-The robustness results therefore preserve the contrast between the two procedures: the effect-wise method remains specific in these samples, whereas the approximate $F$ procedure remains mildly liberal for the accompanying constant effect.
+The unadjusted $F$ diagnostic retains 100\% detection of $\gamma_1$ in both settings but rejects the constant $\gamma_2$ in 8.5\% of usable $t_5$ repetitions and 8.0\% of the unbalanced-group repetitions.
+These values do not establish robustness of the adjusted $F$ test, which was not advanced beyond the failed core calibration gate.
 
 Re-selecting the bandwidth inside every bootstrap refit succeeds for only one of ten data sets.
 The two rejection indicators from that single successful repetition have extremely wide intervals and no inferential value.
@@ -831,13 +851,13 @@ This negative result establishes a computational boundary: bandwidth re-selectio
 
 \input{generated/simulation_computation_table.tex}
 
-Across the 5,110 reported outer repetitions, 96 (1.88\%) fail to produce usable tests.
-For fixed-bandwidth experiments, the failure rates are 0.38\% for the $F$ test, 6.89\% for the full-model bootstrap, and 1.50\% for the effect-wise bootstrap.
+Across the 5,110 reported outer repetitions, 94 (1.84\%) fail to produce usable tests.
+The failure rates are 0.33\% for the adjusted core $F$ test, 0.25\% for the unadjusted robustness $F$ diagnostic, 6.89\% for the full-model bootstrap, and 1.50\% for the fixed-bandwidth effect-wise bootstrap.
 Of the 62 full-model failures, 59 arise because the linear mixed joint-null fit does not satisfy the strict gradient convergence criterion and three arise from the initial \gls{hgwr} fit; no full-model failure is attributed to a bootstrap \gls{hgwr} refit.
-The median serial elapsed times are 1.44 seconds for the $F$ test, 69.81 seconds for the full-model bootstrap, and 132.67 seconds for the effect-wise bootstrap.
-The corresponding 95th percentiles are 3.44, 91.39, and 493.18 seconds.
+The median serial elapsed times are 0.97 seconds for the adjusted core $F$ test, 69.81 seconds for the full-model bootstrap, and 132.67 seconds for the effect-wise bootstrap.
+The corresponding 95th percentiles are 1.64, 91.39, and 493.18 seconds.
 At the median, the effect-wise procedure takes about 1.9 times as long as the full-model procedure because it requires a separate null fit and bootstrap sequence for each tested effect.
-The effect-wise bootstrap is therefore roughly 92 times slower than the approximate $F$ test at the median, before accounting for the larger $B=999$ diagnostic.
+The effect-wise bootstrap is therefore roughly 137 times slower than the adjusted approximate $F$ test at the median, before accounting for the larger $B=999$ diagnostic.
 Its stronger calibration and effect specificity in the investigated settings come with a material computational cost rather than an unqualified dominance over the approximation.
 
 % \subsubsection{Scope of the evidence}
@@ -915,7 +935,7 @@ All continuous variables indicated in \autoref{tab:qoe-variables} are transforme
 \end{table}
 
 The specification is not based on the visual variability of coefficient maps alone.
-The original specification procedure first fits the remaining province-level variables as \gls{glsw} effects and uses the approximate $F$ test in \autoref{sec:test-hgwr-glsw-ftest} to screen each surface.
+The original specification procedure first fits the remaining province-level variables as \gls{glsw} effects and uses the earlier unadjusted approximate $F$ test to screen each surface.
 The youth-palace count is not rejected by this screening test and is therefore retained as a fixed rather than a \gls{glsw} effect.
 This decision illustrates the inferential distinction motivating the paper: a variable may be substantively relevant or have a non-zero global association without requiring a geographically varying coefficient.
 We also address clear multicollinearity between \GDPPrimary and \NumEnterprise by assigning the latter a fixed effect, and exclude national fiscal education expenditure because of its high correlation with \GeneralEduBudget.
@@ -925,16 +945,16 @@ The resulting specification is shown in \autoref{tab:qoe-variables}.
 \subsection{Evidence of spatial heterogeneity}\label{sec:qoe-heterogeneity-results}
 
 \autoref{tab:qoe-model-summary} reports the main model.
-The $F$ column gives the approximate test of whether each \gls{glsw} effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
+The $F$ column gives the earlier unadjusted approximate test of whether each \gls{glsw} effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
 These are distinct inferential statements.
 For example, an effect surface may be heterogeneous overall even when many individual provincial estimates are imprecise.
-All retained \gls{glsw} effects reject spatial homogeneity according to the approximate $F$ test at the 5\% level, although the evidence is weaker for \Gini than for most other provincial variables.
+All retained \gls{glsw} effects reject spatial homogeneity according to this unadjusted $F$ test at the 5\% level, although the evidence is weaker for \Gini than for most other provincial variables.
 The Monte Carlo experiment shows that this approximation can be liberal and can reject a constant effect when another \gls{glsw} effect is heterogeneous.
 The case-study results are therefore treated as screening evidence rather than independent confirmation by a well-calibrated effect-wise test.
 
 \begin{table}[tbp]
   \centering\scriptsize
-  \caption{Summary of the main QOE HGWR model. For GLSW effects, the $F$ statistic is the approximate spatial-homogeneity test; percentages are the proportions of province-specific estimates in each significance category.}
+  \caption{Summary of the main QOE HGWR model. For GLSW effects, the $F$ statistic is the earlier unadjusted approximate spatial-homogeneity test; percentages are the proportions of province-specific estimates in each significance category.}
   \label{tab:qoe-model-summary}
   \begin{tabular}{lrrrrrrr}
     \toprule
@@ -971,7 +991,7 @@ The case-study results are therefore treated as screening evidence rather than i
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=\linewidth]{fig/fig_Model19_coef.pdf}
-  \caption{Province-specific estimates of the GLSW effects and the SLR effect for urban residence in the main QOE model. The approximate global $F$ results in \autoref{tab:qoe-model-summary} provide screening evidence against spatial homogeneity; visual variation alone is not a test.}
+  \caption{Province-specific estimates of the GLSW effects and the SLR effect for urban residence in the main QOE model. The unadjusted approximate global $F$ results in \autoref{tab:qoe-model-summary} provide screening evidence against spatial homogeneity; visual variation alone is not a test.}
   \label{fig:qoe-coefficients}
 \end{figure}
 
@@ -1036,15 +1056,15 @@ The effect-wise bootstrap is generally calibrated or conservative under the glob
 At ICC 0.4 it detects the heterogeneous coefficient in 96.9--100\% of usable repetitions while rejecting the accompanying constant coefficient in 3.1--4.1\%.
 The full-model bootstrap is calibrated under the complete joint null and detects the heterogeneous coefficient in 97.9--100\% of usable repetitions.
 Once the joint null is false, however, it also frequently rejects the component associated with the constant coefficient, so it provides evidence of global departure without reliably localising that departure.
-The approximate $F$ test is much faster, but its global-null rejection rates reach 9.4\%, and its false-positive rate for the constant coefficient rises as the other \gls{glsw} effect becomes more heterogeneous.
+The adjusted approximate $F$ test is much faster and substantially reduces cross-effect leakage, but its global-null rejection rates reach 9.2\% and its rejection rate for the constant coefficient remains as high as 11.9\% under the partial null.
 It should therefore be treated as a rapid approximation rather than a calibrated substitute for effect-wise bootstrapping.
 The distinction between testing constancy and testing a zero coefficient remains essential: the former determines whether a \gls{glsw} representation is statistically warranted.
 
 The QOE case study demonstrates this role in practice.
-The approximate $F$ screening results support \gls{glsw} specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
+The earlier unadjusted approximate $F$ screening results support \gls{glsw} specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
 The fitted model suggests that the associations of primary-sector GDP, living costs, income inequality, university recruitment, public education budgets, and the highly educated population with hourly extracurricular-course expenditure vary geographically.
 Household spending, assets, parental education, child gender, age, and urban residence provide a complementary account of within- and between-province inequality.
-Because the case-study tests use the $F$ approximation, they are screening evidence rather than effect-wise bootstrap confirmation.
+Because the case-study tests use the unadjusted $F$ approximation, they are screening evidence rather than effect-wise bootstrap confirmation.
 These findings show how formal heterogeneity tests can qualify coefficient maps and guide model specification; they do not establish causal effects of provincial policy or household characteristics.
 
 Several issues remain.
@@ -1096,8 +1116,9 @@ The authors report there are no competing interests to declare.
 
 \section{Computational simplification of \textit{F}-test for GLSW effects}\label{sec:app-simplify-ftest}
 
-The $F$-test for \gls{glsw} effects introduced in Section~\ref{sec:test-hgwr-glsw-ftest} involves matrices $\vV$, $\vS$, and $\vGamma$ with $n \times n$ elements, which can become computationally intensive due to their large size.
-However, given that $\vS$ and $\vGamma$ contain repeating rows --- since the group-level variable values are uniform within each group --- and that $\vV$ is a block-diagonal matrix with numerous zero elements, we can develop an algorithm to streamline the computations required for the $F$-test.
+The $F$-test for \gls{glsw} effects introduced in Section~\ref{sec:test-hgwr-glsw-ftest} involves matrices $\vV$, $\vS$, and $\widetilde{\vGamma}_k$ with $n \times n$ elements, which can become computationally intensive due to their large size.
+However, given that $\vS$ and $\widetilde{\vGamma}_k$ contain repeating rows --- since the group-level variable values are uniform within each group --- and that $\vV$ is a block-diagonal matrix with numerous zero elements, we can develop an algorithm to streamline the computations required for the $F$-test.
+For compactness, the following derivation writes $\vGamma=\widetilde{\vGamma}_k$ for the adjusted map of the target effect.
 
 As shown in \autoref{equ:ftest-glsw-Gamma-full}, the matrix $\vGamma$ can be expressed as \autoref{eq:ftest-simp-Gamma},
 \begin{equation}\label{eq:ftest-simp-Gamma}
