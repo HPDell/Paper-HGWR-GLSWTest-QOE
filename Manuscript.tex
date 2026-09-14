@@ -116,7 +116,7 @@
 \articletype{RESEARCH ARTICLE}
 
 
-\title{Testing Spatial Heterogeneity in Hierarchical and Geographically Weighted Regression: Theory, Simulation, and a Study of Extracurricular Education in China}
+\title{Testing Spatial Heterogeneity in Hierarchical and Geographically Weighted Regression with a Study of Extracurricular Education in China}
 
 \author{
   \name{Yigong Hu\textsuperscript{a}\thanks{Corresponding author. Email: yigong.hu@hhu.edu.cn}, Richard Harris\textsuperscript{b}, and Richard Timmerman\textsuperscript{b}}
@@ -613,7 +613,7 @@ we define the null and alternative hypothesis as \autoref{equ:hypothesis-glsw-ft
         H_{1} & : \mbox{not all $\gamma_{ik}(i=1,2,\cdots,m)$ are equal.}
     \end{split}
 \end{equation}
-For the $k$-th \gls{glsw} effect, the unadjusted coefficient-surface variance is
+For the $k$-th \gls{glsw} effect, the coefficient-surface variance is
 \begin{equation}\label{equ:glsw-ftest-variance}
   V_{k}^2
   = \frac{1}{n}\hat{\mybm{\gamma}}_{k}^{\mathrm{T}}
@@ -781,7 +781,7 @@ The smaller allocation under the alternatives, and the restriction of the effect
 Independent $B=999$ effect-wise confirmation experiments use 20 data sets at each ICC 0.4 endpoint.
 Two robustness scenarios replace the normal residuals by variance-standardised $t_5$ residuals or use strongly unbalanced group sizes.
 The unbalanced design assigns 5--15 observations to half of the groups and 60--100 to the other half, giving an expected total sample size of 9,000.
-Both robustness scenarios use 200 data sets for the earlier unadjusted $F$ diagnostic and 30 for the effect-wise bootstrap at $a=0.5$ and \gls{icc} 0.4; the adjusted $F$ test was not extended to these scenarios after failing its locked core calibration criterion.
+Both robustness scenarios use 200 data sets for the earlier $F$ diagnostic and 30 for the effect-wise bootstrap at $a=0.5$ and \gls{icc} 0.4; the adjusted $F$ test was not extended to these scenarios after failing its locked core calibration criterion.
 A separate ten-data-set diagnostic re-selects the bandwidth within every bootstrap fit.
 \autoref{tab:simulation-design} summarises the complete allocation and distinguishes primary, robustness, and diagnostic evidence.
 
@@ -795,7 +795,7 @@ Wilson 95\% intervals quantify Monte Carlo uncertainty in every reported rejecti
 % \subsection{Computational environment and reproducibility}\label{sec:simulation-environment}
 
 The formal experiment was run locally on an AMD Ryzen 9 9950X workstation and 64 GiB of memory under Ubuntu 26.04 with R 4.5.
-The adjusted core $F$ outputs identify \texttt{hgwrr} 0.6.2.9006; the bootstrap and unadjusted robustness outputs identify \texttt{hgwrr} 0.6.2.9003.
+The adjusted core $F$ outputs identify \texttt{hgwrr} 0.6.2.9006; the bootstrap and robustness outputs identify \texttt{hgwrr} 0.6.2.9003.
 Each task outputs its complete scenario configuration, seeds, package version, host name, convergence diagnostics, statistics, $p$-values, and elapsed times.
 
 \subsection{Results}\label{sec:simulation-results}
@@ -809,7 +809,7 @@ The adjusted approximate $F$ test retains high sensitivity but remains liberal u
 Its global-null rejection rates range from 6.6\% to 9.2\%, and three of the four effect-by-\gls{icc} Wilson intervals exclude 5\% on the upper side.
 It detects $\gamma_1$ in all usable heterogeneous repetitions.
 For the constant $\gamma_2$, its rejection rates are 11.9\% and 9.8\% at \gls{icc} 0.1 and 6.6\% in both alternatives at \gls{icc} 0.4.
-The corresponding unadjusted same-fit diagnostic rejects $\gamma_2$ in 21.2\% and 49.3\% of the \gls{icc} 0.1 alternatives and in 10.0\% and 15.4\% of the \gls{icc} 0.4 alternatives.
+The corresponding same-fit diagnostic rejects $\gamma_2$ in 21.2\% and 49.3\% of the \gls{icc} 0.1 alternatives and in 10.0\% and 15.4\% of the \gls{icc} 0.4 alternatives.
 Thus, removing the fitted nuisance surfaces substantially reduces the transmission of $\gamma_1$ heterogeneity into the $\gamma_2$ statistic, but it does not provide nominal 5\% calibration, particularly at low \gls{icc}.
 
 Under the complete joint null, the full-model bootstrap rejects the $\gamma_1$ component in 3.5\% of usable repetitions at both \gls{icc} values and the $\gamma_2$ component in 3.1\% and 2.6\% at \gls{icc} 0.1 and 0.4, respectively.
@@ -819,7 +819,7 @@ Its $\gamma_1$ rejection rates are 100\% at \gls{icc} 0.1 for both alternatives,
 However, the corresponding componentwise rejection rates for the constant $\gamma_2$ are 87.5\%, 15.8\%, 100\%, and 34.0\%.
 These values are not effect-specific false-positive rates, because the full-model joint null is already false whenever $\gamma_1$ varies.
 Rather, they show that jointly estimated coefficient surfaces can transmit a departure from the common generating null to more than one component statistic.
-Descriptively rejecting the joint null when either component has $p<0.05$ gives complete-null rejection rates of 6.6\% and 6.1\%, and alternative rejection rates of 98.9--100\%; this any-component rule is unadjusted and is not presented as a formally multiplicity-controlled omnibus test.
+Descriptively rejecting the joint null when either component has $p<0.05$ gives complete-null rejection rates of 6.6\% and 6.1\%, and alternative rejection rates of 98.9--100\%; this any-component rule is and is not presented as a formally multiplicity-controlled omnibus test.
 
 Effect-wise bootstrap performs better than the full-model bootstrap in terms of effect specificity.
 Under the global null, the effect-wise bootstrap rejection rates range from 1.6\% to 3.7\%.
@@ -836,11 +836,11 @@ The full-model bootstrap increases the componentwise rejection rate for constant
 
 \input{generated/simulation_additional_table.tex}
 
-We further evaluated the effect-wise bootstrap and the earlier unadjusted $F$ statistic under heavy-tailed residuals and strongly unbalanced group sizes.
+We further evaluated the effect-wise bootstrap and the earlier $F$ statistic under heavy-tailed residuals and strongly unbalanced group sizes.
 Results are summarised in \autoref{tab:simulation-additional-results}.
 Under $t_5$ residuals and strongly unbalanced group sizes, the effect-wise bootstrap detects $\gamma_1$ in 29 of 30 repetitions and does not reject $\gamma_2$; the corresponding zero-rejection intervals nevertheless have upper bounds of 11.4\%.
 Thus, these experiments show no evident loss of effect specificity, but their size does not establish a zero false-positive probability.
-The unadjusted $F$ diagnostic retains 100\% detection of $\gamma_1$ in both settings but rejects the constant $\gamma_2$ in 8.5\% of usable $t_5$ repetitions and 8.0\% of the unbalanced-group repetitions.
+The $F$ diagnostic retains 100\% detection of $\gamma_1$ in both settings but rejects the constant $\gamma_2$ in 8.5\% of usable $t_5$ repetitions and 8.0\% of the unbalanced-group repetitions.
 These values do not establish robustness of the adjusted $F$ test, which was not advanced beyond the failed core calibration gate.
 
 Re-selecting the bandwidth inside every bootstrap refit succeeds for only one of ten data sets.
@@ -853,7 +853,7 @@ This negative result establishes a computational boundary: bandwidth re-selectio
 
 The convergence and computational cost of the three procedures are summarised in \autoref{tab:simulation-computation}.
 Across the 5,110 reported outer repetitions, 94 (1.84\%) fail to produce usable tests.
-The failure rates are 0.33\% for the adjusted core $F$ test, 0.25\% for the unadjusted robustness $F$ diagnostic, 6.89\% for the full-model bootstrap, and 1.50\% for the fixed-bandwidth effect-wise bootstrap.
+The failure rates are 0.33\% for the adjusted core $F$ test, 0.25\% for the robustness $F$ diagnostic, 6.89\% for the full-model bootstrap, and 1.50\% for the fixed-bandwidth effect-wise bootstrap.
 Of the 62 full-model failures, 59 arise because the linear mixed joint-null fit does not satisfy the strict gradient convergence criterion and three arise from the initial \gls{hgwr} fit; no full-model failure is attributed to a bootstrap \gls{hgwr} refit.
 The median serial elapsed times are 0.97 seconds for the adjusted core $F$ test, 69.81 seconds for the full-model bootstrap, and 132.67 seconds for the effect-wise bootstrap.
 The corresponding 95th percentiles are 1.64, 91.39, and 493.18 seconds.
@@ -938,12 +938,18 @@ An alternative model uses \QOESpendRatio, the ratio of extracurricular-course ex
 The province-level covariates describe the primary-sector economy, living costs, income inequality, university recruitment, public education budgets, and the prevalence of highly educated residents.
 The household-level covariates describe income, spending, assets, debt, parental education, the child's gender and age, and urban residence.
 
-\subsection{Effect specification guided by heterogeneity tests}\label{sec:qoe-specification}
+% \subsection{Effect specification guided by heterogeneity tests}\label{sec:qoe-specification}
 
-The case study uses the three-effect structure in \autoref{sec:hgwr}.
+Effects in the case study are categorised into province-level and household-level covariates.
 Province-level covariates are candidates for \gls{glsw} effects because their associations with family expenditure may vary geographically.
-Household covariates are assigned fixed effects unless the grouped data support a sample-level random effect.
+For household covariates, they are assigned fixed effects unless the grouped data support a sample-level random effect.
 All continuous variables indicated in \autoref{tab:qoe-variables} are transformed and scaled as in the original QOE analysis.
+Finally, an \gls{hlm} with forward selection identifies \RegionUrban as an \gls{slr} effect.
+The resulting specification is shown in \autoref{tab:qoe-variables}.
+Province-level covariates' effects are tested by the approximate $F$ test to select those of significant spatial heterogeneity.
+The youth-palace count is not rejected by this screening test and is therefore retained as a fixed rather than a \gls{glsw} effect.
+This decision illustrates the inferential distinction motivating the paper: a variable may be substantively relevant or have a non-zero global association without requiring a geographically varying coefficient.
+Further, we also address clear multicollinearity between \GDPPrimary and \NumEnterprise by assigning the latter a fixed effect.
 
 \begin{table}[tbp]
   \centering\scriptsize
@@ -966,27 +972,18 @@ All continuous variables indicated in \autoref{tab:qoe-variables} are transforme
   \end{tabular}
 \end{table}
 
-The specification is not based on the visual variability of coefficient maps alone.
-The original specification procedure first fits the remaining province-level variables as \gls{glsw} effects and uses the earlier unadjusted approximate $F$ test to screen each surface.
-The youth-palace count is not rejected by this screening test and is therefore retained as a fixed rather than a \gls{glsw} effect.
-This decision illustrates the inferential distinction motivating the paper: a variable may be substantively relevant or have a non-zero global association without requiring a geographically varying coefficient.
-We also address clear multicollinearity between \GDPPrimary and \NumEnterprise by assigning the latter a fixed effect, and exclude national fiscal education expenditure because of its high correlation with \GeneralEduBudget.
-Finally, an \gls{hlm} with forward selection identifies \RegionUrban as an \gls{slr} effect.
-The resulting specification is shown in \autoref{tab:qoe-variables}.
-
-\subsection{Evidence of spatial heterogeneity}\label{sec:qoe-heterogeneity-results}
+\subsection{Results}\label{sec:qoe-heterogeneity-results}
 
 \autoref{tab:qoe-model-summary} reports the main model.
-The $F$ column gives the earlier unadjusted approximate test of whether each \gls{glsw} effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
+The $F$ column gives the earlier approximate test of whether each \gls{glsw} effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
 These are distinct inferential statements.
 For example, an effect surface may be heterogeneous overall even when many individual provincial estimates are imprecise.
-All retained \gls{glsw} effects reject spatial homogeneity according to this unadjusted $F$ test at the 5\% level, although the evidence is weaker for \Gini than for most other provincial variables.
+All retained \gls{glsw} effects reject spatial homogeneity according to this $F$ test at the 5\% level.
 The Monte Carlo experiment shows that this approximation can be liberal and can reject a constant effect when another \gls{glsw} effect is heterogeneous.
-The case-study results are therefore treated as screening evidence rather than independent confirmation by a well-calibrated effect-wise test.
 
 \begin{table}[tbp]
   \centering\scriptsize
-  \caption{Summary of the main QOE HGWR model. For GLSW effects, the $F$ statistic is the earlier unadjusted approximate spatial-homogeneity test; percentages are the proportions of province-specific estimates in each significance category.}
+  \caption{Summary of the main QOE HGWR model.}
   \label{tab:qoe-model-summary}
   \begin{tabular}{lrrrrrrrr}
   \toprule
@@ -1013,54 +1010,52 @@ The case-study results are therefore treated as screening evidence rather than i
   \RegionUrban        & 0.456 & 0.091 & 5.026 \makebox[1.5em][l]{***} & & & & & \\
   \Age                & -0.145 & 0.021 & 6.963 \makebox[1.5em][l]{***} & & & & & \\
   \bottomrule
+  \multicolumn{9}{l}{Significance code: `***' $0.001$ `**' $0.01$ `*' $0.05$ `.' $0.1$ ` '.}
   \end{tabular}
 \end{table}
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=\linewidth]{fig/fig_Model19_coef.pdf}
-  \caption{Province-specific estimates of the GLSW effects and the SLR effect for urban residence in the main QOE model. The unadjusted approximate global $F$ results in \autoref{tab:qoe-model-summary} provide screening evidence against spatial homogeneity; visual variation alone is not a test.}
+  \includegraphics[width=\linewidth]{fig/fig_Model22_coef_new.pdf}
+  \caption{Province-specific estimates of the GLSW effects and the SLR effect for urban residence in the main QOE model.}
   \label{fig:qoe-coefficients}
 \end{figure}
 
 The estimated surfaces in \autoref{fig:qoe-coefficients} show that different provincial factors have different geographies.
-The association of primary-sector GDP with hourly expenditure is positive and locally significant in parts of central, southern, and western China, consistent with the possibility that agricultural development raises the resources available to some rural households.
-The consumer price index has negative and locally significant estimates in parts of southern China, including Hunan, Guangdong, and Hainan, although living costs could affect both household purchasing power and course prices.
-The Gini coefficient is negative in several central, northern, and western provinces, but many provincial estimates are not significant; its global heterogeneity test should therefore not be read as evidence of a negative association everywhere.
-
-Public education expenditure has positive estimates across the provinces and is locally significant in most of them.
-One interpretation is that public funding reduces other educational burdens and leaves families more able to purchase extracurricular courses, but the observational design cannot isolate that mechanism.
-The highly educated share of the population is also positive, with stronger local evidence in parts of southeastern China.
-By contrast, \Engel and \UniversityRecruitRatio change sign across the study area.
+The association of primary-sector GDP (\GDPPrimary) with hourly expenditure is positive and locally significant in parts of central, southern, and western China, consistent with the possibility that agricultural development raises the resources available to some rural households.
+The consumer price index (\CPI) has negative and locally significant estimates in parts of southern China, including Hunan, Guangdong, and Hainan, although living costs could affect both household purchasing power and course prices.
+The Gini coefficient (\Gini) is negative in several central, northern, and western provinces, but many provincial estimates are not significant; its global heterogeneity test should therefore not be read as evidence of a negative association everywhere.
+The Engel coefficient (\Engel) and the University Recruitment Ratio (\UniversityRecruitRatio) change sign across the study area.
 The former is more positive in northern provinces and negative in parts of the south; the latter is positive in some western provinces and negative in several eastern provinces.
 These sign changes are precisely the type of pattern for which a single global coefficient would conceal substantively relevant geographical differences, although the local explanations remain hypotheses rather than causal effects.
 
 The \gls{slr} estimate for urban residence is positive in nearly all provinces and is especially large in Gansu and Chongqing.
 Because household finances and parental education are included in the model, the remaining urban--rural difference is consistent with unequal access to course providers and qualified teachers, but unobserved household location and accessibility prevent a direct test of this interpretation.
 
-\subsection{Household-level findings and substantive implications}\label{sec:qoe-household-results}
+% \subsection{Household-level findings and substantive implications}\label{sec:qoe-household-results}
 
-Among the household financial variables, total spending and assets have positive fixed effects, whereas total income and debt are not statistically significant in the fitted model.
+Among the household financial variables, total spending (\TotalSpending) and assets (\Asset) have positive fixed effects, whereas total income (\TotalIncome) and debt (\Debt) are not statistically significant in the fitted model.
 Since extracurricular expenditure is part of total household spending, the total-spending association is partly mechanical.
 The asset result is consistent with wealthier families purchasing more costly courses, but it does not establish differences in educational returns.
-Parental higher education has a positive association after controlling for the included financial measures, suggesting that educational preferences or information may contribute in addition to economic capacity.
-
-The coefficient for boys is slightly negative, indicating lower hourly expenditure than for girls in this sample.
+For parents of high educational qualification (\HighEducated), they tends to spend more on their children's extracurricular activities. The association of parental education with hourly expenditure has a positive association after controlling for the included financial measures, suggesting that educational preferences or information may contribute in addition to economic capacity.
+The coefficient for the gender (\GenderMale) is slightly negative, indicating lower hourly expenditure than for girls in this sample.
 The result does not demonstrate an overall educational advantage for girls because participation, course type, and the social valuation of gendered activities are not modelled.
-Age is negative and is treated as a control: older children may face greater academic and examination demands and consequently spend less time in extracurricular courses.
+The age (\Age) is negative and is treated as a control: older children may face greater academic and examination demands and consequently spend less time in extracurricular courses.
 
 Together, the province- and household-level results suggest that educational inequality is related to both family resources and geographically varying macro contexts.
 The estimates support attention to public education budgets, the distribution of extracurricular resources between urban and rural areas, and access for families with fewer resources.
 Potential interventions include targeted support for underserved regions, public or non-profit extracurricular institutions such as youth palaces, and incentives for qualified teachers to work in rural areas \citep{LaiXu-2023,JiangYip-2024}.
 These policy implications are associational: the \gls{hgwr} analysis identifies where estimated relationships differ, not the causal effect of changing a budget or economic indicator.
 
-\subsection{Alternative outcome and limitations}\label{sec:qoe-robustness}
+% \subsection{Alternative outcome and limitations}\label{sec:qoe-robustness}
 
 The alternative model replaces hourly expenditure with \QOESpendRatio and excludes total spending from the predictors because it enters the response denominator.
 The principal pattern is broadly similar, but three differences qualify the main findings.
 Assets are no longer significant, the spatial heterogeneity of \CPI is weaker, and the heterogeneity of \Engel is more pronounced.
 Detailed province-specific estimates and the alternative-model summary are provided in the supplemental material.
 The comparison indicates that conclusions about purchasing a more expensive course should not automatically be interpreted as conclusions about the priority that a family assigns to extracurricular education.
+
+\subsection{Discussion} \label{sec:discussion}
 
 The case study has five main limitations.
 First, hourly expenditure is an imperfect proxy for course quality and does not measure participation.
@@ -1089,10 +1084,10 @@ It should therefore be treated as a rapid approximation rather than a calibrated
 The distinction between testing constancy and testing a zero coefficient remains essential: the former determines whether a \gls{glsw} representation is statistically warranted.
 
 The QOE case study demonstrates this role in practice.
-The earlier unadjusted approximate $F$ screening results support \gls{glsw} specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
+The earlier approximate $F$ screening results support \gls{glsw} specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
 The fitted model suggests that the associations of primary-sector GDP, living costs, income inequality, university recruitment, public education budgets, and the highly educated population with hourly extracurricular-course expenditure vary geographically.
 Household spending, assets, parental education, child gender, age, and urban residence provide a complementary account of within- and between-province inequality.
-Because the case-study tests use the unadjusted $F$ approximation, they are screening evidence rather than effect-wise bootstrap confirmation.
+Because the case-study tests use the $F$ approximation, they are screening evidence rather than effect-wise bootstrap confirmation.
 These findings show how formal heterogeneity tests can qualify coefficient maps and guide model specification; they do not establish causal effects of provincial policy or household characteristics.
 
 Several issues remain.
