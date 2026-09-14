@@ -65,7 +65,7 @@
 %% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
 %% for the whole article with \linenumbers.
 \usepackage{lineno}
-\usepackage{enumitem}
+\usepackage[inline]{enumitem}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{makecell}
@@ -1059,9 +1059,8 @@ Quality-oriented education has no single standard, and suitable provision depend
 Nevertheless, market-based provision tends to favour households that can afford more costly resources, so policy can seek to reduce the financial and geographic constraints that prevent children from accessing appropriate opportunities.
 The positive association of household assets with hourly expenditure in the main model, together with the remaining urban--rural differences, illustrates how such constraints can arise at both household and regional levels.
 
-At the regional level, economic development and public investment remain broad foundations for improving access to quality-oriented education \citep{XiaoLiu-2014}.
+At the regional level, economic development remains broad foundations for improving access to quality-oriented education \citep{XiaoLiu-2014}.
 The geographically varying estimates for primary-sector GDP, consumer prices, and income inequality further suggest that a uniform national intervention may not address the same constraint in every province.
-Fiscal redistribution could direct educational resources towards underdeveloped and rural areas, with allocations informed by regional economic conditions, student--teacher ratios, and access to aesthetic-education facilities, accompanied by monitoring of how the funds are used \citep{Zhang-2024}.
 Businesses and non-profit organisations could supplement public provision in resource-scarce areas \citep{JingboNatalie-2020,Zhou-2015}.
 Financial, housing, transport, and professional-development incentives may also help rural areas attract and retain qualified teachers, while support for highly educated professionals returning to their home regions could expand the local supply of extracurricular courses \citep{ChengDai-2023,LiShi-2020,JiangYip-2024,ZhangDong-2023,WangTigelaar-2019}.
 
@@ -1070,52 +1069,45 @@ Public funding could support their facilities, teaching materials, and educator 
 Cooperation with local sports and arts schools could strengthen staff development and help these institutions gain recognition and retain qualified teachers \citep{Bao-2024-en}.
 These proposals are policy directions derived from the observed pattern of inequalities rather than estimated intervention effects: the \gls{hgwr} analysis identifies conditional associations and where they vary, but it does not establish that changing a particular budget, price, or institutional arrangement would cause the predicted improvement.
 
-The case study has five main limitations.
-First, hourly expenditure is an imperfect proxy for course quality and does not measure participation.
-Second, the two-level province--household structure cannot directly represent intermediate contexts such as cities, counties, schools, or neighbourhoods.
-Third, the survey does not provide household coordinates, preventing an explicit analysis of distance and transport accessibility.
-Fourth, spatial collinearity may affect the allocation and interpretation of \gls{glsw} and fixed effects.
-Finally, the data support conditional associations rather than causal policy effects.
-The heterogeneity tests strengthen the inferential basis for deciding whether a relationship varies geographically, but they do not resolve omitted-variable bias, measurement error, multiple local comparisons, or causal identification.
+The case study has some main limitations:
+\begin{enumerate*}[label={\alph*)}, after=\unskip{.}, itemjoin={{; }}, itemjoin*={{; and }}]
+  \item hourly expenditure is an imperfect proxy for course quality and does not measure participation
+  \item the two-level province--household structure cannot directly represent intermediate contexts such as cities, counties, schools, or neighbourhoods
+  \item the survey does not provide household coordinates, preventing an explicit analysis of distance and transport accessibility
+  \item the heterogeneity tests strengthen the inferential basis for deciding whether a relationship varies geographically, but they do not resolve omitted-variable bias, measurement error, multiple local comparisons, or causal identification.
+\end{enumerate*}
 
 
 \section{Conclusion}\label{sec:conclusion}
 
 This article develops an inferential framework for spatial heterogeneity in \gls{hgwr}.
-The framework begins with a spatial random variable defined through its location-conditional distribution.
-Strong spatial heterogeneity occurs when that conditional distribution changes with location, whereas weak forms concern specified characteristics such as the conditional expectation.
-This formulation separates spatial non-stationarity from spatial autocorrelation: the former concerns a location-dependent distributional feature, while the latter concerns dependence among observations.
-The two processes may co-occur, but one is not evidence of the other.
-
-Building on this definition, we develop joint-null full-model and effect-wise parametric bootstraps together with an approximate $F$ test for \gls{glsw} effects in \gls{hgwr}.
-The effect-wise bootstrap is generally calibrated or conservative under the global null in the simulated settings.
-At ICC 0.4 it detects the heterogeneous coefficient in 96.9--100\% of usable repetitions while rejecting the accompanying constant coefficient in 3.1--4.1\%.
+The framework begins with defining spatial random variable and spatial heterogeneity.
+Under the definitions, the hypothesises of testing the spatial heterogeneity of a \gls{glsw} effect are formulated as the changes of conditional expectations.
+Accordingly, we develop joint-null full-model and effect-wise parametric bootstraps together with an approximate $F$ test for \gls{glsw} effects in \gls{hgwr}.
+According to the simulation results, the effect-wise bootstrap is generally calibrated or conservative under the global null in the simulated settings.
+It detects the heterogeneous coefficient in 96.9--100\% of usable repetitions while rejecting the accompanying constant coefficient in 3.1--4.1\%.
 The full-model bootstrap is calibrated under the complete joint null and detects the heterogeneous coefficient in 97.9--100\% of usable repetitions.
 Once the joint null is false, however, it also frequently rejects the component associated with the constant coefficient, so it provides evidence of global departure without reliably localising that departure.
-The adjusted approximate $F$ test is much faster and substantially reduces cross-effect leakage, but its global-null rejection rates reach 9.2\% and its rejection rate for the constant coefficient remains as high as 11.9\% under the partial null.
-It should therefore be treated as a rapid approximation rather than a calibrated substitute for effect-wise bootstrapping.
-The distinction between testing constancy and testing a zero coefficient remains essential: the former determines whether a \gls{glsw} representation is statistically warranted.
+The approximate $F$ test is much faster and substantially reduces cross-effect leakage, but its global-null rejection rates and rejection rate for the constant coefficient are higher.
+Thus, treating the approximate $F$ test as a quick screening tool is suggested.
 
-The QOE case study demonstrates this role in practice.
-The earlier approximate $F$ screening results support \gls{glsw} specifications for the retained provincial economic and educational variables but not for the youth-palace count, which is therefore represented by a fixed effect.
-The fitted model suggests that the associations of primary-sector GDP, living costs, income inequality, university recruitment, public education budgets, and the highly educated population with hourly extracurricular-course expenditure vary geographically.
+A case study on the inequality of parents' investments on the extracurricular courses for their children demonstrates this role in practice.
+Both the approximate $F$ and effect-wise bootstrap tests support \gls{glsw} specifications for the retained provincial economic and educational variables but not for the youth-palace count.
+The fitted model suggests that the associations of primary-sector GDP, living costs, income inequality, university recruitment, and the highly educated population with hourly extracurricular-course expenditure vary geographically.
 Household spending, assets, parental education, child gender, age, and urban residence provide a complementary account of within- and between-province inequality.
-Because the case-study tests use the $F$ approximation, they are screening evidence rather than effect-wise bootstrap confirmation.
 These findings show how formal heterogeneity tests can qualify coefficient maps and guide model specification; they do not establish causal effects of provincial policy or household characteristics.
+This work enhances the understanding of educational inequalities and offers practical insights for policymakers aiming to advance inclusive and balanced development in extracurricular education.
+Its methodology is useful for other contexts where spatial heterogeneity exists in all levels of a hierarchical data set.
 
 Several issues remain.
-The simulation fixes one spatial configuration, excludes spatially correlated and spatially confounded covariates, and contains a mismatch between the generated random-slope mean and the centred fitted random-effect component.
-Its results should not be extrapolated beyond this design.
-Although the $t_5$ experiment addresses one departure from normality, spatially dependent and heteroskedastic errors require further theoretical and simulation study.
 Bootstrap accuracy also increases computational cost, particularly for large data sets, and repeated bandwidth optimisation was not computationally reliable in the present experiment.
-The full-model bootstrap additionally depends on successful estimation of its linear mixed joint-null model and currently reports componentwise rather than multiplicity-adjusted omnibus probabilities.
 The $F$ approximation depends on distributional and smoother-matrix assumptions and did not maintain effect specificity in several alternatives.
-The current procedures provide a decision about statistical evidence of heterogeneity but do not supply a scale-independent measure of its magnitude.
 Future work should examine effect-size measures, multiplicity across many candidate effects, sensitivity to spatial collinearity and confounding, and extensions to more than two levels.
 
 \section*{Acknowledgement}
 
-This research was funded by the China Scholarship Council with the University of Bristol (No. 202106270029) whilst at the University of Bristol.
+This research was funded by the China Scholarship Council with the University of Bristol (No. 202106270029) whilst at the University of Bristol, and the Fundamental Research Funds for the Central Universities (Grant number B260201041).
+The work was supported by High Performance Computing Platform, Hohai University.
 
 \section*{Data and code availability}
 
