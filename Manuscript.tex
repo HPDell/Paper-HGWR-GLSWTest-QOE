@@ -116,13 +116,13 @@
 \articletype{RESEARCH ARTICLE}
 
 
-\title{Testing Spatial Heterogeneity in Hierarchical and Geographically Weighted Regression with a Study of Extracurricular Education in China}
+\title{Testing Spatial Heterogeneity in Hierarchical and Geographically Weighted Regression: Theory, Simulation, and a Study of Extracurricular Education in China}
 
 \author{
   \name{Yigong Hu\textsuperscript{a}\thanks{Corresponding author. Email: yigong.hu@hhu.edu.cn}, Richard Harris\textsuperscript{b}, and Richard Timmerman\textsuperscript{b}}
   \affil{
-    \textsuperscript{a}College of Geography and Remote Sensing, Hohai University, Nanjing, Jiangsu, China. 211000.
-    \textsuperscript{b}School of Geographical Sciences, University of Bristol, UK. BS8 1SS.
+    \textsuperscript{a}College of Geography and Remote Sensing, Hohai University, Nanjing, Jiangsu 211000, China.
+    \textsuperscript{b}School of Geographical Sciences, University of Bristol, BS8 1SS, UK.
   }
 }
 
@@ -131,14 +131,14 @@
 \begin{abstract}
 %% Text of abstract
 \Gls{hgwr} models spatial hierarchical data by combining \gls{glsw}, fixed, and sample-level random effects.
-Although \gls{glsw} estimates are allowed to vary geographically, variation in an estimated coefficient surface does not by itself establish spatial heterogeneity because sampling error and spatial autocorrelation may produce similar patterns.
-We address this inferential gap by defining spatial heterogeneity through location-conditional distributions and by developing joint-null full-model and effect-wise parametric bootstraps together with an approximate $F$ test for the spatial heterogeneity of \gls{glsw} effects.
-Monte Carlo experiments with 200 fixed random locations assess calibration, power, effect specificity, and computational stability.
-At \gls{icc} 0.4, the effect-wise bootstrap has null rejection rates of 3.2\% and detects a heterogeneous effect in 96.9--100\% of usable repetitions while rejecting the accompanying constant effect in only 3.1--4.1\%.
-The full-model bootstrap has complete-null rejection rates of 2.6--3.5\% and detects the heterogeneous effect in 97.9--100\% of usable repetitions, but its componentwise rejection of the accompanying constant effect reaches 15.8--100\% once the joint null is false.
+Although \gls{glsw} estimates can vary geographically, geographic variation in an estimated coefficient surface does not by itself establish spatial heterogeneity because sampling error and spatial autocorrelation can produce similar patterns.
+We address this inferential gap by defining spatial heterogeneity through location-conditional distributions and developing a joint-null full-model parametric bootstrap, an effect-wise parametric bootstrap, and an approximate $F$ test for the spatial heterogeneity of \gls{glsw} effects.
+Monte Carlo experiments at 200 randomly generated locations held fixed across scenarios assess calibration, power, effect specificity, and computational stability.
+At a \gls{icc} of 0.4, the effect-wise bootstrap has a null rejection rate of 3.2\% and detects a heterogeneous effect in 96.9--100\% of usable repetitions while rejecting the accompanying constant effect in only 3.1--4.1\%.
+The full-model bootstrap has complete-null rejection rates of 2.6--3.5\%, and its heterogeneous-effect component rejects in 97.9--100\% of usable repetitions; however, rejection of the accompanying constant-effect component reaches 15.8--100\% once the joint null is false.
 The adjusted $F$ approximation is computationally inexpensive and reduces cross-effect leakage, but it remains liberal in several null settings.
-We then apply the framework to household investment in children's extracurricular courses in China, integrating household survey, provincial panel, geographic, and point-of-interest data.
-The application illustrates how heterogeneity testing can inform the allocation of provincial variables to \gls{glsw} or fixed effects, while the simulation results also show why evidence based only on the $F$ approximation should be interpreted cautiously.
+We then apply the framework to household investment in children's extracurricular education in China, integrating household survey, provincial panel, geographic, and point-of-interest data.
+The application illustrates how heterogeneity testing can inform the assignment of provincial variables to \gls{glsw} or fixed-effect components, while the simulation results show why evidence based only on the $F$ approximation should be interpreted cautiously.
 \end{abstract}
 
 %%Graphical abstract
@@ -159,7 +159,7 @@ The application illustrates how heterogeneity testing can inform the allocation 
 
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
-Statistical inference; hypothesis test; spatial heterogeneity; bootstrap; hierarchical and geographically weighted regression; extracurricular education
+Statistical inference; hypothesis testing; spatial heterogeneity; parametric bootstrap; hierarchical and geographically weighted regression; extracurricular education
 \end{keywords}
 
 \glsresetall
@@ -171,15 +171,15 @@ Statistical inference; hypothesis test; spatial heterogeneity; bootstrap; hierar
 
 Local regression models are valuable because they allow a regression relationship to vary across space rather than imposing one global coefficient on every location \citep{LuGe-2020a}.
 \acrcite{gwr} is the best-known example, and its extensions are widely used to explore spatially non-stationary relationships \citep{FotheringhamBrunsdon-2010,HelbichBrunauer-2014,FanSong-2021,TranPearson-2022}.
-It helps to control the resulting risk of ``ecological fallacy'' in the inference on individuals using globally constant relationship \citep{LokarZagar-2019,Openshaw-1984,TranmerSteel-1998,FieldhouseTye-1996}.
+Local regression can help reduce the resulting risk of the ``ecological fallacy'' when drawing inferences about individuals from globally constant relationships \citep{LokarZagar-2019,Openshaw-1984,TranmerSteel-1998,FieldhouseTye-1996}.
 Many spatial data sets, however, are also hierarchical: individual outcomes are grouped within locations, and both individual- and group-level variables may affect the response.
-We use ``spatial hierarchical data'' to refer to data that are products of a geographical process exhibiting spatial effects in its measurements, and that are structured in a way creating a grouping effect or hierarchy.
-They are a consequence of what is measured, as well as how it is measured. 
+We use ``spatial hierarchical data'' to refer to data generated by a geographical process that induces spatial effects in the measurements and organised in a structure that creates grouping or hierarchy.
+% Such data reflect both what is measured and how it is measured.
 % As an example, in housing price analysis in China, properties are grouped by communities, and attributes from both properties and communities impact the prices \citep{HuHarris-2024,HuLu-2022}.
-Such data are prevalent in various fields, including health, economy, and social sciences
+Such data are prevalent in fields including health, economics, and the social sciences
 \citep{ChenTruong-2012,BrunauerLang-2013,FeuilletCossart-2024,AielloRicotta-2016}.
-\gls{gwr} could cause estimation bias, unreliable bandwidth optimisation, and unequal actual bandwidths across locations;
-while \acrcite{hlm} is the conventional approach for dealing with hierarchical data, it assumes that group-level effects are constant across locations and cannot model spatial heterogeneity in group-level variables \citep{HuHarris-2024,HuLu-2022}.
+Applying \gls{gwr} to hierarchical data can produce estimation bias, unreliable bandwidth optimisation, and unequal actual bandwidths across locations.
+Although \acrcite{hlm} is the conventional approach to hierarchical data, it assumes that group-level effects are constant across locations and therefore cannot model spatial heterogeneity in those effects \citep{HuHarris-2024,HuLu-2022}.
 For such data, the \acrcite{hgwr} model combines \gls{gwr} with \gls{hlm} and separates \gls{glsw}, fixed, and \gls{slr} effects \citep{HuHarris-2024}.
 This structure permits associations of group-level variables to vary geographically while retaining the grouped error structure and sample-level variation that a conventional local regression may not represent.
 
@@ -189,31 +189,31 @@ The relevant hypothesis is therefore spatial constancy of an individual \gls{gls
 At the time of writing, \gls{hgwr} provides estimates of \gls{glsw} surfaces but lacks a formal, effect-specific method for testing spatial heterogeneity of \gls{glsw} effects.
 The hybrid parametric and non-parametric structure of the model makes both a reference distribution and a valid resampling scheme less direct than in \gls{gwr} \citep{HuHarris-2024,HuHarris-2024a}.
 
-Unlike spatial dependence that \morani \citep{Moran-1950,LiCalder-2007} and other well-known methods can quantify, spatial heterogeneity is challenging to be quantified, although there have been some attempts to do so \citep{TranPearson-2022}.
-As spatial heterogeneity and spatial dependence often happen together, \morani and, in particular, \acrcite{lisa} ---
-measures of spatial dependence that are estimated for parts of the study regions and not just for the study region as a whole ---
+Unlike spatial dependence, which \morani \citep{Moran-1950,LiCalder-2007} and other established methods can quantify, quantifying spatial heterogeneity remains challenging, despite several attempts \citep{TranPearson-2022}.
+Because spatial heterogeneity and spatial dependence often occur together, \morani and, in particular, \acrcite{lisa}---
+measures of spatial dependence estimated for parts of a study region rather than only for the region as a whole---
 are sometimes employed to identify potential spatial heterogeneity \citep{JacksonHuang-2009,ZhangLin-2016}.
-When \gls{gwr} is used to model spatially-varying regression relationships, one may then analyse the spatial heterogeneity in these relationships using either an $F$-test \citep{LeungMei-2000} or a bootstrap test \citep{HarrisBrunsdon-2017}.
-For hierarchical or grouped data, \gls{anova} and \gls{hlm} are feasible methods \citep{DutilleulLegendre-1993,FotheringhamBrunsdon-2010,LignierJarvis-2024,KirkbrideStochl-2015} in addition to caterpillar plots visualising intraclass correlation in data grouped by geographical locations.
-Geodetector \citep{WangZhang-2016,ZhaoLiu-2021,HuoSun-2021} offers a method to detect stratified heterogeneity in spatial data for finding homogeneous regions.
-However, these methods need to meet certain assumptions to be applied.
+When \gls{gwr} is used to model spatially varying regression relationships, their spatial heterogeneity can be analysed using either an $F$ test \citep{LeungMei-2000} or a bootstrap test \citep{HarrisBrunsdon-2017}.
+For hierarchical or grouped data, \gls{anova} and \gls{hlm} provide feasible alternatives \citep{DutilleulLegendre-1993,FotheringhamBrunsdon-2010,LignierJarvis-2024,KirkbrideStochl-2015}, alongside caterpillar plots that visualise intraclass correlation in data grouped by geographical location.
+Geodetector \citep{WangZhang-2016,ZhaoLiu-2021,HuoSun-2021} detects stratified heterogeneity in spatial data by identifying homogeneous regions.
+However, applying these methods requires specific assumptions.
 Methods using \morani and \gls{lisa} assume that spatial heterogeneity arises from autocorrelation, while \gls{anova} or \gls{hlm} rely on grouping or repeated observations \citep{HuLu-2022,HuHarris-2024}.
-Geodetector focus on uncovering categorical driving factors for numerical data, resulting in limitations of data types.
-Existing local-regression methods with spatially varying coefficients also provide different approaches to testing spatial heterogeneity.
-For \gls{gwr}, approximate $F$ tests compare the variance of a estimated coefficient surface with sample residuals \citep{LeungMei-2000}, and residual-based bootstrap procedures test whether particular coefficients can be treated as constant without relying on normal errors \citep{MeiXu-2016,HarrisBrunsdon-2017}.
+Geodetector focuses on categorical drivers of numerical outcomes and is therefore limited to particular data types.
+Local regression methods with spatially varying coefficients provide additional approaches to testing spatial heterogeneity.
+For \gls{gwr}, approximate $F$ tests compare the variance of an estimated coefficient surface with the residual variance \citep{LeungMei-2000}, while residual-based bootstrap procedures test whether particular coefficients can be treated as constant without assuming normally distributed errors \citep{MeiXu-2016,HarrisBrunsdon-2017}.
 
-The gap requires a precise definition of the object being tested.
-Spatial heterogeneity concerns a specified characteristic of that distribution, such as a location-dependent conditional expectation.
+Addressing this gap requires a precise definition of the object being tested.
+Spatial heterogeneity concerns a specified characteristic of a location-conditional distribution, such as its conditional expectation.
 For a \gls{glsw} effect, this turns spatial heterogeneity into a testable departure from a constant conditional mean across group locations.
 It also distinguishes spatial non-stationarity from spatial autocorrelation: the former concerns a distributional feature that changes with location, whereas the latter concerns dependence among observations.
 The two processes may occur together, but evidence of one is not, by itself, evidence of the other.
-According to the clarified goal of testing spatial heterogeneity of \gls{glsw} effects in \gls{hgwr}, this paper develops two complementary tests.
-One is a distribution-based approximate $F$-test derived from the \gls{glsw} estimator and hat matrix.
-The other route is parametric bootstrapping under an explicit spatial-constancy null.
+To test the spatial heterogeneity of \gls{glsw} effects in \gls{hgwr}, this paper develops two complementary approaches.
+The first is a distribution-based approximate $F$ test derived from the \gls{glsw} estimator and hat matrix.
+The second uses parametric bootstrapping under an explicit spatial-constancy null.
 The full-model construction makes every \gls{glsw} coefficient constant and assesses the requested effects together using common bootstrap responses, whereas the effect-wise construction constrains only the target effect and retains the remaining \gls{glsw} surfaces.
 
 We evaluate the procedures by Monte Carlo experiments with known homogeneous and heterogeneous \gls{glsw} effects at 200 fixed group locations.
-The simulations vary the strength of spatial heterogeneity and the random-intercept variance, and report null rejection rates, power, rejection of an accompanying constant effect, failures, and computation time.
+The simulations vary the strength of spatial heterogeneity and the random-intercept variance and report null rejection rates, power, rejection rates for an accompanying constant effect, failures, and computation time.
 This design assesses whether a procedure detects a truly varying effect without attributing heterogeneity to another effect that is spatially constant.
 We then use household investment in children's extracurricular courses, an important component of \gls{qoe} in China, as an empirical illustration.
 Household expenditure reflects family circumstances, whereas provincial economic and policy variables are candidates for \gls{glsw} effects.
@@ -226,7 +226,7 @@ Third, it connects this methodological evaluation to a multilevel application in
 The remainder of this paper is organised as follows.
 \autoref{sec:hgwr} presents the \gls{hgwr} model and identifies \gls{glsw} effects as the object of inference.
 \autoref{sec:spatial-heterogeneity} defines spatial heterogeneity and derives the spatial-homogeneity null hypothesis.
-\autoref{sec:glsw-test} develops the bootstrap and approximate $F$ tests and evaluates them by simulation.
+\autoref{sec:glsw-test} develops the bootstrap and approximate $F$ tests, and \autoref{sec:test-hgwr-simulation} evaluates them by simulation.
 \autoref{sec:qoe-case} applies the framework to extracurricular education investment in China.
 Finally, \autoref{sec:conclusion} summarises the methodological findings, substantive illustration, and limitations.
 
@@ -234,50 +234,44 @@ Finally, \autoref{sec:conclusion} summarises the methodological findings, substa
 
 % In addition to spatial analysis of individual variables, examining the relationships among multiple variables is often a more critical issue.
 % Due to the existence of spatial heterogeneity, local-form regression models \citep{FotheringhamBrunsdon-2010} analysing non-stationary relationships are popular with geographers, like \gls{gwr} \citep{HelbichBrunauer-2014,FanSong-2021,TranPearson-2022} and \gls{hlm} \citep{WuHou-2011,KirkbrideStochl-2015,WangJiang-2021}.
-As a combination of \gls{gwr} and \gls{hlm}, the \gls{hgwr} model overcomes the limitations of the two models, such as the risk of singular matrix in \gls{gwr} and the inability to model spatial heterogeneity for group-level variables in \gls{hlm} \citep{HuHarris-2024}.
-However, methods for testing the significance of spatial heterogeneity of the non-stationary relationships have been developed for \gls{gwr} via bootstrapping or $F$-test \citep{LeungMei-2000,MeiXu-2016,HarrisBrunsdon-2017} and \gls{hlm} \citep{GelmanHill-2006,Goldstein-2011},
-while \gls{hgwr} lacks such methods.
-
-Developing a hypothesis test for spatial heterogeneity in \gls{hgwr} is challenging due to the model's complexity.
-At minimum, it is important to establish that the variation in \gls{glsw} effect estimates differs from the variation produced by the random component of the model.
-To achieve this goal, starting from reviewing the basis of this model is essential.
-This section summarises the definition and estimation of the \gls{hgwr} model, as the bootstrap method requires resampling according to the hierarchical error structure, and the $F$-test requires the \gls{glsw} estimator and its hat matrix.
-After the model and its estimator are introduced, the next section defines the exact form of spatial heterogeneity to be tested.
+By combining \gls{gwr} and \gls{hlm}, the \gls{hgwr} model overcomes limitations of both models, including the risk of singular matrices in \gls{gwr} and the inability of \gls{hlm} to model spatial heterogeneity in group-level effects \citep{HuHarris-2024}.
+Methods for testing the spatial heterogeneity of non-stationary relationships have been developed for \gls{gwr} using bootstrap and $F$ tests \citep{LeungMei-2000,MeiXu-2016,HarrisBrunsdon-2017} and for \gls{hlm} \citep{GelmanHill-2006,Goldstein-2011}, whereas \gls{hgwr} lacks such methods.
+Developing a hypothesis test for spatial heterogeneity in \gls{hgwr} need establish that the variation in \gls{glsw} effect estimates differs from that produced by the random component of the model,  therefore requires a review of the model's foundations.
+This section summarises the definition and estimation of the \gls{hgwr} model.
 
 \subsection{Definition}
 
 % The \gls{hgwr} model \citep{HuHarris-2024} integrates geographically weighted regression and hierarchical modelling.
-In \gls{hgwr}, variables are classified as either group level or sample level, and their effects can be fixed or varying.
-For sample $i$ in group $j$ from a data set of $n$ samples across $m$ groups, the \gls{hgwr} model can be expressed as \autoref{equ:hgwr-model-pointwise},
+In \gls{hgwr}, variables are classified as either group-level or sample-level, and their effects can be fixed or varying.
+For sample $i$ in group $j$ in a data set containing $n$ samples across $m$ groups, the \gls{hgwr} model is expressed as \autoref{equ:hgwr-model-pointwise}:
 \begin{equation}\label{equ:hgwr-model-pointwise}
   y_{ij} = \vG_{ij}\vgamma_{j} + \vX_{ij}\vbeta + \vZ_{ij}\vmu_{j} + \epsilon_{ij}
 \end{equation}
-where $y_{ij}$ is the dependent variable of the sample;
-$\vG_{ij}$ represents the group-level independent variables with spatially heterogeneous effects, $\vgamma_{j}$;
-$\vX_{ij}$ includes group-level or sample-level independent variables of fixed effects, $\vbeta$;
-$\vZ_{ij}$ denotes the sample-level independent variables of random effects, $\vmu_{j}$, and $\vmu_{j} \sim \vN(\vzero, \sigma^2\vD)$ with $\vD$ the variance-covariance matrix;
-$\epsilon_{ij}$ represents the random error of the sample,
-and $\epsilon_{ij} \sim N(0, \sigma^2)$, with $\sigma$ the variance.
-$\vG_{ij}$, $\vX_{ij}$, $\vZ_{ij}$ are row vectors like
+where $y_{ij}$ is the dependent variable for the sample $i$;
+$\vG_{ij}$ contains the group-level independent variables with spatially heterogeneous effects $\vgamma_{j}$;
+$\vX_{ij}$ contains the group- or sample-level independent variables with fixed effects $\vbeta$;
+$\vZ_{ij}$ contains the sample-level independent variables with random effects $\vmu_{j}$, where $\vmu_{j} \sim \vN(\vzero, \sigma^2\vD)$ and $\vD$ is the variance--covariance matrix;
+and $\epsilon_{ij}$ is the sample-level random error, with $\epsilon_{ij} \sim N(0, \sigma^2)$ and error variance $\sigma^2$.
+The quantities $\vG_{ij}$, $\vX_{ij}$, and $\vZ_{ij}$ are row vectors:
 \begin{equation*}
   \vG_{ij} = \left(g_{ij1}, g_{ij2}, \cdots, g_{ijh}\right),
   \vX_{ij} = \left(x_{ij1}, x_{ij2}, \cdots, x_{ijp}\right),
   \vZ_{ij} = \left(z_{ij1}, z_{ij2}, \cdots, z_{ijq}\right)
 \end{equation*}
-with $h,p,q$ are the number of \gls{glsw}, fixed, and \gls{slr} effects, respectively.
-These vectors are stacked for all samples and groups to form $\vG,\vX,\vZ$ as follows,
+where $h$, $p$, and $q$ are the numbers of \gls{glsw}, fixed, and \gls{slr} effects, respectively.
+These vectors are stacked across all samples and groups to form $\vG$, $\vX$, and $\vZ$ as follows:
 \begin{equation*}
   \vG = \begin{pmatrix}
     \vG_1 \\ \vG_2 \\ \vdots \\ \vG_m
   \end{pmatrix},
   \vG_j = \begin{pmatrix}
-    \vG_{1j} \\ \vG_{2j} \\ \vdots \\ \vG_{n_{1}j} \\
+    \vG_{1j} \\ \vG_{2j} \\ \vdots \\ \vG_{n_{j}j} \\
   \end{pmatrix},
   \vX = \begin{pmatrix}
     \vX_1 \\ \vX_2 \\ \vdots \\ \vX_m
   \end{pmatrix},
   \vX_j = \begin{pmatrix}
-    \vX_{1j} \\ \vX_{2j} \\ \vdots \\ \vX_{n_{1}j} \\
+    \vX_{1j} \\ \vX_{2j} \\ \vdots \\ \vX_{n_{j}j} \\
   \end{pmatrix},
 \end{equation*}
 \begin{equation*}
@@ -288,17 +282,17 @@ These vectors are stacked for all samples and groups to form $\vG,\vX,\vZ$ as fo
     & & & \vZ_m
   \end{pmatrix},
   \vZ_j = \begin{pmatrix}
-    \vZ_{1j} \\ \vZ_{2j} \\ \vdots \\ \vZ_{n_{1}j} \\
+    \vZ_{1j} \\ \vZ_{2j} \\ \vdots \\ \vZ_{n_{j}j} \\
   \end{pmatrix}.
 \end{equation*}
-Similarly, the vectors $\vgamma_j$ and $\vmu_j$ can also be vertically stacked, denoted by $\vgamma$ and $\vmu$, respectively.
-The \gls{hgwr} model can be expressed in the matrix from, as shown in \autoref{equ:hgwr-model},
+Similarly, the vectors $\vgamma_j$ and $\vmu_j$ are stacked vertically to form $\vgamma$ and $\vmu$, respectively.
+The \gls{hgwr} model can then be written in matrix form as \autoref{equ:hgwr-model}:
 \begin{equation}\label{equ:hgwr-model}
   \vy = \diag(\vG\vgamma) + \vX\vbeta + \vZ\vmu + \vepsilon
 \end{equation}
 where $\vy$ is a column vector of all dependent variable values,
 $\vepsilon$ is a column vector of all random errors,
-and $\diag(\vG\vgamma)$ represents the diagonal elements of blocked matrix $\vG\vgamma$, i.e.,
+and $\diag(\vG\vgamma)$ represents the diagonal elements of the block matrix $\vG\vgamma$, namely,
 \begin{equation*}
   \vG = \left(\begin{array}{c}
     \vG_1 \\\hline
@@ -319,20 +313,20 @@ and $\diag(\vG\vgamma)$ represents the diagonal elements of blocked matrix $\vG\
 
 \subsection{Estimator}
 
-A back-fitting and maximum likelihood (BFML) estimator is applied to estimate effects, $\vgamma,\vbeta,\vmu$.
-Each $\vgamma_{j} (j=1,2,\cdots,m)$ in $\vgamma$ is estimated through a \gls{gwr}-like method by borrowing information from its geographical neighbours, using a kernel function $k$ with a parameter called bandwidth, $b$.
-These are specified like the standard \gls{gwr} methods \citep{ComberBrunsdon-2022}.
-The parameters $\vbeta$ and $\vmu$ are estimated using the maximum likelihood estimator.
-After several iterations, all effects are properly estimated.
+A back-fitting and maximum-likelihood (BFML) estimator is used to estimate the effects $\vgamma$, $\vbeta$, and $\vmu$.
+Each $\vgamma_{j}$ (for $j=1,2,\cdots,m$), is estimated using a \gls{gwr}-like method that borrows information from geographical neighbours through a kernel function $k$ with bandwidth $b$.
+The kernel and bandwidth are specified as in standard \gls{gwr} methods \citep{ComberBrunsdon-2022}.
+The parameters $\vbeta$ and $\vmu$ are estimated by maximum likelihood.
+The procedure iterates until the effect estimates converge.
 For the \gls{hgwr} model described above, the BFML estimator follows this procedure.
 
 \begin{enumerate}[label=\textbf{Step \arabic*.}, left=0.5em, itemindent=2em]
-\item Initialise. Set $\hat{\vD}^{(0)} = \vI$, $\hat{\vbeta}^{(0)} = 0$. Then let $\hat{\vV}^{(0)}=\vZ\hat{\vD}^{(0)}\vZ\T+\vI$.
+\item Initialise parameters. Set $\hat{\vD}^{(0)} = \vI$ and $\hat{\vbeta}^{(0)} = 0$, and then let $\hat{\vV}^{(0)}=\vZ\hat{\vD}^{(0)}\vZ\T+\vI$.
 
 \item Estimate \gls{glsw} effects.
 Construct $\vy_g^{(t)}=\vy-\vX\hat{\vbeta}^{(t-1)}$.
-Regard $\vZ\vmu$ as a part of random errors.
-For $j$-th location $\vu_j$, by applying a \gls{gwr}-like method, $\hat{\vgamma}$ there can be estimated as \autoref{equ:bfml-glsw-estimator},
+Treat $\vZ\vmu$ as part of the random error.
+At the $j$-th location $\vu_j$, a \gls{gwr}-like method estimates $\hat{\vgamma}_j$ as \autoref{equ:bfml-glsw-estimator}:
 \begin{equation}\label{equ:bfml-glsw-estimator}
   \hat{\vgamma}_j^{(t)}
   = \left[\vG\T\vW_j\left(\vV^{(t)}\right)^{-1}\vG\right]^{-1} \left[\vG\T\vW_j\left(\vV^{(t)}\right)^{-1}\vy_g^{(t)}\right] 
@@ -343,28 +337,28 @@ $\vg_i=(g_{i1},g_{i2},\cdots,g_{ik})$,
 $\vg'=\vV_{j\Sigma}^{-1}\vg $,
 $\vy'_{g}=\vV_{j\Sigma}^{-1}\vy_g$,
 and $\vV_{j\Sigma}^{-1}=1_{j}\T\vV_{j}^{-1}$.
-The spatial weighting matrix $\vw(\vu)$ is calculated according to the coordinates of groups.
+The spatial weighting matrix $\vw(\vu)$ is calculated from the group coordinates.
 
 \item Estimate fixed effects.
-With the estimated $\hat{\vgamma}^{(t)}$, let $\vy_h^{(t)}=\vy - \diag(\vG\hat{\vgamma})$, and $\vbeta$ can be estimated by the generalised weighted least squares estimator.
+Given $\hat{\vgamma}^{(t)}$, let $\vy_h^{(t)}=\vy - \diag(\vG\hat{\vgamma}^{(t)})$ and estimate $\vbeta$ by generalised weighted least squares.
 
-\item Estimate covariance of \gls{slr} effects, $\vD$, and variance of random errors, $\sigma^2$, denoted by $\hat{\vD}^{(t)}$ and $\hat{\sigma}^{(t)}$.
+\item Estimate the covariance matrix $\vD$ of the \gls{slr} effects and the random-error variance $\sigma^2$, obtaining $\hat{\vD}^{(t)}$ and $(\hat{\sigma}^2)^{(t)}$.
 
-\item Estimate values of random effects.
-After obtaining $\hat{\vD}^{(t)}$ and $\sigma^{2(t)}$ in iteration $t$, random effects can be computed as $\hat{\vmu}^{(t)} = \hat{\vD} \vZ\T\hat{\vV}^{-1}\left(\vy-\vX\hat{\vbeta}\right)$.
+\item Estimate the random effects.
+After obtaining $\hat{\vD}^{(t)}$ and $(\hat{\sigma}^2)^{(t)}$ at iteration $t$, compute the random effects as $\hat{\vmu}^{(t)} = \hat{\vD} \vZ\T\hat{\vV}^{-1}\left(\vy-\vX\hat{\vbeta}\right)$.
 
 \item Compute the sum of squared residuals.
-If it doesn't change significantly than that in previous iteration, terminate iteration; otherwise, set $t=t+1$ and return to step 2.
+If it does not differ substantially from the value in the previous iteration, terminate the procedure; otherwise, set $t=t+1$ and return to Step 2.
 \end{enumerate}
 
 In Step 2, it is common to calculate a so-called ``hat matrix'', $\vS$, such that $\hat{\vy}_g = \vS\vy_g$.
-For the $i$-th sample in the $j$-th group, the corresponding row vector of $\vS$, denoted by $\vS_i$ is given by \autoref{equ:bfml-glsw-hatmat-row},
+For the $i$th sample in the $j$th group, the corresponding row vector of $\vS$, denoted by $\vS_{ij}$, is given by \autoref{equ:bfml-glsw-hatmat-row}:
 \begin{equation}\label{equ:bfml-glsw-hatmat-row}
   % \vS_i = \left[\vG\T\vW(\vu_i)\left(\vV^{(t)}\right)\I\vG\right]\I
   % \left[\vG\T\vW(\vu_i)\left(\vV^{(t)}\right)\I\right]
   \vS_{ij} = \left(\vg\vw_j\vg'\right)\I \vg\vw_j\vV_{i\Sigma}\I \;.
 \end{equation}
-The full form of $\vS$ is defined by stacking all $\vS_{ij} (i=1,2,\cdots,n;j=1,2,\cdots,m)$ vertically, as shown in \autoref{equ:bfml-glsw-hatmat},
+The full matrix $\vS$ is formed by stacking all $\vS_{ij}$ vertically, as shown in \autoref{equ:bfml-glsw-hatmat}:
 % \begin{equation}\label{equ:bfml-glsw-hatmat}
 %   \vS = \begin{pmatrix}
 %     \vS_{11} \\
@@ -400,95 +394,95 @@ The full form of $\vS$ is defined by stacking all $\vS_{ij} (i=1,2,\cdots,n;j=1,
   \end{pmatrix} \;.
 \end{equation}
 
-The hat matrix will be important in deriving probability-based heterogeneity tests.
+The hat matrix is required to derive the distribution-based heterogeneity test.
 At this stage, however, the model only provides spatially varying estimates $\hat{\vgamma}_j$.
 Whether their variation should be interpreted as spatial heterogeneity depends on the definition and null hypothesis developed in the next section.
 
 \section{Testing Spatial Heterogeneity in GLSW Effects} \label{sec:glsw-test}
 
-The preceding section shows that \gls{hgwr} allows the \gls{glsw} effect $\vgamma_j$ to vary among locations.
+The preceding section shows that \gls{hgwr} allows the \gls{glsw} effect $\vgamma_j$ to vary across locations.
 However, such variation is a property of the estimator and is not itself sufficient evidence of spatial heterogeneity.
-The importance of spatial heterogeneity as a spatial effect has been widely recognised \citep{Anselin-2010,ShuPei-2019,ComberBrunsdon-2022}.
-Researchers may sometimes find it challenging to differentiate spatial heterogeneity from spatial dependency, as the two often appear as two facets of the same phenomenon \citep{Anselin-2010}.
-Before presenting the hypothesis testing methods for \gls{glsw} effects of \gls{hgwr}, we make it clear what is meant by spatial heterogeneity.
-Then we derive the hypothesis of spatial heterogeneity and the corresponding statistics.
+Spatial heterogeneity is widely recognised as an important spatial effect \citep{Anselin-2010,ShuPei-2019,ComberBrunsdon-2022}.
+Distinguishing spatial heterogeneity from spatial dependence can nevertheless be challenging because the two often appear as facets of the same phenomenon \citep{Anselin-2010}.
+Before presenting methods for testing \gls{glsw} effects in \gls{hgwr}, we therefore clarify the meaning of spatial heterogeneity.
+We then formulate the hypothesis of spatial homogeneity and define the corresponding statistics.
 
 \subsection{Hypothesis of spatial heterogeneity}
 \label{sec:spatial-heterogeneity}
 
-We assume that space is filled by many kinds of fields.
-Each field $f$ maps the location $\vU$ to a geographical phenomenon or entity $X$ \citep{LiuWang-2023-en,LiuYao-2020-en}, represented by $f: \vU \rightarrow X$, where $\vU \in \mathbb{R}^m$, $m$ is the number of dimensions, and $X$ can be any value, vector or tuple relate to the geographical phenomenon or entity.
-In this paper, we focus specifically on scalar-type $X$.
-For clarity, we will refer to what $X$ represents as an ``object''.
-Accordingly, we can express $X$ as the outcome of function $f$, i.e., $X = f(\vU)$.
-However, in many real-world situations, the relationship between $X$ and $\vU$ may not be that deterministic, as $X$ can be a random variable.
-In such cases, we define a spatial random variable $X$ as specified in \autoref{def:spatial-random-variable}.
+We assume that space comprises multiple types of fields.
+Each field $f$ maps a location $\vU$ to a geographical phenomenon or entity $X$ \citep{LiuWang-2023-en,LiuYao-2020-en}, represented by $f:\vU\rightarrow X$, where $\vU\in\mathbb{R}^m$, $m$ is the number of spatial dimensions, and $X$ may be a value or vector related to the geographical phenomenon or entity.
+This paper focuses specifically on scalar-valued $X$.
+For clarity, we refer to the phenomenon or entity represented by $X$ as an ``object''.
+Accordingly, $X$ can be expressed as the output of $f$, namely, $X=f(\vU)$.
+In many real-world settings, however, the relationship between $X$ and $\vU$ is not deterministic because $X$ may be a random variable.
+In such cases, we define $X$ as a spatial random variable according to \autoref{def:spatial-random-variable}.
 
 \begin{definition}[Spatial random variable]
   \label{def:spatial-random-variable}
-  Let random variable $\vU$ denote the location in the space $R \subseteq \mathbb{R}^m$ in the $m$-dimension space, and $X$ represent an event that happens in $R$.
-  If the value of $X$ obeys the conditional distribution $f$ under the condition of $\vU$, i.e.,
+  Let the random variable $\vU$ denote a location in a region $R\subseteq\mathbb{R}^m$, and let $X$ represent an event occurring in $R$.
+  If $X$ follows the conditional distribution $f$ given $\vU$, that is,
   \begin{equation}
     X \sim f_{X|\vU}(x|\vu)
   \end{equation}
   where $x$ and $\vu$ are values of $X$ and $\vU$, respectively,
-  then $X$ is a ``spatial random variable''.
+  then $X$ is a spatial random variable.
 \end{definition}
 
-This definition permits spatial random variables to assume different values at various locations. 
-Thus, variations in values do not necessarily indicate spatial heterogeneity, as they may be independently and identically distributed, which is still considered ``homogeneous.''
-Only when changes in the probability density function across spatial locations lead to variations in the values of the random variable can they be deemed heterogeneous.
-Thus, spatial heterogeneity is defined by \autoref{def:spatial-heterogeneity}.
+This definition permits a spatial random variable to take different values at different locations.
+Variation in observed values does not necessarily indicate spatial heterogeneity because those values may be independently and identically distributed and thus remain homogeneous.
+Spatial heterogeneity instead requires the conditional distribution of the random variable to differ across locations.
+Accordingly, \autoref{def:spatial-heterogeneity} defines spatial heterogeneity.
 
 \begin{definition}[Spatial heterogeneity] \label{def:spatial-heterogeneity}
-  Let $\vU$ denote the random variable of the location of another random variable $X \sim f_{X|\vU}(x|\vu)$.
-  For any two possible values of $\vU$, denoting $\vu_1,\vu_2$, there is spatial heterogeneity in $X$ when $f(x|\vu_1) \neq f(x|\vu_2)$; by contrast, there is no heterogeneity in $X$ when $f(x|\vu_1) = f(x|\vu_2)$ for every two possible values of $\vU$.
+  Let $\vU$ denote the random location associated with another random variable $X\sim f_{X|\vU}(x|\vu)$.
+  For any two possible locations $\vu_1$ and $\vu_2$, $X$ exhibits spatial heterogeneity when $f(x|\vu_1)\neq f(x|\vu_2)$; by contrast, $X$ is spatially homogeneous when $f(x|\vu_1)=f(x|\vu_2)$ for every pair of possible locations.
 \end{definition}
 
-Under \autoref{def:spatial-heterogeneity}, spatial heterogeneity focus on the spatial variation of the conditional distribution of $X$ under $\vU$.
-Considering that the estimates of \gls{glsw} effects in \gls{hgwr} are actually conditional expectations of the effects, we study how spatial heterogeneity affects the conditional expectation of $X$ under $\vU$.
-Although changes of $f_{X|\vU}$ across locations does not necessarily lead to changes in $E(X|\vU)$, the latter is an effective indicator of spatial heterogeneity for Gaussian random variables, which is the case for the \gls{glsw} effects.
-Let $f_{X|\vU}(x|vu)=N(\mu(\vu),\sigma^2(\vu))$ denote the distribution of $X$ at a certain location $\vu$.
-Spatial heterogeneity cause the changes in expectation and variance of $X$ across locations.
-By controlling the variance $\sigma^2(\vu)$ to be constant across locations, the expectation $\mu(\vu)$ is a direct reflection of spatial heterogeneity.
-On other words, for spatial random variables with Gaussian distribution and homoscedasticity, spatial heterogeneity is equivalent to the non-constancy of the conditional expectation $E(X|\vU)$ across locations following a surface of $\mu(\vu)$.
-In the case without spatial heterogeneity, i.e., $X$ and $\vU$ are independent, $E(X|\vU)$ equal to $E(X)$.
-For the $k$-th \gls{glsw} effect in \gls{hgwr}, this definition leads to the null hypothesis
+Under \autoref{def:spatial-heterogeneity}, spatial heterogeneity concerns location-associated variation in the conditional distribution of $X$ given $\vU$.
+Because the estimated \gls{glsw} effects in \gls{hgwr} are conditional expectations, we examine spatial heterogeneity in the conditional expectation of $X$ given $\vU$.
+Although variation in $f_{X|\vU}$ across locations does not necessarily imply variation in $E(X|\vU)$, the conditional expectation is an informative indicator of spatial heterogeneity for Gaussian random variables, as assumed for the \gls{glsw} effects.
+Let $f_{X|\vU}(x|\vu)=N(\mu(\vu),\sigma^2(\vu))$ denote the distribution of $X$ at location $\vu$.
+Spatial heterogeneity can manifest as changes in the expectation or variance of $X$ across locations.
+When the variance $\sigma^2(\vu)$ is held constant across locations, variation in the expectation $\mu(\vu)$ directly reflects spatial heterogeneity.
+In other words, for a homoscedastic Gaussian spatial random variable, spatial heterogeneity in the conditional mean is equivalent to non-constancy of $E(X|\vU)=\mu(\vu)$ across locations.
+In the absence of spatial heterogeneity, $X$ and $\vU$ are independent and $E(X|\vU)=E(X)$.
+For the $k$-th \gls{glsw} effect in \gls{hgwr}, this definition yields the null hypothesis
 \begin{equation}\label{equ:glsw-heterogeneity-core-hypothesis}
   H_0: E(\hat{\gamma}_k|\vu_{1})=E(\hat{\gamma}_k|\vu_{2})=\cdots=E(\hat{\gamma}_k|\vu_{m})=E(\hat{\gamma}_k),
 \end{equation}
-whereas the alternative hypothesis states that not all $E(\hat{\gamma}_k|\vu_{j})$ equal to $E(\hat{\gamma}_k)$.
+whereas the alternative hypothesis states that not all $E(\hat{\gamma}_k|\vu_{j})$ are equal to $E(\hat{\gamma}_k)$.
 An effect can therefore be significantly different from zero but spatially homogeneous, or spatially heterogeneous even when some local estimates are not significantly different from zero.
 
 \subsection{Statistics for testing spatial heterogeneity}\label{sec:heterogeneity-testing-logic}
 
-After estimating $\gamma_{jk}$ at all group locations, its spatial dispersion can be used as a statistic.
-For the $k$-th \gls{glsw} effect, denote this statistic $T_k$ defined by \autoref{equ:heterogeneity-core-statistic},
+After estimating $\gamma_{jk}$ at all group locations, we use the spatial dispersion of the estimates as a test statistic.
+For the $k$-th \gls{glsw} effect, define $T_k$ as
 \begin{equation}\label{equ:heterogeneity-core-statistic}
   \begin{split}
     T_k = & \frac{1}{m}\sum_{j=1}^{m}\left(\tilde{\gamma}_{jk}-\sum_{l=1}^{m} \frac{1}{m}\tilde{\gamma}_{lk} \right)^2 \\
     \tilde{\gamma} = & \frac{\hat{\gamma}}{\se(\hat{\gamma})} \; ,
   \end{split}
 \end{equation}
-where $m$ is the number of groups and $\var(\cdot)$ is the variance of the local estimates.
-A large value of $T_k$ indicates strong variation, but it cannot alone show significant spatial heterogeneity because random error, data borrowing, and the hierarchical random effects also produce variation in local estimates.
+where $m$ is the number of groups and $\tilde{\gamma}_{jk}$ is the standardised local estimate.
+A large value of $T_k$ indicates substantial variation, but does not alone establish significant spatial heterogeneity because random error, data borrowing, and hierarchical random effects also produce variation in local estimates.
 
 The next step is consequently to determine the distribution of a dispersion statistic under spatial constancy.
-There are two routes in this study: bootstrap-based and distribution-based routes.
+This study considers two approaches: bootstrap-based and distribution-based testing.
 The bootstrap compares the observed variance of standardised local estimates with an empirical reference distribution.
 The distribution-based method uses the linear form of the \gls{glsw} estimator, a same-fit adjustment for the other \gls{glsw} surfaces, the hat matrix $\vS$, and the covariance matrix $\vV$ to approximate the null distribution of an observation-weighted coefficient variance by an $F$ distribution.
 Both methods assess spatial constancy, but they use different finite-sample statistics and reference distributions.
 We consider both a full-model bootstrap, which imposes spatial constancy on all \gls{glsw} effects jointly, and an effect-wise bootstrap, which imposes spatial constancy only on the effect being tested.
-The following section incorporates the hierarchical error structure and \gls{glsw} estimator to construct the corresponding bootstrap and $F$ tests for \gls{hgwr}.
+The following subsections use the hierarchical error structure and \gls{glsw} estimator to construct the corresponding bootstrap and $F$ tests for \gls{hgwr}.
 
 \subsection{Bootstrap-based hypothesis testing}\label{sec:test-hgwr-glsw-boot}
 
-The primary objective for the \gls{glsw} effects is to determine whether their spatial variation is significant under the definition and null hypothesis established in \autoref{equ:glsw-heterogeneity-core-hypothesis}.
+The primary objective is to determine whether the spatial variation in each \gls{glsw} effect is significant under the definition and null hypothesis in \autoref{equ:glsw-heterogeneity-core-hypothesis}.
 Because the \gls{glsw} effects are estimated within a hierarchical regression model, their local estimates inherit correlation from data borrowing and the model's error structure.
-Both theoretical and experimental findings indicate that directly testing for spatial heterogeneity in \gls{glsw} effect estimates results in an excessively high Type I error rate (i.e., incorrectly rejecting the null hypothesis of no spatial heterogeneity), making the test ineffective.
+Theoretical and experimental findings indicate that directly testing spatial heterogeneity in \gls{glsw} effect estimates produces an excessively high Type I error rate.
 For regression models, there are two typical resampling strategies: sampling observations and sampling residuals \citep{Bittmann-2021}.
-For \gls{hgwr}, experiments show that resampling observations may lead to an insufficient number of samples in some locations, potentially causing model calibration to fail.
-Therefore, resampling residuals is a more suitable approach, as recommended by \citet{HarrisBrunsdon-2017}.
+For \gls{hgwr}, experiments show that resampling observations may leave some locations with too few samples and thereby cause model calibration to fail.
+Residual resampling is therefore more suitable, as recommended by \citet{HarrisBrunsdon-2017}.
 
 \subsubsection{Full-model bootstrap}
 
@@ -502,7 +496,7 @@ Its null hypothesis requires all $K$ \gls{glsw} effects to be spatially constant
 \end{equation}
 The null model therefore replaces every \gls{glsw} surface by a global fixed coefficient while retaining the original fixed covariates and sample-level random-effect structure.
 It is fitted as a linear mixed model by maximum likelihood.
-One response is then generated from this common null model and the complete \gls{hgwr} specification is refitted once in each bootstrap replication, providing statistics for all requested \gls{glsw} effects and preserving their dependence.
+One response is then generated from this common null model, and the complete \gls{hgwr} specification is refitted once in each bootstrap replication; this refit provides statistics for all requested \gls{glsw} effects while preserving their dependence.
 
 Let $j(\ell)$ denote the group containing observation $\ell$.
 For constant \gls{glsw} estimates $\hat{\vgamma}_0$ and fixed-effect estimates $\hat{\vbeta}_0$ from the joint null model, the generating mean for observation $\ell$ is
@@ -545,25 +539,25 @@ The full-model bootstrap proceeds as follows.
   \begin{equation}\label{equ:glsw-bootvar-pvalue}
     p_k = \frac{1+\sum_{i=1}^B 1\{S^*_{ik} \geq S_k\}}{B+1},
   \end{equation}
-  and compare $p_k$ with the pre-defined significance level $\alpha$.
+  and compare $p_k$ with the prespecified significance level $\alpha$.
 \end{enumerate}
 
 The componentwise $p_k$ values share the same joint-null samples and collectively assess departures from \autoref{equ:glsw-full-bootstrap-null}.
 They are calibrated as effect-labelled statistics when the complete joint null is true, but they are not effect-specific tests under a partial alternative: if one \gls{glsw} surface is heterogeneous, the generating model is misspecified for every componentwise comparison, including a coefficient that is itself constant.
 Consequently, rejection of a component indicates evidence against the common full-model null and cannot by itself identify which \gls{glsw} effect is heterogeneous.
-The present implementation reports the componentwise probabilities and does not apply a maximum-statistic or multiplicity adjustment to form a single omnibus $p$-value.
+The present implementation reports the componentwise $p$ values and does not apply a maximum-statistic or multiplicity adjustment to form a single omnibus $p$ value.
 The computation is also intensive because every replication requires a complete \gls{hgwr} refit, although all effects are evaluated jointly from that refit.
 
 \subsubsection{Effect-wise bootstrap}
 
 The effect-wise bootstrap instead constructs a separate spatially constant null model for each effect $k$.
-For a non-intercept effect, the tested group-level variable is removed from the \gls{glsw} component and entered into the fixed component, so that its coefficient is constant over space.
+For a non-intercept effect, the tested group-level variable is removed from the \gls{glsw} component and entered into the fixed component so that its coefficient is spatially constant.
 For a \gls{glsw} intercept, the spatially varying intercept is removed while the fixed intercept is retained.
 All other \gls{glsw}, fixed, and sample-level random effects remain in their original components.
 Thus, the target effect alone is constrained by $H_{0k}$, while the other \gls{glsw} effects may retain spatial variation.
 
 Let $\hat{\vm}_{0k}$ denote the fitted mean from the effect-specific null model, excluding its empirical group random-effect predictions.
-The effect-wise bootstrap response in replication $i$ is
+The effect-wise bootstrap response for replication $i$ is
 \begin{equation}\label{equ:glsw-effectwise-bootstrap-response}
   \vy^{*}_{ik}
   = \hat{\vm}_{0k}
@@ -581,7 +575,7 @@ The coordinates, covariates, group membership, and group sample sizes again rema
 The effect-wise procedure is as follows.
 \begin{enumerate}[label=\textbf{Step \arabic*.}, left=0.5em, itemindent=2em]
   \item Fit the original complete \gls{hgwr} model and calculate the observed statistic $S_k$ in \autoref{equ:glsw-full-bootstrap-statistic};
-  \item For target effect $k$, fit its spatially constant null model and obtain $\hat{\vm}_{0k}$, $\hat{\vD}_{0k}$, and $\hat{\sigma}^{2}_{0k}$;
+  \item For the target effect $k$, fit its spatially constant null model and obtain $\hat{\vm}_{0k}$, $\hat{\vD}_{0k}$, and $\hat{\sigma}^{2}_{0k}$;
   \item Repeat the following steps $B$ times:
   \begin{enumerate}
     \item Generate $\vy^{*}_{ik}$ according to \autoref{equ:glsw-effectwise-bootstrap-response};
@@ -598,19 +592,18 @@ The effect-wise procedure is as follows.
 
 Unlike the full-model bootstrap, the effect-wise bootstrap generates the reference distribution under the tested effect's spatial-constancy null.
 It therefore directly targets effect-specific calibration and avoids requiring the other \gls{glsw} effects to be spatially constant.
-The cost is that each requested effect needs its own null-model fit and its own $B$ complete-model bootstrap refits.
+The trade-off is that each requested effect requires its own null-model fit and $B$ complete-model bootstrap refits.
 For $K$ tested effects, the dominant computation consequently increases from $B$ full-model refits to approximately $KB$ refits, in addition to the $K$ null-model fits.
 
 \subsection{Distribution-based hypothesis testing}\label{sec:test-hgwr-glsw-ftest}
 
-As a computationally inexpensive approximation,
-we can also design a probability-based hypothesis test for \gls{glsw} effects following the method proposed by \citet{LeungMei-2000}.
+As a computationally inexpensive alternative, we develop a distribution-based approximate test for \gls{glsw} effects following the method of \citet{LeungMei-2000}.
 Assuming normality for $\vmu$ and $\vepsilon$,
-we define the null and alternative hypothesis as \autoref{equ:hypothesis-glsw-ftest},
+we define the null and alternative hypotheses as \autoref{equ:hypothesis-glsw-ftest},
 \begin{equation}\label{equ:hypothesis-glsw-ftest}
     \begin{split}
-        H_{0} & : \gamma_{0k} = \gamma_{2k} = \cdots = \gamma_{mk}  \\
-        H_{1} & : \mbox{not all $\gamma_{ik}(i=1,2,\cdots,m)$ are equal.}
+        H_{0} & : \gamma_{1k} = \gamma_{2k} = \cdots = \gamma_{mk}  \\
+        H_{1} & : \mbox{not all $\gamma_{ik}$, $i=1,2,\ldots,m$, are equal.}
     \end{split}
 \end{equation}
 For the $k$-th \gls{glsw} effect, the coefficient-surface variance is
@@ -621,7 +614,7 @@ For the $k$-th \gls{glsw} effect, the coefficient-surface variance is
   \hat{\mybm{\gamma}}_{k},
 \end{equation}
 where each group coefficient is repeated for its $n_i$ observations.
-According to \autoref{equ:bfml-glsw-estimator}, for the $i$-th group, we know
+According to \autoref{equ:bfml-glsw-estimator}, the estimate for the $i$-th group is
 \begin{equation*}
     \hat{\mybm{\gamma}}_{ik} = \mybm{e}_{k} \left( \mybm{G}^{\mathrm{T}}\mybm{W}_{i}\mybm{V}^{-1}\mybm{G} \right)^{-1}\left( \mybm{G}^{\mathrm{T}}\mybm{W}_{i}\mybm{V}^{-1}\mybm{y}_{g} \right) = \mybm{\Gamma}_{ik}\mybm{y}_{g}
 \end{equation*}
@@ -658,7 +651,7 @@ Under the working null, $E(\widetilde{\vgamma}_{k})$ is spatially constant and i
     \widetilde V_{k}^2  = \mybm{\eta}^{\mathrm{T}}\left[ \frac{1}{n} \widetilde{\mybm{\Gamma}}_k\T\left( \mybm{I}-\frac{1}{n}\mybm{J}\right)\widetilde{\mybm{\Gamma}}_k \right]\mybm{\eta}
 \end{equation*}
 where $\mybm{\eta}=\mybm{Z}\mybm{\mu}+\mybm{\epsilon}\sim \mybm{N}(\mybm{0},\vV\sigma^2)$.
-The expectation and variance of $\widetilde V_k^2/\sigma^2$ can be calculated as \autoref{equ:glsw-ftest-exp-Vksigma} and \autoref{equ:glsw-ftest-var-Vksigma}, respectively,
+The expectation and variance of $\widetilde V_k^2/\sigma^2$ are given by \autoref{equ:glsw-ftest-exp-Vksigma} and \autoref{equ:glsw-ftest-var-Vksigma}, respectively,
 \begin{align}
 \label{equ:glsw-ftest-exp-Vksigma}
 E\left( \frac{\widetilde V_{k}^2}{\sigma^{2}} \right)  & = \mathrm{tr}\left[ \frac{1}{n} \widetilde{\mybm{\Gamma}}_k^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \widetilde{\mybm{\Gamma}}_k \mybm{V} \right]  \\
@@ -666,17 +659,17 @@ E\left( \frac{\widetilde V_{k}^2}{\sigma^{2}} \right)  & = \mathrm{tr}\left[ \fr
 \mathop{\mathrm{var}}\left( \frac{\widetilde V_{k}^2}{\sigma^{2}} \right) & = 2\mathrm{tr}\left\{ \left[ \frac{1}{n} \widetilde{\mybm{\Gamma}}_k^{\mathrm{T}} \left( \mybm{I}-\frac{1}{n}\mybm{J} \right) \widetilde{\mybm{\Gamma}}_k\mybm{V} \right]^2 \right\} .
 \end{align}
 The matrix square in \autoref{equ:glsw-ftest-var-Vksigma} is evaluated before taking the trace, so the second-order moment includes cross-location as well as within-location covariance terms.
-By letting $\xi_{1}=E({\widetilde V_{k}^2}/{\sigma^2})$ and $\xi_{2}=\frac{1}{2}\mathop{\mathrm{var}}({\widetilde V_{k}^2}/{\sigma^2})$,
-the term $\hfrac{\xi_{1}\widetilde V_{k}^2}{\xi_{2}\sigma^2}$ can be approximated by a $\chi^2$ distribution with $\hfrac{\xi_1^2}{\xi_2}$ degrees of freedom.
+Letting $\xi_{1}=E({\widetilde V_{k}^2}/{\sigma^2})$ and $\xi_{2}=\frac{1}{2}\mathop{\mathrm{var}}({\widetilde V_{k}^2}/{\sigma^2})$,
+we approximate $\hfrac{\xi_{1}\widetilde V_{k}^2}{\xi_{2}\sigma^2}$ by a $\chi^2$ distribution with $\hfrac{\xi_1^2}{\xi_2}$ degrees of freedom.
 
-Denote the sum of squared residuals of $\hat{\vy}_g$ by $\mathrm{RSS}_g$ as \autoref{equ:glsw-ftest-rss},
+Define the sum of squared residuals for $\hat{\vy}_g$, denoted by $\mathrm{RSS}_g$, as \autoref{equ:glsw-ftest-rss},
 \begin{equation}\label{equ:glsw-ftest-rss}
     \begin{split}
     \mathrm{RSS}_{g} & = \mybm{y}_{g}^{\mathrm{T}}(\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{y}_{g} = \mybm{\eta}^{\mathrm{T}}(\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{\eta} \quad .
     \end{split}
 \end{equation}
 where $\vS$ is defined in \autoref{equ:bfml-glsw-hatmat}.
-Using a similar method as above, the expectation and variance of $\left.\mathrm{RSS}\middle/\sigma^2\right.$ can be calculated as \autoref{equ:glsw-ftest-rsssigma2-exp} and \autoref{equ:glsw-ftest-rsssigma2-var},
+Using the same approach, the expectation and variance of $\left.\mathrm{RSS}_g\middle/\sigma^2\right.$ are given by \autoref{equ:glsw-ftest-rsssigma2-exp} and \autoref{equ:glsw-ftest-rsssigma2-var}, respectively,
 \begin{align}
 \label{equ:glsw-ftest-rsssigma2-exp}
 E\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right) & = \mathrm{tr}\left[ (\mybm{I}-\mybm{S})^{\mathrm{T}}(\mybm{I}-\mybm{S})\mybm{V} \right]  \\
@@ -686,13 +679,13 @@ E\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right) & = \mathrm{tr}\left[ (\mybm
 By setting $\delta_{1}=E\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right)$ and 
 $\delta_{2}=\frac{1}{2}\mathop{\mathrm{var}}\left( \frac{\mathrm{RSS}_{g}}{\sigma^{2}} \right)$,
 the term $\frac{\delta_1\mathrm{RSS}_g}{\delta_2\sigma^2}$ can be approximated by a $\chi^2$ distribution with $\delta_1^2/\delta_2$ degrees of freedom.
-Furthermore, since $\hat{\sigma}^2 = \frac{\mathrm{RSS}_g}{\delta_1}$
-is an unbiased estimator of $\sigma^2$, $\frac{\delta_1\mathrm{RSS}_g}{\delta_2\sigma^2}$ can be approximated by a $\chi^2$ distribution according to \autoref{equ:glsw-ftest-rss-chi2},
+Furthermore, because $\hat{\sigma}^2 = \frac{\mathrm{RSS}_g}{\delta_1}$
+is an unbiased estimator of $\sigma^2$, $\frac{\delta_1\mathrm{RSS}_g}{\delta_2\sigma^2}$ has the approximation in \autoref{equ:glsw-ftest-rss-chi2}:
 \begin{equation}\label{equ:glsw-ftest-rss-chi2}
     \frac{\delta_1\mathrm{RSS}_g}{\delta_2\sigma^2} = \frac{\delta_1^2 \hat{\sigma}^2}{\delta_2\sigma^2} \sim \chi^2\left(\frac{\delta_1^2}{\delta_2}\right).
 \end{equation}
 
-Consequently, we can design an $F$-statistic as \autoref{equ:glsw-ftest-statistics},
+Consequently, we define the $F$ statistic as
 \begin{equation}\label{equ:glsw-ftest-statistics}
 F_k = \frac{
 \left( \frac{\xi_{1}\widetilde V_{k}^{2}}{\xi_{2}\sigma^{2}} \middle/ \frac{\xi_{1}^{2}}{\xi_{2}} \right)
@@ -722,19 +715,19 @@ We reject the null hypothesis if $F_k \geqslant F_{1-\alpha}$.
 
 \section{Simulation}\label{sec:test-hgwr-simulation}
 
-A Monte Carlo simulation was conducted to evaluate the performance of the proposed bootstrap and $F$ tests for \gls{glsw} effects in \gls{hgwr}.
-In each simulation, the \gls{dgp} was designed to produce a range of scenarios with hierarchical spatial data and varying degrees of spatial heterogeneity.
-Multiple repetitions of each scenario were generated to assess the empirical Type I error rate and power of the tests.
+We conducted Monte Carlo simulations to evaluate the performance of the proposed bootstrap and $F$ tests for \gls{glsw} effects in \gls{hgwr}.
+The \gls{dgp} produces hierarchical spatial data under scenarios with varying degrees of spatial heterogeneity.
+Repeated data sets from each scenario are used to assess the empirical Type I error rates and power of the tests.
 
 \subsection{Data-generating process}\label{sec:simulation-dgp}
 
 The \gls{dgp} generates 200 group locations drawn independently and uniformly from $[0,1]\times [0,1]$.
-The resulting locations are held fixed across every scenario and outer repetition, whereas all covariates, random effects, residuals, and group sizes are regenerated independently for each data set.
+The resulting locations are held fixed across all scenarios and outer repetitions, whereas all covariates, random effects, residuals, and group sizes are regenerated independently for each data set.
 This conditional design removes variation due to changing spatial configurations when rejection rates are compared.
 
 In the core experiment, the group size $n_j$ is sampled independently from the discrete uniform distribution on 20--50, giving an expected total sample size of 7,000 and a possible range of 4,000--10,000 observations.
 Independent Gaussian innovations generate the group-level covariates $g_1$ and $g_2$, which are then standardised across the 200 groups.
-The individual-level covariates $x_1,x_2,x_3,z_1$ are generated independently from $N(0,1)$.
+The individual-level covariates $x_1$, $x_2$, $x_3$, and $z_1$ are generated independently from $N(0,1)$.
 The core settings impose no spatial autocorrelation in $g_1$ or $g_2$, no correlation between them, and no correlation with a latent spatial process.
 Thus, the simulation isolates coefficient heterogeneity rather than combining it with spatially patterned or confounded predictors.
 
@@ -743,12 +736,12 @@ Let $s(u_j)$ be the standardised value across the 200 locations of
   \frac{1}{324}\left[36-\left(6-\frac{12u_j}{2}\right)^2\right]^2.
 \end{equation}
 The two \gls{glsw} effects are $\gamma_{1j}=2+a s(u_j)$ and $\gamma_{2j}=2$, where $a\in\{0,0.5,1\}$ controls the heterogeneity of the first effect.
-Because $s(u_j)$ is standardised, $a$ is also the across-location standard deviation of the true $\gamma_1$ surface; $a=0$ is the global null and $a=0.5$ and 1 represent moderate and strong heterogeneity.
+Because $s(u_j)$ is standardised, $a$ is also the across-location standard deviation of the true $\gamma_1$ surface; $a=0$ represents the global null, whereas $a=0.5$ and $a=1$ represent moderate and strong heterogeneity, respectively.
 Responses are generated as
 \begin{equation}\label{equ:sim-hgwrtest-response}
   y_{ij}=2+g_{1j}\gamma_{1j}+g_{2j}\gamma_{2j}+2x_{1ij}+b_{0j}+b_{1j}z_{1ij}+\epsilon_{ij},
 \end{equation}
-Here $x_1$ has coefficient 2, while $x_2$ and $x_3$ are included null predictors with coefficients zero.
+Here, $x_1$ has a coefficient of 2, whereas $x_2$ and $x_3$ are included as null predictors with coefficients of zero.
 The random effects are $b_{0j}\sim N(0,\tau^2)$ and $b_{1j}\sim N(2,0.2^2)$, and the core residual is $\epsilon_{ij}\sim N(0,1)$.
 We set $\tau^2=\mathrm{ICC}/(1-\mathrm{ICC})$, giving $\tau^2=1/9$ and $2/3$ for the labelled \gls{icc} settings 0.1 and 0.4.
 Because the response also contains a random slope, these \gls{icc} labels index the random-intercept variance rather than the complete marginal within-group correlation.
@@ -760,43 +753,43 @@ Each data set is fitted as
 \subsection{Monte Carlo design and testing workflow}\label{sec:simulation-workflow}
 
 For each scenario and repetition, the random seed is determined by the scenario index and replication number.
-The two bootstrap procedures use paired generated data sets whenever they cover the same scenario and replication.
+The two bootstrap procedures use paired data sets whenever they cover the same scenario and replication.
 The adjusted $F$ follow-up uses the same fixed locations but an independent base seed, so its comparisons with the bootstrap results are unpaired.
-Each data set is first fitted by \gls{hgwr} with a bisquared kernel and a cross-validation-selected bandwidth with fitting tolerance, the optimisation parameter, the outer iteration limit, and at permitted retries being $10^{-5}$, 0.01, 200 and 10, respectively.
+Each data set is first fitted using \gls{hgwr} with a bisquared kernel and a bandwidth selected by cross-validation; the fitting tolerance, optimisation parameter, outer iteration limit, and maximum number of retries are $10^{-5}$, 0.01, 200, and 10, respectively.
 
 Three testing procedures are evaluated in this simulation: the approximate $F$ test, the full-model bootstrap, and the effect-wise bootstrap.
-For each target effect, the adjusted approximate $F$ procedure removes the fitted contribution of the other \gls{glsw} surfaces through \autoref{equ:glsw-ftest-adjusted-map} and then obtains the test from the same fitted model; it does not fit a null or reduced model.
+For each target effect, the adjusted approximate $F$ procedure removes the fitted contribution of the other \gls{glsw} surfaces using \autoref{equ:glsw-ftest-adjusted-map} and then calculates the test from the same fitted model; it does not fit a null or reduced model.
 The full-model bootstrap first fits a joint null model in which both \gls{glsw} variables are global fixed effects, generates one common response from that model, and refits the complete \gls{hgwr} specification to obtain both component statistics.
 Its outputs assess the joint spatial-constancy null and are not interpreted as effect-specific tests once either coefficient is heterogeneous.
-For the primary effect-wise bootstrap, each target effect is separately constrained to be spatially constant under the null, responses are generated under that fitted null model, and the original \gls{hgwr} specification is refitted to each bootstrap response.
+For the effect-wise bootstrap, each target effect is separately constrained to be spatially constant under the null; responses are generated from the fitted null model, and the original \gls{hgwr} specification is refitted to each bootstrap response.
 The statistic is the spatial variance of the standardised local coefficient estimates.
-Bootstrap $p$-values use the plus-one correction, and a non-converged null or bootstrap refit invalidates that outer repetition.
+Bootstrap $p$ values use the plus-one correction, and failure of a null or bootstrap refit to converge invalidates the corresponding outer repetition.
 The bandwidth selected from the observed data is held fixed during the primary bootstrap; a separate diagnostic re-selects it for every bootstrap response.
 Bootstrap refits use an outer iteration limit of 100 and the same ten-retry limit.
 
-The adjusted approximate $F$ test is evaluated in all six $a$-by-ICC scenarios using 500 independent data sets per scenario.
-The full-model bootstrap uses $B=199$ resamples in all six $a$-by-ICC scenarios, with 250 independent data sets in each global-null scenario and 100 in each alternative scenario.
-The effect-wise bootstrap also uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with ICC 0.4.
-The smaller allocation under the alternatives, and the restriction of the effect-wise alternatives to ICC 0.4, reflect the bootstrap procedures' substantially greater computational cost.
-Independent $B=999$ effect-wise confirmation experiments use 20 data sets at each ICC 0.4 endpoint.
+The adjusted approximate $F$ test is evaluated in all six $a$-by-\gls{icc} scenarios using 500 independent data sets per scenario.
+The full-model bootstrap uses $B=199$ resamples in all six $a$-by-\gls{icc} scenarios, with 250 independent data sets in each global-null scenario and 100 in each alternative scenario.
+The effect-wise bootstrap also uses $B=199$ resamples for 250 data sets under each global-null scenario and for 100 data sets at $a=0.5$ and $a=1$ with \gls{icc} 0.4.
+The smaller allocation under the alternatives, and the restriction of the effect-wise alternatives to \gls{icc} 0.4, reflect the bootstrap procedures' substantially greater computational cost.
+Independent $B=999$ effect-wise confirmation experiments use 20 data sets at each \gls{icc} 0.4 endpoint.
 Two robustness scenarios replace the normal residuals by variance-standardised $t_5$ residuals or use strongly unbalanced group sizes.
 The unbalanced design assigns 5--15 observations to half of the groups and 60--100 to the other half, giving an expected total sample size of 9,000.
-Both robustness scenarios use 200 data sets for the earlier $F$ diagnostic and 30 for the effect-wise bootstrap at $a=0.5$ and \gls{icc} 0.4; the adjusted $F$ test was not extended to these scenarios after failing its locked core calibration criterion.
+Both robustness scenarios use 200 data sets for the earlier $F$ diagnostic and 30 for the effect-wise bootstrap at $a=0.5$ and \gls{icc} 0.4; the adjusted $F$ test was not extended to these scenarios because it failed the pre-specified core calibration criterion.
 A separate ten-data-set diagnostic re-selects the bandwidth within every bootstrap fit.
 \autoref{tab:simulation-design} summarises the complete allocation and distinguishes primary, robustness, and diagnostic evidence.
 
 \input{generated/simulation_design_table.tex}
 
-After excluding superseded pilot output, the reported design comprises 5,110 outer repetitions and 10,220 effect-level results.
+After excluding superseded pilot outputs, the reported design comprises 5,110 outer repetitions and 10,220 effect-level results.
 All tests use a 5\% threshold.
-Rejection rates use only repetitions that return a finite $p$-value after all required fits converge; the number excluded is reported rather than silently replaced.
+Rejection rates use only repetitions that return a finite $p$ value after all required fits converge; the number of excluded repetitions is reported rather than silently replaced.
 Wilson 95\% intervals quantify Monte Carlo uncertainty in every reported rejection rate.
 
 % \subsection{Computational environment and reproducibility}\label{sec:simulation-environment}
 
-The formal experiment was run locally on an AMD Ryzen 9 9950X workstation and 64 GiB of memory under Ubuntu 26.04 with R 4.5.
+The formal experiment was run locally on a workstation with an AMD Ryzen 9 9950X processor and 64 GiB of memory, using Ubuntu 26.04 and R 4.5.
 The adjusted core $F$ outputs identify \texttt{hgwrr} 0.6.2.9006; the bootstrap and robustness outputs identify \texttt{hgwrr} 0.6.2.9003.
-Each task outputs its complete scenario configuration, seeds, package version, host name, convergence diagnostics, statistics, $p$-values, and elapsed times.
+Each task records its complete scenario configuration, seeds, package version, host name, convergence diagnostics, statistics, $p$ values, and elapsed times.
 
 \subsection{Results}\label{sec:simulation-results}
 
@@ -804,11 +797,11 @@ Each task outputs its complete scenario configuration, seeds, package version, h
 
 \input{generated/simulation_core_table.tex}
 
-The core experiments of the three testing procedures are summarised in \autoref{tab:simulation-core-results}.
+The core experiments for the three testing procedures are summarised in \autoref{tab:simulation-core-results}.
 The adjusted approximate $F$ test retains high sensitivity but remains liberal under parts of the null.
 Its global-null rejection rates range from 6.6\% to 9.2\%, and three of the four effect-by-\gls{icc} Wilson intervals exclude 5\% on the upper side.
 It detects $\gamma_1$ in all usable heterogeneous repetitions.
-For the constant $\gamma_2$, its rejection rates are 11.9\% and 9.8\% at \gls{icc} 0.1 and 6.6\% in both alternatives at \gls{icc} 0.4.
+For the constant $\gamma_2$, the rejection rates are 11.9\% and 9.8\% under the two alternatives at \gls{icc} 0.1 and 6.6\% under both alternatives at \gls{icc} 0.4.
 The corresponding same-fit diagnostic rejects $\gamma_2$ in 21.2\% and 49.3\% of the \gls{icc} 0.1 alternatives and in 10.0\% and 15.4\% of the \gls{icc} 0.4 alternatives.
 Thus, removing the fitted nuisance surfaces substantially reduces the transmission of $\gamma_1$ heterogeneity into the $\gamma_2$ statistic, but it does not provide nominal 5\% calibration, particularly at low \gls{icc}.
 
@@ -819,31 +812,31 @@ Its $\gamma_1$ rejection rates are 100\% at \gls{icc} 0.1 for both alternatives,
 However, the corresponding componentwise rejection rates for the constant $\gamma_2$ are 87.5\%, 15.8\%, 100\%, and 34.0\%.
 These values are not effect-specific false-positive rates, because the full-model joint null is already false whenever $\gamma_1$ varies.
 Rather, they show that jointly estimated coefficient surfaces can transmit a departure from the common generating null to more than one component statistic.
-Descriptively rejecting the joint null when either component has $p<0.05$ gives complete-null rejection rates of 6.6\% and 6.1\%, and alternative rejection rates of 98.9--100\%; this any-component rule is and is not presented as a formally multiplicity-controlled omnibus test.
+Descriptively rejecting the joint null when either component has $p<0.05$ gives complete-null rejection rates of 6.6\% and 6.1\% and alternative rejection rates of 98.9--100\%; this any-component rule is not presented as a formally multiplicity-controlled omnibus test.
 
-Effect-wise bootstrap performs better than the full-model bootstrap in terms of effect specificity.
+The effect-wise bootstrap performs better than the full-model bootstrap in terms of effect specificity.
 Under the global null, the effect-wise bootstrap rejection rates range from 1.6\% to 3.7\%.
 The 95\% intervals include 5\% except for $\gamma_2$ at \gls{icc} 0.1, where the method is conservative (1.6\%, 95\% CI 0.6--4.1\%).
 At \gls{icc} 0.4, the bootstrap detects the heterogeneous $\gamma_1$ in 96.9\% of usable repetitions for $a=0.5$ and 100\% for $a=1$.
-Over the same repetitions it rejects the constant $\gamma_2$ in only 4.1\% and 3.1\%, respectively.
+Across the same repetitions, it rejects the constant $\gamma_2$ in only 4.1\% and 3.1\%, respectively.
 This combination of detection and embedded-null behaviour supports the effect-wise bootstrap as the primary inferential procedure in the simulated settings.
 
-Overall, the simulation shows that the adjusted $F$ test is useful as a rapid screening tool, as it requires fewer computational resources than the bootstrap methods and detects heterogeneous effects with high power.
+Overall, the simulations show that the adjusted $F$ test is useful as a rapid screening tool because it requires fewer computational resources than the bootstrap methods and detects heterogeneous effects with high power.
 The two bootstrap methods are more computationally intensive, but the effect-wise bootstrap is more robust to the presence of heterogeneous effects in other components and is therefore recommended as the primary procedure for effect-specific inference.
-The full-model bootstrap increases the componentwise rejection rate for constant effects when other effects are heterogeneous compared with the adjusted approximate $F$ test, and it is therefore not recommended for effect-specific inference.
+Compared with the adjusted approximate $F$ test, the full-model bootstrap produces higher component-wise rejection rates for constant effects when other effects are heterogeneous and is therefore not recommended for effect-specific inference.
 
 \subsubsection{Robustness and bandwidth diagnostic}
 
 \input{generated/simulation_additional_table.tex}
 
-We further evaluated the effect-wise bootstrap and the earlier $F$ statistic under heavy-tailed residuals and strongly unbalanced group sizes.
+We further evaluated the effect-wise bootstrap and the earlier $F$ statistic with heavy-tailed residuals and strongly unbalanced group sizes.
 Results are summarised in \autoref{tab:simulation-additional-results}.
-Under $t_5$ residuals and strongly unbalanced group sizes, the effect-wise bootstrap detects $\gamma_1$ in 29 of 30 repetitions and does not reject $\gamma_2$; the corresponding zero-rejection intervals nevertheless have upper bounds of 11.4\%.
+With $t_5$ residuals and strongly unbalanced group sizes, the effect-wise bootstrap detects $\gamma_1$ in 29 of 30 repetitions and never rejects $\gamma_2$; nevertheless, the corresponding zero-rejection intervals have upper bounds of 11.4\%.
 Thus, these experiments show no evident loss of effect specificity, but their size does not establish a zero false-positive probability.
 The $F$ diagnostic retains 100\% detection of $\gamma_1$ in both settings but rejects the constant $\gamma_2$ in 8.5\% of usable $t_5$ repetitions and 8.0\% of the unbalanced-group repetitions.
 These values do not establish robustness of the adjusted $F$ test, which was not advanced beyond the failed core calibration gate.
 
-Re-selecting the bandwidth inside every bootstrap refit succeeds for only one of ten data sets.
+Re-selecting the bandwidth within every bootstrap refit succeeds for only one of ten data sets.
 The two rejection indicators from that single successful repetition have extremely wide intervals and no inferential value.
 This negative result establishes a computational boundary: bandwidth re-selection cannot be recommended as a routine default for the present implementation.
 
@@ -851,15 +844,15 @@ This negative result establishes a computational boundary: bandwidth re-selectio
 
 \input{generated/simulation_computation_table.tex}
 
-The convergence and computational cost of the three procedures are summarised in \autoref{tab:simulation-computation}.
+The convergence behaviour and computational costs of the three procedures are summarised in \autoref{tab:simulation-computation}.
 Across the 5,110 reported outer repetitions, 94 (1.84\%) fail to produce usable tests.
 The failure rates are 0.33\% for the adjusted core $F$ test, 0.25\% for the robustness $F$ diagnostic, 6.89\% for the full-model bootstrap, and 1.50\% for the fixed-bandwidth effect-wise bootstrap.
-Of the 62 full-model failures, 59 arise because the linear mixed joint-null fit does not satisfy the strict gradient convergence criterion and three arise from the initial \gls{hgwr} fit; no full-model failure is attributed to a bootstrap \gls{hgwr} refit.
+Of the 62 full-model failures, 59 occur because the linear mixed joint-null fit does not satisfy the strict gradient-convergence criterion, and three occur during the initial \gls{hgwr} fit; none is attributable to a bootstrap \gls{hgwr} refit.
 The median serial elapsed times are 0.97 seconds for the adjusted core $F$ test, 69.81 seconds for the full-model bootstrap, and 132.67 seconds for the effect-wise bootstrap.
 The corresponding 95th percentiles are 1.64, 91.39, and 493.18 seconds.
 At the median, the effect-wise procedure takes about 1.9 times as long as the full-model procedure because it requires a separate null fit and bootstrap sequence for each tested effect.
 The effect-wise bootstrap is therefore roughly 137 times slower than the adjusted approximate $F$ test at the median, before accounting for the larger $B=999$ diagnostic.
-Its stronger calibration and effect specificity in the investigated settings come with a material computational cost rather than an unqualified dominance over the approximation.
+Its stronger calibration and effect specificity in the investigated settings therefore come at a substantial computational cost and do not imply unqualified dominance over the approximation.
 
 % \subsubsection{Scope of the evidence}
 
@@ -875,55 +868,55 @@ Its stronger calibration and effect specificity in the investigated settings com
 \section{Case study: spatial inequalities in extracurricular education investment in China}\label{sec:qoe-case}
 
 The simulations evaluate how the proposed procedures behave under known data-generating structures.
-This section examines their role in an applied \gls{hgwr} analysis, where the assignment of a coefficient to the \gls{glsw} or fixed component affects both model complexity and substantive interpretation.
+This section examines their role in an applied \gls{hgwr} analysis, in which assigning a coefficient to the \gls{glsw} or fixed component affects both model complexity and substantive interpretation.
 We study family expenditure on children's extracurricular courses in China.
-The case is methodologically relevant because the outcome is observed for children and families, whereas several candidate explanations describe the provinces in which those families live.
+The case is methodologically relevant because the outcome is observed at the child and family levels, whereas several candidate explanatory variables are measured at the provincial level.
 
 \subsection{Context}\label{sec:qoe-context}
 
 Quality-oriented education, also known as \textit{suzhi jiaoyu}, was introduced by the Chinese government as a national educational development strategy in 1993 \citep{CCCPC-1993}.
-It seeks the all-round development of students in morality, academic potential, physical health, aesthetic appreciation, and practical capability, extending the aims of education beyond examination performance alone \citep{LiuLi-2020-en,Dello-Iacovo-2009,Deng-1994b,Wang-2018}.
+It seeks students' all-round development in morality, academic potential, physical health, aesthetic appreciation, and practical capability, extending the aims of education beyond examination performance alone \citep{LiuLi-2020-en,Dello-Iacovo-2009,Deng-1994b,Wang-2018}.
 The government has supported this strategy through financial investment, human-capital development, and related policies \citep{Xie-2017-en,Vilairat-2019,DPCSEC-1997-en,LiuLi-2020-en,SiQiao-2017,HanYe-2017}.
-Extracurricular courses have also become important contributors to quality-oriented education by providing aesthetic, physical, and other forms of non-academic training that tend to receive less attention in examination-oriented school systems \citep{ZhangTang-2017,ZhengYuan-2021}.
+Extracurricular courses have also become important components of quality-oriented education by providing aesthetic, physical, and other forms of non-academic training that tend to receive less attention in examination-oriented school systems \citep{ZhangTang-2017,ZhengYuan-2021}.
 Their commercial provision allows families to select services suited to their circumstances, but it also makes balanced access difficult in a large country with substantial social and regional diversity \citep{HeHuang-2021,WuKC-2022}.
 
-At the micro level, participation in extracurricular courses is voluntary and therefore depends strongly on decisions and constraints within the family.
+At the micro level, participation in extracurricular courses is voluntary and therefore depends strongly on family decisions and constraints.
 Household educational expenditure and socio-economic status affect whether families can purchase these courses and the level of resources they can obtain \citep{ChiQian-2016,QianChi-2015-en,SongZhou-2019,TanCai-2022,RenChen-2021}.
 Urban parents tend to be more involved in their children's education and are often better able to afford supplementary educational resources, whereas rural families may face tighter economic constraints \citep{NieTeng-2021,YangChen-2023}.
 Parents with higher educational qualifications are also more likely to provide enhanced educational opportunities for their children \citep{Wang-2021a}.
 Gender may further shape access, although previous studies disagree over whether gender disparities are small or whether girls, particularly in rural areas, remain disadvantaged \citep{LuoZeng-2022,ZhangLiang-2022,DongLi-2008,Xiao-2015}.
-Income, expenditure, assets, debt, parental education, the child's gender and age, and urban residence are therefore relevant family- and child-level characteristics when examining investment in extracurricular courses.
+Income, expenditure, assets, debt, parental education, child gender and age, and urban residence are therefore relevant family- and child-level characteristics for examining investment in extracurricular courses.
 
 At the macro level, provincial economic development and the progress of educational initiatives condition the resources available to both schools and families.
 Government education expenditure differs markedly between provinces, in part because economic development is uneven and eastern provinces generally have greater access to resources than western provinces \citep{HuangGao-2017,Lin-2009,Xie-2011,XiaoLiu-2014,XiangStillwell-2020}.
-Geographic access also varies: the reported proportion of rural families living conveniently close to primary schools is higher in Eastern than in Western China \citep{ZhangWang-2019}.
-Because aesthetic training in painting, dance, and musical performance imposes additional costs, the availability and purchase of these services are also related to local consumption levels \citep{YouDing-2021,Cheng-2021,Zhou-2013}.
+Geographical access also varies: the reported proportion of rural families living conveniently close to primary schools is higher in eastern than in western China \citep{ZhangWang-2019}.
+Because aesthetic training in painting, dance, and musical performance entails additional costs, the availability and uptake of these services are also related to local consumption levels \citep{YouDing-2021,Cheng-2021,Zhou-2013}.
 Provincial economic structure, living costs, income inequality, public education budgets, the prevalence of highly educated residents, and access to higher education may consequently be associated with how much families invest in extracurricular courses.
 
 Important disparities also occur within provinces, especially between urban and rural areas \citep{Lin-2009}.
 Rural schools often have poorer facilities, fewer specialist teachers, and fewer supporting resources for quality-oriented education, while urban schools benefit from stronger infrastructure, teaching expertise, and community support \citep{Li-2014-en,XiangStillwell-2020,SuYuan-2023,Xie-2022,ZhangLiang-2022,Zhang-2024,SunHu-2023}.
-Concentrating investment in a small number of representative schools can extend the reach of aesthetic education while also widening inequalities in the services available to urban and rural students \citep{Xing-2020}.
+Concentrating investment in a small number of representative schools can extend the reach of aesthetic education while widening inequalities in the services available to urban and rural students \citep{Xing-2020}.
 These differences mean that the association between urban residence and family investment may itself differ across provinces rather than being represented adequately by one national coefficient.
 
 The market organisation of extracurricular education introduces a further source of inequality.
 Highly qualified teachers and higher-priced courses tend to concentrate in urban and economically developed areas, where households are more able to pay the associated fees \citep{Liu-2024,YangQiu-2016,Wang-2021a}.
-At the same time, the National College Entrance Examination focuses on academic subjects, which can reduce the priority that families assign to extracurricular courses \citep{LiAbbasi-2013}.
+At the same time, the National College Entrance Examination focuses on academic subjects, potentially reducing the priority that families assign to extracurricular courses \citep{LiAbbasi-2013}.
 Because higher-education resources and the difficulty of university admission differ between provinces, the academic pressure surrounding the examination may influence families' willingness to invest in non-exam-oriented activities differently across space \citep{Shang-2024,Liu-2024}.
 
 These mechanisms operate at two connected levels and cannot be represented fully by a model that considers only provincial indicators or only household survey variables.
 Previous quantitative studies have commonly examined either macro-level regional disparities \citep{Wang-2010,XiaoLiu-2014,XiangStillwell-2020,WuKC-2022,SunHu-2023,Song-2023a,HanNi-2023} or micro-level family influences \citep{HannumWang-2006,Wang-2018,TanCai-2022}, while studies that address both perspectives are predominantly qualitative \citep{Dello-Iacovo-2009,ChungMason-2012}.
 Moreover, a single national association can average over geographically different relationships between provincial conditions and household investment.
-The \gls{hgwr} model is therefore appropriate because it combines group-level provincial covariates with sample-level family and child attributes, preserves the hierarchical grouping of households within provinces, and allows selected province-level associations to vary geographically.
+The \gls{hgwr} model is therefore appropriate because it combines group-level provincial covariates with sample-level family and child attributes, preserves the hierarchical grouping of families within provinces, and allows selected province-level associations to vary geographically.
 For this application, the heterogeneity tests developed in this paper provide the additional evidence needed to decide whether an observed provincial association should be represented by a \gls{glsw} effect or by a spatially constant fixed effect, rather than treating every mapped coefficient surface as substantively heterogeneous.
 
 \subsection{Data}\label{sec:qoe-data}
 
-Four sources of data are used in the case study.
+The case study uses four data sources.
 The \gls{ciefr} collected family and child information from 40,011 families in 29 provincial-level administrations in 2017 and 34,643 families in 2019 \citep{CIEFR-HS,CIEFR-HS-V1,CIEFR-HS-2019}.
-The surveys include household finances, parental education, child characteristics, education expenditure, and participation in extracurricular training.
+The surveys record household finances, parental education, child characteristics, educational expenditure, and participation in extracurricular training.
 Provincial economic and educational indicators are drawn from the \textit{China Statistical Yearbook} and the \textit{Educational Statistical Yearbook of China} \citep{KangSheng-2024,ESYC-2022}.
-Provincial boundaries provide the locations used by the spatial weights, and 2017 point-of-interest data from Amap provide counts of youth palaces, institutions that supply extracurricular educational resources \citep{Lei-2024,LaiXu-2023}.
-The study covers the 29 provinces identified in \autoref{fig:qoe-provinces}; the complete survey sample counts describe the source surveys rather than the final complete-case estimation sample.
+Provincial boundaries define the locations used to construct the spatial weights, and 2017 point-of-interest data from Amap provide counts of youth palaces, which are institutions that supply extracurricular educational resources \citep{Lei-2024,LaiXu-2023}.
+The study covers the 29 provincial-level administrations identified in \autoref{fig:qoe-provinces}; the full survey sample counts describe the source surveys rather than the final complete-case estimation sample.
 
 \begin{figure}[tbp]
   \centering
@@ -932,7 +925,7 @@ The study covers the 29 provinces identified in \autoref{fig:qoe-provinces}; the
   \label{fig:qoe-provinces}
 \end{figure}
 
-The main response, \QOESpendingPH, is the estimated hourly expenditure on extracurricular courses for one child.
+The main response variable, \QOESpendingPH, is the estimated hourly expenditure on extracurricular courses for one child.
 Hourly expenditure is used as a proxy for the level of course resources purchased by a family, while recognising that price is an imperfect measure of educational quality.
 An alternative model uses \QOESpendRatio, the ratio of extracurricular-course expenditure to total expenditure for the child, to describe the relative priority assigned to these courses.
 The province-level covariates describe the primary-sector economy, living costs, income inequality, university recruitment, public education budgets, and the prevalence of highly educated residents.
@@ -940,16 +933,16 @@ The household-level covariates describe income, spending, assets, debt, parental
 
 % \subsection{Effect specification guided by heterogeneity tests}\label{sec:qoe-specification}
 
-Effects in the case study are categorised into province-level and household-level covariates.
+The case-study covariates are categorised as province-level or household-level variables.
 Province-level covariates are candidates for \gls{glsw} effects because their associations with family expenditure may vary geographically.
-For household covariates, they are assigned fixed effects unless the grouped data support a sample-level random effect.
+Household-level covariates are assigned fixed effects unless the grouped data support a sample-level random effect.
 All continuous variables indicated in \autoref{tab:qoe-variables} are transformed and scaled as in the original QOE analysis.
-Finally, an \gls{hlm} with forward selection identifies \RegionUrban as an \gls{slr} effect.
+An \gls{hlm} fitted with forward selection identifies \RegionUrban as an \gls{slr} effect.
 The resulting specification is shown in \autoref{tab:qoe-variables}.
-Province-level covariates' effects are tested by the approximate $F$ test to select those of significant spatial heterogeneity.
-The youth-palace count is not rejected by this screening test and is therefore retained as a fixed rather than a \gls{glsw} effect.
+The approximate $F$ test screens the effects of province-level covariates to identify those with significant spatial heterogeneity.
+The screening test does not reject spatial homogeneity for the youth-palace count, which is therefore retained as a fixed rather than a \gls{glsw} effect.
 This decision illustrates the inferential distinction motivating the paper: a variable may be substantively relevant or have a non-zero global association without requiring a geographically varying coefficient.
-Further, we also address clear multicollinearity between \GDPPrimary and \NumEnterprise by assigning the latter a fixed effect.
+We also address clear multicollinearity between \GDPPrimary and \NumEnterprise by assigning the latter a fixed effect.
 
 \begin{table}[tbp]
   \centering\scriptsize
@@ -974,12 +967,12 @@ Further, we also address clear multicollinearity between \GDPPrimary and \NumEnt
 
 \subsection{Results}\label{sec:qoe-heterogeneity-results}
 
-\autoref{tab:qoe-model-summary} reports the main model.
-The $F$ column gives the earlier approximate test of whether each \gls{glsw} effect is spatially homogeneous across the study area; the percentages describe how many province-specific estimates reach each local significance level.
+\autoref{tab:qoe-model-summary} summarises the main model.
+The $F$ column reports the approximate test of whether each \gls{glsw} effect is spatially homogeneous across the study area, and the Bootstrap column reports the corresponding effect-wise bootstrap $p$ value; the percentages describe the proportions of province-specific estimates that reach each local significance level.
 These are distinct inferential statements.
 For example, an effect surface may be heterogeneous overall even when many individual provincial estimates are imprecise.
-All retained \gls{glsw} effects reject spatial homogeneity according to this $F$ test at the 5\% level.
-The Monte Carlo experiment shows that this approximation can be liberal and can reject a constant effect when another \gls{glsw} effect is heterogeneous.
+For all retained \gls{glsw} effects, this $F$ test rejects spatial homogeneity at the 5\% level.
+The Monte Carlo simulations show that this approximation can be liberal and can reject a constant effect when another \gls{glsw} effect is heterogeneous.
 
 \begin{table}[tbp]
   \centering\scriptsize
@@ -1022,14 +1015,14 @@ The Monte Carlo experiment shows that this approximation can be liberal and can 
 \end{figure}
 
 The estimated surfaces in \autoref{fig:qoe-coefficients} show that different provincial factors have different geographies.
-The association of primary-sector GDP (\GDPPrimary) with hourly expenditure is positive and locally significant in parts of central, southern, and western China, consistent with the possibility that agricultural development raises the resources available to some rural households.
-The consumer price index (\CPI) has negative and locally significant estimates in parts of southern China, including Hunan, Guangdong, and Hainan, although living costs could affect both household purchasing power and course prices.
-The Gini coefficient (\Gini) is negative in several central, northern, and western provinces, but many provincial estimates are not significant; its global heterogeneity test should therefore not be read as evidence of a negative association everywhere.
+The association between primary-sector GDP (\GDPPrimary) and hourly expenditure is positive and locally significant in parts of central, southern, and western China, consistent with the possibility that agricultural development increases the resources available to some rural households.
+The consumer price index (\CPI) has negative, locally significant estimates in parts of southern China, including Hunan, Guangdong, and Hainan, although living costs could affect both household purchasing power and course prices.
+The Gini coefficient (\Gini) is negative in several central, northern, and western provinces, but many provincial estimates are not significant; its global heterogeneity-test result should therefore not be read as evidence of a negative association everywhere.
 The Engel coefficient (\Engel) and the University Recruitment Ratio (\UniversityRecruitRatio) change sign across the study area.
 The former is more positive in northern provinces and negative in parts of the south; the latter is positive in some western provinces and negative in several eastern provinces.
 These sign changes are precisely the type of pattern for which a single global coefficient would conceal substantively relevant geographical differences, although the local explanations remain hypotheses rather than causal effects.
 
-The \gls{slr} estimate for urban residence is positive in nearly all provinces and is especially large in Gansu and Chongqing.
+The \gls{slr} estimates for urban residence are positive in nearly all provinces and are especially large in Gansu and Chongqing.
 Because household finances and parental education are included in the model, the remaining urban--rural difference is consistent with unequal access to course providers and qualified teachers, but unobserved household location and accessibility prevent a direct test of this interpretation.
 
 % \subsection{Household-level findings and substantive implications}\label{sec:qoe-household-results}
@@ -1037,20 +1030,20 @@ Because household finances and parental education are included in the model, the
 Among the household financial variables, total spending (\TotalSpending) and assets (\Asset) have positive fixed effects, whereas total income (\TotalIncome) and debt (\Debt) are not statistically significant in the fitted model.
 Since extracurricular expenditure is part of total household spending, the total-spending association is partly mechanical.
 The asset result is consistent with wealthier families purchasing more costly courses, but it does not establish differences in educational returns.
-For parents of high educational qualification (\HighEducated), they tends to spend more on their children's extracurricular activities. The association of parental education with hourly expenditure has a positive association after controlling for the included financial measures, suggesting that educational preferences or information may contribute in addition to economic capacity.
-The coefficient for the gender (\GenderMale) is slightly negative, indicating lower hourly expenditure than for girls in this sample.
+Parents with higher educational qualifications (\HighEducated) tend to spend more on their children's extracurricular activities. Parental education is positively associated with hourly expenditure after controlling for the included financial measures, suggesting that educational preferences or information may contribute in addition to economic capacity.
+The coefficient for male gender (\GenderMale) is slightly negative, indicating lower hourly expenditure for boys than for girls in this sample.
 The result does not demonstrate an overall educational advantage for girls because participation, course type, and the social valuation of gendered activities are not modelled.
-The age (\Age) is negative and is treated as a control: older children may face greater academic and examination demands and consequently spend less time in extracurricular courses.
+The coefficient for age (\Age) is negative and is treated as a control: older children may face greater academic and examination demands and consequently spend less time in extracurricular courses.
 
 Together, the province- and household-level results suggest that educational inequality is related to both family resources and geographically varying macro contexts.
 
 % \subsection{Alternative outcome and limitations}\label{sec:qoe-robustness}
 
-The alternative model replaces hourly expenditure with \QOESpendRatio and excludes total spending from the predictors because it enters the response denominator.
+The alternative model replaces hourly expenditure with \QOESpendRatio and excludes total spending from the predictors because total spending enters the denominator of the response.
 The principal pattern is broadly similar, but three differences qualify the main findings.
 Assets are no longer significant, the spatial heterogeneity of \CPI is weaker, and the heterogeneity of \Engel is more pronounced.
 Detailed province-specific estimates and the alternative-model summary are provided in the supplemental material.
-The comparison indicates that conclusions about purchasing a more expensive course should not automatically be interpreted as conclusions about the priority that a family assigns to extracurricular education.
+This comparison indicates that conclusions about purchasing a more expensive course should not automatically be interpreted as conclusions about the priority a family assigns to extracurricular education.
 
 \subsection{Discussion} \label{sec:discussion}
 
@@ -1059,7 +1052,7 @@ Quality-oriented education has no single standard, and suitable provision depend
 Nevertheless, market-based provision tends to favour households that can afford more costly resources, so policy can seek to reduce the financial and geographic constraints that prevent children from accessing appropriate opportunities.
 The positive association of household assets with hourly expenditure in the main model, together with the remaining urban--rural differences, illustrates how such constraints can arise at both household and regional levels.
 
-At the regional level, economic development remains broad foundations for improving access to quality-oriented education \citep{XiaoLiu-2014}.
+At the regional level, economic development remains a broad foundation for improving access to quality-oriented education \citep{XiaoLiu-2014}.
 The geographically varying estimates for primary-sector GDP, consumer prices, and income inequality further suggest that a uniform national intervention may not address the same constraint in every province.
 Businesses and non-profit organisations could supplement public provision in resource-scarce areas \citep{JingboNatalie-2020,Zhou-2015}.
 Financial, housing, transport, and professional-development incentives may also help rural areas attract and retain qualified teachers, while support for highly educated professionals returning to their home regions could expand the local supply of extracurricular courses \citep{ChengDai-2023,LiShi-2020,JiangYip-2024,ZhangDong-2023,WangTigelaar-2019}.
@@ -1067,9 +1060,9 @@ Financial, housing, transport, and professional-development incentives may also 
 Public extracurricular institutions such as youth palaces offer a more direct way to reduce the burden on low- and middle-income families in a market-dominated system \citep{KerrAinscow-2022,ZhangDong-2023,LaiXu-2023,Ren-2018-en}.
 Public funding could support their facilities, teaching materials, and educator training, while programmes incorporating local music, dance, and art could connect extracurricular provision with local cultural resources \citep{Xie-2022}.
 Cooperation with local sports and arts schools could strengthen staff development and help these institutions gain recognition and retain qualified teachers \citep{Bao-2024-en}.
-These proposals are policy directions derived from the observed pattern of inequalities rather than estimated intervention effects: the \gls{hgwr} analysis identifies conditional associations and where they vary, but it does not establish that changing a particular budget, price, or institutional arrangement would cause the predicted improvement.
+These proposals are policy directions derived from the observed pattern of inequalities rather than estimated intervention effects: the \gls{hgwr} analysis identifies conditional associations and their spatial variation, but it does not establish that changing a particular budget, price, or institutional arrangement would produce the anticipated improvement.
 
-The case study has some main limitations:
+The case study has several important limitations:
 \begin{enumerate*}[label={\alph*)}, after=\unskip{.}, itemjoin={{; }}, itemjoin*={{; and }}]
   \item hourly expenditure is an imperfect proxy for course quality and does not measure participation
   \item the two-level province--household structure cannot directly represent intermediate contexts such as cities, counties, schools, or neighbourhoods
@@ -1081,30 +1074,30 @@ The case study has some main limitations:
 \section{Conclusion}\label{sec:conclusion}
 
 This article develops an inferential framework for spatial heterogeneity in \gls{hgwr}.
-The framework begins with defining spatial random variable and spatial heterogeneity.
-Under the definitions, the hypothesises of testing the spatial heterogeneity of a \gls{glsw} effect are formulated as the changes of conditional expectations.
+The framework begins by defining spatial random variables and spatial heterogeneity.
+Under these definitions, the hypotheses for testing the spatial heterogeneity of a \gls{glsw} effect are formulated in terms of changes in conditional expectations.
 Accordingly, we develop joint-null full-model and effect-wise parametric bootstraps together with an approximate $F$ test for \gls{glsw} effects in \gls{hgwr}.
-According to the simulation results, the effect-wise bootstrap is generally calibrated or conservative under the global null in the simulated settings.
+The simulation results show that the effect-wise bootstrap is generally calibrated or conservative under the global null in the settings examined.
 It detects the heterogeneous coefficient in 96.9--100\% of usable repetitions while rejecting the accompanying constant coefficient in 3.1--4.1\%.
 The full-model bootstrap is calibrated under the complete joint null and detects the heterogeneous coefficient in 97.9--100\% of usable repetitions.
-Once the joint null is false, however, it also frequently rejects the component associated with the constant coefficient, so it provides evidence of global departure without reliably localising that departure.
-The approximate $F$ test is much faster and substantially reduces cross-effect leakage, but its global-null rejection rates and rejection rate for the constant coefficient are higher.
-Thus, treating the approximate $F$ test as a quick screening tool is suggested.
+Once the joint null is false, however, the full-model bootstrap also frequently rejects the component associated with the constant coefficient, so it provides evidence of a global departure without reliably localising that departure.
+The approximate $F$ test is much faster and substantially reduces cross-effect leakage, but its global-null and constant-coefficient rejection rates are higher than those of the effect-wise bootstrap.
+We therefore recommend treating the approximate $F$ test as a rapid screening tool.
 
-A case study on the inequality of parents' investments on the extracurricular courses for their children demonstrates this role in practice.
-Both the approximate $F$ and effect-wise bootstrap tests support \gls{glsw} specifications for the retained provincial economic and educational variables but not for the youth-palace count.
+A case study of inequality in family expenditure on children's extracurricular courses demonstrates this role in practice.
+Both the approximate $F$ and effect-wise bootstrap tests support \gls{glsw} specifications for the retained provincial economic and educational variables, whereas the approximate $F$ screening test does not reject spatial homogeneity for the youth-palace count.
 The fitted model suggests that the associations of primary-sector GDP, living costs, income inequality, university recruitment, and the highly educated population with hourly extracurricular-course expenditure vary geographically.
-Household spending, assets, parental education, child gender, age, and urban residence provide a complementary account of within- and between-province inequality.
+Household spending, assets, parental education, child gender and age, and urban residence provide a complementary account of inequalities within and between provinces.
 These findings show how formal heterogeneity tests can qualify coefficient maps and guide model specification; they do not establish causal effects of provincial policy or household characteristics.
-This work enhances the understanding of educational inequalities and offers practical insights for policymakers aiming to advance inclusive and balanced development in extracurricular education.
-Its methodology is useful for other contexts where spatial heterogeneity exists in all levels of a hierarchical data set.
+This work advances the understanding of educational inequalities and offers practical insights for policymakers seeking inclusive and balanced development in extracurricular education.
+The methodology is also applicable to other contexts in which spatial heterogeneity occurs at multiple levels of a hierarchical data set.
 
 Several issues remain.
-Bootstrap accuracy also increases computational cost, particularly for large data sets, and repeated bandwidth optimisation was not computationally reliable in the present experiment.
+The improved calibration of the effect-wise bootstrap entails greater computational cost, particularly for large data sets, and repeated bandwidth optimisation was not computationally reliable in the present experiments.
 The $F$ approximation depends on distributional and smoother-matrix assumptions and did not maintain effect specificity in several alternatives.
 Future work should examine effect-size measures, multiplicity across many candidate effects, sensitivity to spatial collinearity and confounding, and extensions to more than two levels.
 
-\section*{Acknowledgement}
+\section*{Acknowledgements}
 
 This research was funded by the China Scholarship Council with the University of Bristol (No. 202106270029) whilst at the University of Bristol, and the Fundamental Research Funds for the Central Universities (Grant number B260201041).
 The work was supported by High Performance Computing Platform, Hohai University.
@@ -1116,16 +1109,16 @@ The CIEFR-HS source data are available through the Peking University Open Resear
 
 \section*{Disclosure statement}
 
-The authors report there are no competing interests to declare.
+The authors declare no competing interests.
 
 \section*{Notes on contributors}
 
 \begin{description}
-\item[Yigong Hu] is a lecturer at Hohai University. His research interests include hierarchical and geographically weighted regression, spatial non-parametric statistics, and geo-computing.
+\item[Yigong Hu] is a lecturer at Hohai University. His research interests include hierarchical and geographically weighted regression, spatial non-parametric statistics, and geocomputing.
 
-\item[Richard Harris] is a Professor of Quantitative Social Geography at University of Bristol and a director of the South West Doctoral Training Partnership. His research interests include geographic data science, urban analytics, and cartographic geo-visualisation. His main contribution to this paper is making substantial revisions to the content and structure.
+\item[Richard Harris] is a professor of quantitative social geography at the University of Bristol and a director of the South West Doctoral Training Partnership. His research interests include geographic data science, urban analytics, and cartographic geovisualisation.
 
-\item[Richard Timmerman] is a lecturer at University of Bristol. His main research interest is urban design and planning. His main contribution is making revisions and providing constructive feedback on the content.
+\item[Richard Timmerman] is a lecturer at the University of Bristol. His primary research interest is urban design and planning.
 \end{description}
 
 \section*{CRediT authorship contribution statement}
